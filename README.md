@@ -2,19 +2,19 @@
 
 EXT-Screen is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by [Michael Teeuw](https://github.com/MichMich).
 
-After a configurated time without any user interaction the display will turn off and hide all module for economy mode.
+After a configurated time without any user interaction the display will turn off and hide all modules for economy mode.
 
 You can use others EXT modules to control it:
  * with PIR Sensor (`EXT-Pir`)
  * with crontab (`EXT-ScreenManager`)
  * with `gateway` for full control in harmony with all EXT components 
 
-Naturally, you can use it as a sigle module and without `MMM-GoogleAssistant`
+Naturally, you can use it as a single module and without `MMM-GoogleAssistant`
 
 ## Screenshot
-![](https://raw.githubusercontent.com/bugsounet/EXT-Screen/master/screenshoot.png)
+![](https://raw.githubusercontent.com/bugsounet/EXT-Screen/dev/screenshot/screenshot.png)
 
-![](https://raw.githubusercontent.com/bugsounet/EXT-Screen/master/screenshot_2.png)
+![](https://raw.githubusercontent.com/bugsounet/EXT-Screen/dev/screenshot/screenshot2.png)
 
 ## Installation / update / configuration
 
