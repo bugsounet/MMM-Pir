@@ -1,0 +1,60 @@
+#EXT-SCREEN {
+  font-size: large;
+  /*display: flex;*/
+  user-select: none;
+  line-height: 99%; 
+}
+
+#EXT-SCREEN.hidden {
+  display: none;
+}
+
+#EXT-SCREEN_TEXT {
+  margin-right: 10px;
+}
+
+#EXT-SCREEN_PRESENCE,
+#EXT-SCREEN_SCREEN {
+  font-size: large;
+  display: flex;
+}
+
+#EXT-SCREEN_PRESENCE.hidden,
+#EXT-SCREEN_BAR.hidden,
+#EXT-SCREEN_SCREEN.hidden {
+  display: none;
+}
+
+#EXT-SCREEN_PRESENCE_TEXT,
+#EXT-SCREEN_SCREEN_TEXT {
+  margin-right: 10px;
+}
+
+
+#EXT-SCREEN_SCREEN_BAR {
+  font-size: large;
+  min-width: 100px;
+}
+
+#EXT-SCREEN_SCREEN_BAR.Line {
+  height: 40px;
+}
+
+#EXT-SCREEN_SCREEN_BAR.Circle {
+  width: 100px;
+  height: 93px;
+  top: 10px;
+}
+
+#EXT-SCREEN_SCREEN_BAR.SemiCircle {
+  width: 100px;
+  top: 10px;
+}
+
+#EXT-SCREEN_SCREEN_BAR.Bar {
+  margin-bottom:4px;
+  height: 4px;
+  width: 100%;
+  position:relative;
+}
+
