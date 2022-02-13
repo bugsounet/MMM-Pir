@@ -66,11 +66,8 @@ module.exports = NodeHelper.create({
         this.sendSocketNotification(noti, params)
         log("Callback Notification:", noti,params)
       },
-      "governor": (param) => {
-        /* to code 
-        if (this.governor && param == "GOVERNOR_SLEEPING") this.governor.sleeping()
-        if (this.governor && param == "GOVERNOR_WORKING") this.governor.working()
-        */
+      "governor": (gov) => {
+        this.sendSocketNotification(gov)
       },
     }
     /** constructor(config, callback, debug, detectorControl, governorControl) **/

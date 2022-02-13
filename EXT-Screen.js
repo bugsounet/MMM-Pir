@@ -19,7 +19,6 @@ Module.register("EXT-Screen", {
         text: "Auto Turn Off Screen:",
         displayBar: true,
         displayStyle: "Text",
-        governorSleeping: false,
         displayLastPresence: true,
         LastPresenceText: "Last Presence:",
         delayed: 0
@@ -46,9 +45,10 @@ Module.register("EXT-Screen", {
       }
 
       if (this.config.debug) mylog = mylog_
+      this.config.screen.governorSleeping= true
       this.sendSocketNotification("INIT", this.config)
       this.checkStyle()
-      this.userPrensece = null
+      this.userPresence = null
       this.lastPresence = null
       this.init = null
       this.awaitBeforeTurnOnTimer= null
@@ -101,6 +101,12 @@ Module.register("EXT-Screen", {
       case "SCREEN_POWER":
         if (payload) this.sendNotification("EXT_SCREEN-ON")
         else this.sendNotification("EXT_SCREEN-OFF")
+        break
+      case "GOVERNOR_SLEEPING":
+        this.sendNotification("EXT_GOVERNOR-SLEEPING")
+        break
+      case "GOVERNOR_WORKING":
+        this.sendNotification("EXT_GOVERNOR-WORKING")
         break
       case "NPM_UPDATE":
         if (payload && payload.length > 0) {
