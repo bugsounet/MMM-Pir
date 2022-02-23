@@ -150,7 +150,9 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-LOCK":
           this.sendSocketNotification("LOCK")
-          if (sender.name != "MMM-GoogleAssistant") this.hideDivWithAnimatedFlip("EXT-SCREEN")
+          let HiddenLock = true
+          if (payload && payload.show) HiddenLock= false
+          if (HiddenLock) this.hideDivWithAnimatedFlip("EXT-SCREEN")
           if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenLock", { VALUES: sender.name }),
             type: "information",
@@ -166,7 +168,9 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-UNLOCK":
           this.sendSocketNotification("UNLOCK")
-          if (sender.name != "MMM-GoogleAssistant") this.showDivWithAnimatedFlip("EXT-SCREEN")
+          let HiddenUnLock = true
+          if (payload && payload.show) HiddenUnLock= false
+          if (HiddenUnLock) this.showDivWithAnimatedFlip("EXT-SCREEN")
           if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenUnLock"),
             type: "information",
