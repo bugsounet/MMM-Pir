@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "MagicMirror svegliato da {VALUES}",
+  "ScreenLock": "MagicMirror bloccato da {VALUES}",
+  "ScreenUnLock": "MagicMirror svegliato da {VALUES}",
+  "ScreenTurnOff": "Spegnimento automatico monitor:",
+  "ScreenLastPresence": "Ultima presenza:",
+  "ScreenPowerOn": "accensione monitor",
+  "ScreenPowerOff": "Spegnimento monitor"
+}

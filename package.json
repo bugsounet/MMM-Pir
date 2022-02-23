@@ -1,8 +1,8 @@
 {
   "name": "EXT-Screen",
   "version": "1.0.0",
-  "rev": "220213",
-  "description": "GA EXT PIR Module",
+  "rev": "220223",
+  "description": "GA EXT Screen manager",
   "main": "EXT-Screen.js",
   "scripts": {
     "preinstall": "installer/preinstall.sh",

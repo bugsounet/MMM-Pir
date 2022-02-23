@@ -16,11 +16,11 @@ Module.register("EXT-Screen", {
         mode: 1,
         ecoMode: true,
         displayCounter: true,
-        text: "Auto Turn Off Screen:",
         displayBar: true,
         displayStyle: "Text",
         displayLastPresence: true,
-        LastPresenceText: "Last Presence:",
+        lastPresenceTimeFormat: "LL H:mm",
+        autoHide: true,
         delayed: 0
       },
       touch: {
@@ -88,7 +88,7 @@ Module.register("EXT-Screen", {
         break
       case "SCREEN_PRESENCE":
         this.sendNotification("USER_PRESENCE", payload ? true : false)
-        if (payload) this.lastPresence = moment().format("LL H:mm")
+        if (payload) this.lastPresence = moment().format(this.config.screen.lastPresenceTimeFormat)
         else this.userPresence = this.lastPresence
         if (this.userPresence && this.config.screen.displayLastPresence) {
           let presence= document.getElementById("EXT-SCREEN_PRESENCE")
@@ -99,8 +99,19 @@ Module.register("EXT-Screen", {
         }
         break
       case "SCREEN_POWER":
-        if (payload) this.sendNotification("EXT_SCREEN-ON")
-        else this.sendNotification("EXT_SCREEN-OFF")
+        if (payload) {
+          this.sendNotification("EXT_SCREEN-ON")
+          this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenPowerOn"),
+            type: "information",
+          })
+        } else {
+          this.sendNotification("EXT_SCREEN-OFF")
+          this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenPowerOff"),
+            type: "information",
+          })
+        }
         break
       case "GOVERNOR_SLEEPING":
         this.sendNotification("EXT_GOVERNOR-SLEEPING")
@@ -126,7 +137,7 @@ Module.register("EXT-Screen", {
       case "WARNING":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
-          message: "[Warning] Error When Loading: " + payload.library + ". Try to solve it with `npm run rebuild` in NewPIR directory",
+          message: "[Warning] Error When Loading: " + payload.library + ". Try to solve it with `npm run rebuild` in Screen directory",
           title: "EXT-Screen",
           timer: 10000
         })
@@ -134,7 +145,7 @@ Module.register("EXT-Screen", {
       }
     },
 
-    notificationReceived: function (notification, payload) {
+    notificationReceived: function (notification, payload, sender) {
       switch(notification) {
         case "DOM_OBJECTS_CREATED":
           if (this.config.touch.useTouch) this.touchScreen(this.config.touch.mode)
@@ -151,12 +162,42 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-WAKEUP":
           this.sendSocketNotification("WAKEUP")
+          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
+            type: "information",
+          })
           break
         case "EXT_SCREEN-LOCK":
           this.sendSocketNotification("LOCK")
+          this.hideDivWithAnimatedFlip("EXT-SCREEN")
+          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenLock", { VALUES: sender.name }),
+            type: "information",
+          })
+          break
+        case "EXT_SCREEN-FORCE_LOCK":
+          this.sendSocketNotification("FORCELOCK")
+          this.hideDivWithAnimatedFlip("EXT-SCREEN")
+          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenLock"),
+            type: "information",
+          })
           break
         case "EXT_SCREEN-UNLOCK":
           this.sendSocketNotification("UNLOCK")
+          this.showDivWithAnimatedFlip("EXT-SCREEN")
+          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenUnLock"),
+            type: "information",
+          })
+          break
+        case "EXT_SCREEN-FORCE_UNLOCK":
+          this.sendSocketNotification("FORCEUNLOCK")
+          this.showDivWithAnimatedFlip("EXT-SCREEN")
+          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+            message: this.translate("ScreenUnLock"),
+            type: "information",
+          })
           break
       }
     },
@@ -164,6 +205,8 @@ Module.register("EXT-Screen", {
     getDom: function () {
       var dom = document.createElement("div")
       dom.id = "EXT-SCREEN"
+      dom.className= "animate__animated"
+      dom.style.setProperty('--animate-duration', '1s')
 
       if (this.config.screen.displayCounter || this.config.screen.displayBar) {
         /** Screen TimeOut Text **/
@@ -172,7 +215,7 @@ Module.register("EXT-Screen", {
         if (this.config.screen.displayStyle != "Text") screen.className = "hidden"
         var screenText = document.createElement("div")
         screenText.id = "EXT-SCREEN_SCREEN_TEXT"
-        screenText.textContent = this.config.screen.text
+        screenText.textContent = this.translate("ScreenTurnOff")
         screenText.classList.add("bright")
         screen.appendChild(screenText)
         var screenCounter = document.createElement("div")
@@ -204,7 +247,7 @@ Module.register("EXT-Screen", {
         presence.className = "hidden"
         var presenceText = document.createElement("div")
         presenceText.id = "EXT-SCREEN_PRESENCE_TEXT"
-        presenceText.textContent = this.config.screen.LastPresenceText
+        presenceText.textContent = this.translate("ScreenLastPresence")
         presence.appendChild(presenceText)
         var presenceDate = document.createElement("div")
         presenceDate.id = "EXT-SCREEN_PRESENCE_DATE"
@@ -229,6 +272,19 @@ Module.register("EXT-Screen", {
         "/modules/EXT-Screen/scripts/progressbar.js",
         "/modules/EXT-Screen/scripts/long-press-event.js"
       ]
+    },
+
+    getTranslations: function() {
+      return {
+        en: "translations/en.json",
+        fr: "translations/fr.json",
+        it: "translations/it.json",
+        de: "translations/de.json",
+        es: "translations/es.json",
+        nl: "translations/nl.json",
+        pt: "translations/pt.json",
+        ko: "translations/ko.json"
+      }
     },
 
     prepareBar: function () {
@@ -307,7 +363,7 @@ Module.register("EXT-Screen", {
     touchScreen: function (mode) {
       let clickCount = 0
       let clickTimer = null
-      let NewPIR = document.getElementById("EXT-SCREEN")
+      let TouchScreen = document.getElementById("EXT-SCREEN")
 
       switch (mode) {
         case 1:
@@ -328,7 +384,7 @@ Module.register("EXT-Screen", {
           break
         case 2:
           /** mode 2 **/
-          NewPIR.addEventListener('click', () => {
+          TouchScreen.addEventListener('click', () => {
             if (clickCount) return clickCount = 0
             if (!this.hidden) this.sendSocketNotification("WAKEUP")
           }, false)
@@ -342,7 +398,7 @@ Module.register("EXT-Screen", {
           break
         case 3:
           /** mode 3 **/
-          NewPIR.addEventListener('click', () => {
+          TouchScreen.addEventListener('click', () => {
             clickCount++
             if (clickCount === 1) {
               clickTimer = setTimeout(() => {
@@ -368,6 +424,28 @@ Module.register("EXT-Screen", {
       else mylog("Touch Screen Function added. [mode " + mode +"]")
     },
 
+    /** Hide EXT with Flip animation **/
+    hideDivWithAnimatedFlip: function (div) {
+      if (!this.config.screen.autoHide) return
+      var module = document.getElementById(div)
+      module.classList.remove("animate__flipInX")
+      module.classList.add("animate__flipOutX")
+      module.addEventListener('animationend', (e) => {
+        if (e.animationName == "flipOutX" && e.path[0].id == div) {
+          module.classList.add("hidden")
+        }
+        e.stopPropagation()
+      }, {once: true})
+    },
+
+    showDivWithAnimatedFlip: function (div) {
+      if (!this.config.screen.autoHide) return
+      var module = document.getElementById(div)
+      module.classList.remove("hidden")
+      module.classList.remove("animate__flipOutX")
+      module.classList.add("animate__flipInX")
+    },
+
     /** need to sleep ? **/
     awaitBeforeWakeUp: function(ms=3000) {
       return new Promise((resolve) => {
@@ -383,8 +461,36 @@ Module.register("EXT-Screen", {
         return style == this.config.screen.displayStyle
       })
       if (!found) {
-        console.error("[NewPIR] displayStyle Error ! ["+ this.config.screen.displayStyle + "]")
+        console.error("[Screen] displayStyle Error ! ["+ this.config.screen.displayStyle + "]")
         this.config.screen= Object.assign({}, this.config.screen, {displayStyle : "Text"})
       }
+    },
+
+    getCommands: function(commander) {
+      commander.add({
+        command: "screen",
+        description: "Screen power control",
+        callback: "tbScreen"
+      })
+    },
+    tbScreen: function(command, handler) {
+      if (handler.args) {
+        var args = handler.args.toLowerCase().split(" ")
+        var params = handler.args.split(" ")
+        if (args[0] == "on") {
+          this.sendSocketNotification("WAKEUP")
+          handler.reply("TEXT", this.translate("ScreenPowerOn"))
+          return
+        }
+        if (args[0] == "off") {
+          this.sendSocketNotification("FORCE_END")
+          handler.reply("TEXT", this.translate("ScreenPowerOff"))
+          return
+        }
+      }
+      handler.reply("TEXT", 'Need Help for /screen commands ?\n\n\
+  *on*: Power on the screen\n\
+  *off*: Power off the screen\n\
+  ',{parse_mode:'Markdown'})
     }
 });

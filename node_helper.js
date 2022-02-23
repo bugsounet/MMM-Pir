@@ -10,6 +10,7 @@ var log = (...args) => { /* do nothing */ }
 module.exports = NodeHelper.create({
   start: function() {
     this.lib = {}
+    this.forceLocked = false
   },
 
   initialize: async function() {
@@ -54,7 +55,16 @@ module.exports = NodeHelper.create({
       case "LOCK":
         this.screen.lock()
         break
+      case "FORCELOCK":
+        this.forceLocked = true
+        this.screen.lock()
+        break
       case "UNLOCK":
+        if (this.forceLocked) return log("Sorry, it's Force-Locked!")
+        this.screen.unlock()
+        break
+      case "FORCEUNLOCK":
+        this.forceLocked = false
         this.screen.unlock()
         break
     }
