@@ -29,5 +29,5 @@
   "homepage": "https://wiki.bugsounet.fr/en/EXT-Screen",
   "dependencies": {
     "@bugsounet/screen": "^1.1.8"
-  },
+  }
 }
