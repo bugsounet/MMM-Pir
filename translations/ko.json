@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Screen Wakeup by {VALUES}",
+  "ScreenLock": "Screen Lock by {VALUES}",
+  "ScreenUnLock": "Screen UnLock by {VALUES}",
+  "ScreenTurnOff": "화면 자동 끄기:",
+  "ScreenLastPresence": "마지막 화면:",
+  "ScreenPowerOn": "화면 켜기",
+  "ScreenPowerOff": "화면 끄기"
+}

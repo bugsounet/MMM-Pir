@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Display aktivieren durch {VALUES}",
+  "ScreenLock": "Display sperren durch {VALUES}",
+  "ScreenUnLock": "Display entsperren durch {VALUES}",
+  "ScreenTurnOff": "Automatische Displayabschaltung:",
+  "ScreenLastPresence": "Letzte Aktivität:",
+  "ScreenPowerOn": "Display einschalten",
+  "ScreenPowerOff": "Display ausschalten"
+}

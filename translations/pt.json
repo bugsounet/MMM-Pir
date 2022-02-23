@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Ecrã ligado {VALUES}",
+  "ScreenLock": "Ecrã bloqueado por {VALUES}",
+  "ScreenUnLock": "Ecrã desbloqueado por {VALUES}",
+  "ScreenTurnOff": "Desbloqueio automático do Ecrã:",
+  "ScreenLastPresence": "Última utilização",
+  "ScreenPowerOn": "Ligar Ecrã",
+  "ScreenPowerOff": "Desligar Ecrã"
+}

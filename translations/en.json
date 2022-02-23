@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Screen Wakeup by {VALUES}",
+  "ScreenLock": "Screen Lock by {VALUES}",
+  "ScreenUnLock": "Screen UnLock by {VALUES}",
+  "ScreenTurnOff": "Auto Turn Off Screen:",
+  "ScreenLastPresence": "Last Presence:",
+  "ScreenPowerOn": "Turn on screen",
+  "ScreenPowerOff": "Turn off screen"
+}

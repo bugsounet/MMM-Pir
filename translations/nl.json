@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Scherm wordt wakker door {VALUES}",
+  "ScreenLock": "Scherm vergrendeld door {VALUES}",
+  "ScreenUnLock": "Scherm ontgrendeld door {VALUES}",
+  "ScreenTurnOff": "Automatisch Scherm Uit:",
+  "ScreenLastPresence": "Laatst getoond:",
+  "ScreenPowerOn": "Scherm aan",
+  "ScreenPowerOff": "Scherm uit"
+}

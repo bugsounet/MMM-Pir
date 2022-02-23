@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Pantalla activada por {VALUES}",
+  "ScreenLock": "Pantalla bloqueada por {VALUES}",
+  "ScreenUnLock": "Pantalla desbloqueada por {VALUES}",
+  "ScreenTurnOff": "Apagado automático de la pantalla:",
+  "ScreenLastPresence": "Última presencia:",
+  "ScreenPowerOn": "Encender Pantalla",
+  "ScreenPowerOff": "Apagar Pantalla"
+}
