@@ -162,7 +162,8 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-WAKEUP":
           this.sendSocketNotification("WAKEUP")
-          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+          if (sender.name == "Gateway" || sender.name == "EXT-Pir") return
+          this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
             type: "information",
           })
