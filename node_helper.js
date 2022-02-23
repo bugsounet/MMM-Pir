@@ -26,15 +26,6 @@ module.exports = NodeHelper.create({
     else {
       console.log("[SCREEN] All needed @bugsounet library loaded !")
     }
-    if (this.config.NPMCheck.useChecker) {
-      var cfg = {
-        dirName: __dirname,
-        moduleName: this.name,
-        timer: this.config.NPMCheck.delay,
-        debug: this.config.debug
-      }
-      new this.lib.npmCheck(cfg, update => { this.sendSocketNotification("NPM_UPDATE", update)} )
-    }
     this.Screen()
     console.log("[SCREEN] Initialized ")
   },
@@ -96,7 +87,6 @@ module.exports = NodeHelper.create({
   loadBugsounetLibrary: function() {
     let libraries= [
       // { "library to load" : [ "store library name", "path to check"] }
-      { "@bugsounet/npmcheck": [ "npmCheck", "NPMCheck.useChecker" ] },
       { "@bugsounet/screen": [ "Screen", "screen.useScreen" ] }
     ]
     let errors = 0

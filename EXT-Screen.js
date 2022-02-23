@@ -26,11 +26,6 @@ Module.register("EXT-Screen", {
       touch: {
         useTouch: false,
         mode: 3
-      },
-      NPMCheck: {
-        useChecker: true,
-        delay: 10 * 60 * 1000,
-        useAlert: true
       }
     },
 
@@ -119,21 +114,6 @@ Module.register("EXT-Screen", {
       case "GOVERNOR_WORKING":
         this.sendNotification("EXT_GOVERNOR-WORKING")
         break
-      case "NPM_UPDATE":
-        if (payload && payload.length > 0) {
-          if (this.config.NPMCheck.useAlert) {
-            payload.forEach(npm => {
-              this.sendNotification("SHOW_ALERT", {
-                type: "notification" ,
-                message: "[NPM] " + npm.library + " v" + npm.installed +" -> v" + npm.latest,
-                title: this.translate("UPDATE_NOTIFICATION_MODULE", { MODULE_NAME: npm.module }),
-                timer: this.config.NPMCheck.delay-2000
-              })
-            })
-          }
-          this.sendNotification("NPM_UPDATE", payload)
-        }
-        break
       case "WARNING":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
@@ -162,14 +142,15 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-WAKEUP":
           this.sendSocketNotification("WAKEUP")
-          if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
+          if (sender.name == "Gateway" || sender.name == "EXT-Pir") return
+          this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
             type: "information",
           })
           break
         case "EXT_SCREEN-LOCK":
           this.sendSocketNotification("LOCK")
-          this.hideDivWithAnimatedFlip("EXT-SCREEN")
+          if (sender.name != "MMM-GoogleAssistant") this.hideDivWithAnimatedFlip("EXT-SCREEN")
           if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenLock", { VALUES: sender.name }),
             type: "information",
@@ -185,7 +166,7 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-UNLOCK":
           this.sendSocketNotification("UNLOCK")
-          this.showDivWithAnimatedFlip("EXT-SCREEN")
+          if (sender.name != "MMM-GoogleAssistant") this.showDivWithAnimatedFlip("EXT-SCREEN")
           if (sender.name != "Gateway") this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenUnLock"),
             type: "information",
@@ -256,7 +237,6 @@ Module.register("EXT-Screen", {
         presence.appendChild(presenceDate)
         dom.appendChild(presence)
       }
-
       return dom
     },
 
