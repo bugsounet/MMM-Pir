@@ -52,76 +52,68 @@ Module.register("EXT-Screen", {
 
     socketNotificationReceived: function (notification, payload) {
       switch(notification) {
-      case "SCREEN_SHOWING":
-        this.screenShowing()
-        break
-      case "SCREEN_HIDING":
-        this.screenHiding()
-        break
-      case "SCREEN_TIMER":
-        if (this.config.screen.displayStyle == "Text") {
-          let counter = document.getElementById("EXT-SCREEN_SCREEN_COUNTER")
-          counter.textContent = payload
-        }
-        break
-      case "SCREEN_BAR":
-        if (this.config.screen.displayStyle == "Bar") {
-          let bar = document.getElementById("EXT-SCREEN_SCREEN_BAR")
-          bar.value= this.config.screen.delay - payload
-        }
-        else if (this.config.screen.displayStyle != "Text") {
-          let value = (100 - ((payload * 100) / this.config.screen.delay))/100
-          let timeOut = moment(new Date(this.config.screen.delay-payload)).format("m:ss")
-          this.bar.animate(value, {
-            step: (state, bar) => {
-              bar.path.setAttribute('stroke', state.color)
-              bar.setText(this.config.screen.displayCounter ? timeOut : "")
-              bar.text.style.color = state.color
-            }
-          })
-        }
-        break
-      case "SCREEN_PRESENCE":
-        this.sendNotification("USER_PRESENCE", payload ? true : false)
-        if (payload) this.lastPresence = moment().format(this.config.screen.lastPresenceTimeFormat)
-        else this.userPresence = this.lastPresence
-        if (this.userPresence && this.config.screen.displayLastPresence) {
-          let presence= document.getElementById("EXT-SCREEN_PRESENCE")
-          presence.classList.remove("hidden")
-          presence.classList.add("bright")
-          let userPresence= document.getElementById("EXT-SCREEN_PRESENCE_DATE")
-          userPresence.textContent= this.userPresence
-        }
-        break
-      case "SCREEN_POWER":
-        if (payload) {
-          this.sendNotification("EXT_SCREEN-ON")
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenPowerOn"),
-            type: "information",
-          })
-        } else {
-          this.sendNotification("EXT_SCREEN-OFF")
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenPowerOff"),
-            type: "information",
-          })
-        }
-        break
-      case "GOVERNOR_SLEEPING":
-        this.sendNotification("EXT_GOVERNOR-SLEEPING")
-        break
-      case "GOVERNOR_WORKING":
-        this.sendNotification("EXT_GOVERNOR-WORKING")
-        break
-      case "WARNING":
-        this.sendNotification("SHOW_ALERT", {
-          type: "notification",
-          message: "[Warning] Error When Loading: " + payload.library + ". Try to solve it with `npm run rebuild` in Screen directory",
-          title: "EXT-Screen",
-          timer: 10000
-        })
-        break
+        case "SCREEN_SHOWING":
+          this.screenShowing()
+          break
+        case "SCREEN_HIDING":
+          this.screenHiding()
+          break
+        case "SCREEN_TIMER":
+          if (this.config.screen.displayStyle == "Text") {
+            let counter = document.getElementById("EXT-SCREEN_SCREEN_COUNTER")
+            counter.textContent = payload
+          }
+          break
+        case "SCREEN_BAR":
+          if (this.config.screen.displayStyle == "Bar") {
+            let bar = document.getElementById("EXT-SCREEN_SCREEN_BAR")
+            bar.value= this.config.screen.delay - payload
+          }
+          else if (this.config.screen.displayStyle != "Text") {
+            let value = (100 - ((payload * 100) / this.config.screen.delay))/100
+            let timeOut = moment(new Date(this.config.screen.delay-payload)).format("m:ss")
+            this.bar.animate(value, {
+              step: (state, bar) => {
+                bar.path.setAttribute('stroke', state.color)
+                bar.setText(this.config.screen.displayCounter ? timeOut : "")
+                bar.text.style.color = state.color
+              }
+            })
+          }
+          break
+        case "SCREEN_PRESENCE":
+          this.sendNotification("USER_PRESENCE", payload ? true : false)
+          if (payload) this.lastPresence = moment().format(this.config.screen.lastPresenceTimeFormat)
+          else this.userPresence = this.lastPresence
+          if (this.userPresence && this.config.screen.displayLastPresence) {
+            let presence= document.getElementById("EXT-SCREEN_PRESENCE")
+            presence.classList.remove("hidden")
+            presence.classList.add("bright")
+            let userPresence= document.getElementById("EXT-SCREEN_PRESENCE_DATE")
+            userPresence.textContent= this.userPresence
+          }
+          break
+        case "SCREEN_POWER":
+          if (payload) {
+            this.sendNotification("EXT_SCREEN-ON")
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenPowerOn"),
+              type: "information",
+            })
+          } else {
+            this.sendNotification("EXT_SCREEN-OFF")
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenPowerOff"),
+              type: "information",
+            })
+          }
+          break
+        case "GOVERNOR_SLEEPING":
+          this.sendNotification("EXT_GOVERNOR-SLEEPING")
+          break
+        case "GOVERNOR_WORKING":
+          this.sendNotification("EXT_GOVERNOR-WORKING")
+          break
       }
     },
 

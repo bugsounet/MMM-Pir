@@ -1,14 +1,13 @@
 {
   "name": "EXT-Screen",
   "version": "1.0.0",
-  "rev": "220223",
+  "rev": "220225",
   "description": "GA EXT Screen manager",
   "main": "EXT-Screen.js",
   "scripts": {
     "preinstall": "installer/preinstall.sh",
     "postinstall": "installer/postinstall.sh",
-    "update": "installer/update.sh",
-    "rebuild": "installer/rebuild.sh"
+    "update": "installer/update.sh"
   },
   "keywords": [
     "magic mirror",
