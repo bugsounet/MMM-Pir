@@ -20,7 +20,7 @@ module.exports = NodeHelper.create({
     let bugsounet = await this.loadBugsounetLibrary()
     if (bugsounet) {
       console.error("[SCREEN] Warning:", bugsounet, "needed @bugsounet library not loaded !")
-      console.error("[SCREEN] Try to solve it with `npm run rebuild` in NewPIR directory")
+      console.error("[SCREEN] Try to solve it with `npm run rebuild` in EXT-Screen directory")
       return
     }
     else {
