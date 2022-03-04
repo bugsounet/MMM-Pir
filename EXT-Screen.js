@@ -123,7 +123,9 @@ Module.register("EXT-Screen", {
           if (this.config.touch.useTouch) this.touchScreen(this.config.touch.mode)
           if (this.config.screen.animateBody) this.prepareBody()
           this.prepareBar()
-          this.sendNotification("EXT_HELLO", this.name)
+          break
+        case "GAv4_READY":
+          if (sender.name == "MMM-GoogleAssistant") this.sendNotification("EXT_HELLO", this.name)
           break
         case "USER_PRESENCE":
           if (payload == true) this.sendSocketNotification("WAKEUP")
