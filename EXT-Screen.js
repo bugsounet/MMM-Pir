@@ -21,7 +21,9 @@ Module.register("EXT-Screen", {
         displayLastPresence: true,
         lastPresenceTimeFormat: "LL H:mm",
         autoHide: true,
-        delayed: 0
+        delayed: 0,
+        gpio: 20,
+        clearGpioValue: true
       },
       touch: {
         useTouch: false,
@@ -98,13 +100,13 @@ Module.register("EXT-Screen", {
             this.sendNotification("EXT_SCREEN-ON")
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenPowerOn"),
-              type: "information",
+              type: "information"
             })
           } else {
             this.sendNotification("EXT_SCREEN-OFF")
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenPowerOff"),
-              type: "information",
+              type: "information"
             })
           }
           break
