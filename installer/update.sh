@@ -20,7 +20,7 @@ Installer_dir="$(Installer_get_current_dir)"
 cd "$Installer_dir"
 
 source utils.sh
-cd..
+cd ..
 
 # check version in package.json file
 Installer_version="$(grep -Eo '\"version\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
