@@ -6,8 +6,9 @@ After a configurated time without any user interaction the display will turn off
 
 You can use others EXT modules to control it:
  * with PIR Sensor (`EXT-Pir`)
+ * with Touch (`EXT-ScreenTouch`)
  * with crontab (`EXT-ScreenManager`)
- * with `gateway` for full control in harmony with all EXT components 
+ * with `gateway` for full control in harmony with all EXT components.
 
 Naturally, you can use it as a single module and without `MMM-GoogleAssistant`
 

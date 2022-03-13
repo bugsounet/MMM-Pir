@@ -1,7 +1,7 @@
-/********************************
-* node_helper for EXT-Screen v1 *
-* BuGsounet ©02/22              *
-********************************/
+/**********************************
+* node_helper for EXT-Screen v1.1 *
+* BuGsounet ©03/22                *
+**********************************/
 
 const NodeHelper = require('node_helper')
 const LibScreen = require("@bugsounet/screen")
@@ -15,7 +15,7 @@ module.exports = NodeHelper.create({
 
   initialize: async function() {
     if (this.config.debug) log = (...args) => { console.log("[SCREEN]", ...args) }
-    console.log("[GATEWAY] EXT-Screen Version:", require('./package.json').version, "rev:", require('./package.json').rev)
+    console.log("[SCREEN] EXT-Screen Version:", require('./package.json').version, "rev:", require('./package.json').rev)
     this.Screen()
     console.log("[SCREEN] Initialized")
   },
@@ -24,7 +24,7 @@ module.exports = NodeHelper.create({
     switch(notification) {
       case "INIT":
         this.config = payload
-        this.config.screen.useScreen= true
+        this.config.useScreen= true
         this.initialize()
         break
       case "WAKEUP":
@@ -61,9 +61,15 @@ module.exports = NodeHelper.create({
         this.sendSocketNotification(gov)
       },
     }
-    /** constructor(config, callback, debug, detectorControl, governorControl) **/
+    /** constructor(
+     *    config,
+     *    callback,
+     *    debug,
+     *    detectorControl,
+     *    governorControl
+     * ) **/
     this.screen = new LibScreen(
-      this.config.screen,
+      this.config,
       callbacks.sendSocketNotification,
       this.config.debug,
       callbacks.sendSocketNotification,
