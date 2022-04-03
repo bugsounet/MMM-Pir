@@ -4,7 +4,7 @@
 **********************************/
 
 const NodeHelper = require('node_helper')
-const LibScreen = require("@bugsounet/screen")
+const LibScreen = require("./lib/screenLib.js")
 var log = (...args) => { /* do nothing */ }
 
 module.exports = NodeHelper.create({
