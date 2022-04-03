@@ -1,6 +1,6 @@
 {
   "name": "EXT-Screen",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "rev": "220312",
   "description": "GA EXT Screen manager",
   "main": "EXT-Screen.js",
@@ -27,6 +27,8 @@
   },
   "homepage": "https://wiki.bugsounet.fr/en/EXT-Screen",
   "dependencies": {
-    "@bugsounet/screen": "^1.1.9"
+    "child_process": "^1.0.2",
+    "process": "^0.11.10",
+    "moment": "^2.26.0"
   }
 }
