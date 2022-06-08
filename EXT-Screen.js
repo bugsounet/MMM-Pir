@@ -217,7 +217,7 @@ Module.register("EXT-Screen", {
         /** Screen TimeOut Text **/
         var screen = document.createElement("div")
         screen.id = "EXT-SCREEN_SCREEN"
-        if (this.config.displayStyle != "Text") screen.className = "hidden"
+        if (this.config.displayStyle != "Text" || !this.config.displayCounter) screen.className = "hidden"
         var screenText = document.createElement("div")
         screenText.id = "EXT-SCREEN_SCREEN_TEXT"
         screenText.textContent = this.translate("ScreenTurnOff")
