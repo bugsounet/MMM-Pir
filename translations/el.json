@@ -1,0 +1,9 @@
+{
+  "ScreenWakeUp": "Ενεργοποίηση οθόνης από {VALUES}",
+  "ScreenLock": "Κλείδωμα οθόνης από {VALUES}",
+  "ScreenUnLock": "Ξεκλείδωμα οθόνης από {VALUES}",
+  "ScreenTurnOff": "Αυτόματη απενεργοποίηση οθόνης:",
+  "ScreenLastPresence": "Τελευταία παρουσία:",
+  "ScreenPowerOn": "Ενεργοποίηση οθόνης",
+  "ScreenPowerOff": "Απενεργοποίηση οθόνης"
+}
