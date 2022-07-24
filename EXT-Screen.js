@@ -287,7 +287,8 @@ Module.register("EXT-Screen", {
         es: "translations/es.json",
         nl: "translations/nl.json",
         pt: "translations/pt.json",
-        ko: "translations/ko.json"
+        ko: "translations/ko.json",
+        el: "translations/el.json"
       }
     },
 
