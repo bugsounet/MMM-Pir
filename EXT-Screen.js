@@ -1,7 +1,7 @@
 /*******************
 *  EXT-Screen v1.1 *
 *  Bugsounet       *
-*  03/2022         *
+*  08/2022         *
 *******************/
 
 Module.register("EXT-Screen", {
@@ -24,7 +24,7 @@ Module.register("EXT-Screen", {
       detectorSleeping: false,
       gpio: 20,
       clearGpioValue: true,
-      sound: true
+      sound: false
     },
 
     start: function () {
