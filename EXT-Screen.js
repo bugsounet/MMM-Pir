@@ -1,7 +1,7 @@
 /*******************
 *  EXT-Screen v1.1 *
 *  Bugsounet       *
-*  03/2022         *
+*  08/2022         *
 *******************/
 
 Module.register("EXT-Screen", {
@@ -23,7 +23,8 @@ Module.register("EXT-Screen", {
       delayed: 0,
       detectorSleeping: false,
       gpio: 20,
-      clearGpioValue: true
+      clearGpioValue: true,
+      sound: false
     },
 
     start: function () {
@@ -95,13 +96,15 @@ Module.register("EXT-Screen", {
             this.sendNotification("EXT_SCREEN-ON")
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenPowerOn"),
-              type: "information"
+              type: "information",
+              sound: this.config.sound ? "modules/EXT-Screen/sounds/open.mp3" : null
             })
           } else {
             this.sendNotification("EXT_SCREEN-OFF")
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenPowerOff"),
-              type: "information"
+              type: "information",
+              sound: this.config.sound ? "modules/EXT-Screen/sounds/close.mp3" : null
             })
           }
           break
@@ -160,7 +163,7 @@ Module.register("EXT-Screen", {
           ) return
           this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenLock", { VALUES: sender.name }),
-            type: "information",
+            type: "information"
           })
           break
         case "EXT_SCREEN-FORCE_LOCK":
