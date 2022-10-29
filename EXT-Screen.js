@@ -361,7 +361,7 @@ Module.register("EXT-Screen", {
               module.hide(1000, {lockString: "EXT-SCREEN_LOCK"})
             })
           }
-        }, {once: false})
+        }, {once: true})
       } else {
         MM.getModules().enumerate((module)=> {
           module.hide(1000, {lockString: "EXT-SCREEN_LOCK"})
