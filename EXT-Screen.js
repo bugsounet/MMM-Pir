@@ -144,7 +144,8 @@ Module.register("EXT-Screen", {
           if (sender.name == "Gateway" ||
             sender.name == "EXT-Pir" ||
             sender.name == "EXT-ScreenManager" ||
-            sender.name == "EXT-ScreenTouch"
+            sender.name == "EXT-ScreenTouch"||
+            sender.name == "EXT-Motion"
           ) return
           this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
