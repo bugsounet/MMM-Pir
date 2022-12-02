@@ -145,7 +145,9 @@ Module.register("EXT-Screen", {
             sender.name == "EXT-Pir" ||
             sender.name == "EXT-ScreenManager" ||
             sender.name == "EXT-ScreenTouch"||
-            sender.name == "EXT-Motion"
+            sender.name == "EXT-Motion" ||
+            sender.name == "EXT-Keyboard" ||
+            sender.name == "EXT-StreamDeck"
           ) return
           this.sendNotification("EXT_ALERT", {
             message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
