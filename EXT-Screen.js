@@ -37,6 +37,17 @@ Module.register("EXT-Screen", {
         //do nothing
       }
 
+      this.ignoreSender= [
+        "Gateway",
+        "EXT-Pir",
+        "EXT-ScreenManager",
+        "EXT-ScreenTouch",
+        "EXT-Motion",
+        "EXT-Keyboard",
+        "EXT-StreamDeck",
+        "EXT-SmartHome"
+      ]
+
       if (this.config.debug) mylog = mylog_
       this.config.governorSleeping= true
       this.sendSocketNotification("INIT", this.config)
@@ -141,74 +152,56 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-WAKEUP":
           this.sendSocketNotification("WAKEUP")
-          if (sender.name == "Gateway" ||
-            sender.name == "EXT-Pir" ||
-            sender.name == "EXT-ScreenManager" ||
-            sender.name == "EXT-ScreenTouch"||
-            sender.name == "EXT-Motion" ||
-            sender.name == "EXT-Keyboard" ||
-            sender.name == "EXT-StreamDeck"
-          ) return
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
-            type: "information",
-          })
+          if (this.ignoreSender.indexOf(sender.name) == -1) {
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenWakeUp", { VALUES: sender.name }),
+              type: "information",
+            })
+          }
           break
         case "EXT_SCREEN-LOCK":
           this.sendSocketNotification("LOCK")
           let HiddenLock = true
           if (payload && payload.show) HiddenLock= false
           if (HiddenLock) this.hideDivWithAnimatedFlip("EXT-SCREEN")
-          if (sender.name == "Gateway" ||
-            sender.name == "EXT-Pir" ||
-            sender.name == "EXT-ScreenManager" ||
-            sender.name == "EXT-ScreenTouch"
-          ) return
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenLock", { VALUES: sender.name }),
-            type: "information"
-          })
+          if (this.ignoreSender.indexOf(sender.name) == -1) {
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenLock", { VALUES: sender.name }),
+              type: "information"
+            })
+          }
           break
         case "EXT_SCREEN-FORCE_LOCK":
           this.sendSocketNotification("FORCELOCK")
           this.hideDivWithAnimatedFlip("EXT-SCREEN")
-          if (sender.name == "Gateway" ||
-            sender.name == "EXT-Pir" ||
-            sender.name == "EXT-ScreenManager" ||
-            sender.name == "EXT-ScreenTouch"
-          ) return
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenLock", { VALUES: sender.name }),
-            type: "information",
-          })
+          if (this.ignoreSender.indexOf(sender.name) == -1) {
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenLock", { VALUES: sender.name }),
+              type: "information",
+            })
+          }
           break
         case "EXT_SCREEN-UNLOCK":
           this.sendSocketNotification("UNLOCK")
           let HiddenUnLock = true
           if (payload && payload.show) HiddenUnLock= false
           if (HiddenUnLock) this.showDivWithAnimatedFlip("EXT-SCREEN")
-          if (sender.name == "Gateway" ||
-            sender.name == "EXT-Pir" ||
-            sender.name == "EXT-ScreenManager" ||
-            sender.name == "EXT-ScreenTouch"
-          ) return
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenUnLock", { VALUES: sender.name }),
-            type: "information",
-          })
+          if (this.ignoreSender.indexOf(sender.name) == -1) {
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenUnLock", { VALUES: sender.name }),
+              type: "information",
+            })
+          }
           break
         case "EXT_SCREEN-FORCE_UNLOCK":
           this.sendSocketNotification("FORCEUNLOCK")
           this.showDivWithAnimatedFlip("EXT-SCREEN")
-          if (sender.name == "Gateway" ||
-            sender.name == "EXT-Pir" ||
-            sender.name == "EXT-ScreenManager" ||
-            sender.name == "EXT-ScreenTouch"
-          ) return
-          this.sendNotification("EXT_ALERT", {
-            message: this.translate("ScreenUnLock", { VALUES: sender.name }),
-            type: "information",
-          })
+          if (this.ignoreSender.indexOf(sender.name) == -1) {
+            this.sendNotification("EXT_ALERT", {
+              message: this.translate("ScreenUnLock", { VALUES: sender.name }),
+              type: "information",
+            })
+          }
           break
       }
     },
