@@ -55,7 +55,7 @@ module.exports = NodeHelper.create({
     var callbacks= {
       "sendSocketNotification": (noti, params) => {
         this.sendSocketNotification(noti, params)
-        log("Callback Notification:", noti,params)
+        //log("Callback Notification:", noti,params)
       },
       "governor": (gov) => {
         this.sendSocketNotification(gov)
