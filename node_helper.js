@@ -28,12 +28,15 @@ module.exports = NodeHelper.create({
         this.initialize()
         break
       case "WAKEUP":
+        if (this.forceLocked) return log("[WAKEUP] Sorry, it's Force-Locked!")
         this.screen.wakeup()
         break
       case "FORCE_END":
+        if (this.forceLocked) return log("[FORCE_END] Sorry, it's Force-Locked!")
         this.screen.forceEnd()
         break
       case "LOCK":
+        if (this.forceLocked) return log("[LOCK] Sorry, it's Force-Locked!")
         this.screen.lock()
         break
       case "FORCELOCK":
@@ -41,12 +44,21 @@ module.exports = NodeHelper.create({
         this.screen.lock()
         break
       case "UNLOCK":
-        if (this.forceLocked) return log("Sorry, it's Force-Locked!")
+        if (this.forceLocked) return log("[UNLOCK] Sorry, it's Force-Locked!")
         this.screen.unlock()
         break
       case "FORCEUNLOCK":
         this.forceLocked = false
         this.screen.unlock()
+        break
+      case "GH_FORCE_END":
+        if (this.forceLocked) return log("[GH_FORCE_END] Sorry, it's Force-Locked!")
+        this.screen.GHforceEndAndLock()
+        this.forceLocked = true
+        break
+      case "GH_FORCE_WAKEUP":
+        this.forceLocked = false
+        this.screen.GHforceWakeUp()
         break
     }
   },

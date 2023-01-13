@@ -143,10 +143,6 @@ Module.register("EXT-Screen", {
         case "GAv4_READY":
           if (sender.name == "MMM-GoogleAssistant") this.sendNotification("EXT_HELLO", this.name)
           break
-        case "USER_PRESENCE":
-          if (payload == true) this.sendSocketNotification("WAKEUP")
-          else this.sendSocketNotification("FORCE_END")
-          break
         case "EXT_SCREEN-END":
           this.sendSocketNotification("FORCE_END")
           break
@@ -202,6 +198,12 @@ Module.register("EXT-Screen", {
               type: "information",
             })
           }
+          break
+        case "EXT_SCREEN-GH_FORCE_END":
+          this.sendSocketNotification("GH_FORCE_END")
+          break
+        case "EXT_SCREEN-GH_FORCE_WAKEUP":
+          this.sendSocketNotification("GH_FORCE_WAKEUP")
           break
       }
     },
