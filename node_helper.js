@@ -25,6 +25,7 @@ module.exports = NodeHelper.create({
       case "INIT":
         this.config = payload
         this.config.useScreen= true
+        this.initialize()
         break
       case "WAKEUP":
         if (this.forceLocked) return log("[WAKEUP] Sorry, it's Force-Locked!")
