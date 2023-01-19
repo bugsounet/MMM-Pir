@@ -91,7 +91,6 @@ Module.register("EXT-Screen", {
           }
           break
         case "SCREEN_PRESENCE":
-          this.sendNotification("USER_PRESENCE", payload ? true : false)
           if (payload) this.lastPresence = moment().format(this.config.lastPresenceTimeFormat)
           else this.userPresence = this.lastPresence
           if (this.userPresence && this.config.displayLastPresence) {
