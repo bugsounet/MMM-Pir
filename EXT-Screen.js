@@ -404,12 +404,12 @@ Module.register("EXT-Screen", {
         return style == this.config.displayStyle
       })
       if (!found) {
-        console.error("[Screen] displayStyle Error ! ["+ this.config.displayStyle + "]")
+        console.error("[SCREEN] displayStyle Error ! ["+ this.config.displayStyle + "]")
         this.config.displayStyle = "Text"
       }
     },
 
-    getCommands: function(commander) {
+    EXT_TELBOTCommands: function(commander) {
       commander.add({
         command: "screen",
         description: "Screen power control",
