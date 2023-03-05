@@ -139,7 +139,7 @@ Module.register("EXT-Screen", {
           if (this.config.animateBody) this.prepareBody()
           this.prepareBar()
           break
-        case "GAv5_READY":
+        case "GAv4_READY":
           if (sender.name == "MMM-GoogleAssistant") this.sendNotification("EXT_HELLO", this.name)
           break
         case "EXT_SCREEN-END":
