@@ -1,4 +1,4 @@
-# EXT-Screen - Extented for `MMM-GoogleAssistant` v4.x
+# EXT-Screen - Extented for `MMM-GoogleAssistant` v5.x
 
 EXT-Screen is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by [Michael Teeuw](https://github.com/MichMich).
 
@@ -26,8 +26,3 @@ New forum and support for all @bugsounet modules is now localized [there](https:
  
 ## Donate
  [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TTHRH94Y4KL36&source=url), if you love this module !
-
-## Change Log
-
-### 2022-02-13
-- Initial pre-release
