@@ -1,7 +1,7 @@
 {
   "name": "EXT-Screen",
-  "version": "1.2.2",
-  "rev": "230301",
+  "version": "1.3.0",
+  "rev": "230324",
   "description": "GA EXT Screen manager",
   "main": "EXT-Screen.js",
   "scripts": {

@@ -5,7 +5,7 @@
 *******************/
 
 Module.register("EXT-Screen", {
-    requiresVersion: "2.18.0",
+    requiresVersion: "2.22.0",
     defaults: {
       debug: false,
       animateBody: true,
@@ -50,17 +50,21 @@ Module.register("EXT-Screen", {
 
       if (this.config.debug) mylog = mylog_
       this.config.governorSleeping= true
-      this.sendSocketNotification("INIT", this.config)
       this.checkStyle()
       this.userPresence = null
       this.lastPresence = null
       this.init = null
+      this.ready = false
       this.awaitBeforeTurnOnTimer= null
       mylog("is now started!")
     },
 
     socketNotificationReceived: function (notification, payload) {
       switch(notification) {
+        case "INITIALIZED":
+          this.sendNotification("EXT_HELLO", this.name)
+          this.ready = true
+          break
         case "SCREEN_SHOWING":
           this.screenShowing()
           break
@@ -134,14 +138,15 @@ Module.register("EXT-Screen", {
     },
 
     notificationReceived: function (notification, payload, sender) {
-      switch(notification) {
-        case "DOM_OBJECTS_CREATED":
+      if (notification == "GW_READY") {
+        if (sender.name == "Gateway") {
           if (this.config.animateBody) this.prepareBody()
           this.prepareBar()
-          break
-        case "GAv5_READY":
-          if (sender.name == "MMM-GoogleAssistant") this.sendNotification("EXT_HELLO", this.name)
-          break
+          this.sendSocketNotification("INIT", this.config)
+        }
+      }
+      if (!this.ready) return
+      switch(notification) {
         case "EXT_SCREEN-END":
           this.sendSocketNotification("FORCE_END")
           break

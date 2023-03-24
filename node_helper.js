@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
     if (this.config.debug) log = (...args) => { console.log("[SCREEN]", ...args) }
     console.log("[SCREEN] EXT-Screen Version:", require('./package.json').version, "rev:", require('./package.json').rev)
     this.Screen()
-    console.log("[SCREEN] Initialized")
+    this.sendSocketNotification("INITIALIZED")
   },
 
   socketNotificationReceived: function (notification, payload) {
