@@ -34,6 +34,7 @@
   "dependencies": {
     "check-node-version": "^4.2.1",
     "child_process": "^1.0.2",
+    "glob": "^9.3.2",
     "minify": "^9.2.0",
     "moment": "^2.26.0",
     "process": "^0.11.10"

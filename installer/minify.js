@@ -1,11 +1,21 @@
+/** Code minifier v1.2 **/
+/** 2023/02/28 **/
+/** @busgounet **/
+
 const check = require("check-node-version")
 const fs = require('fs')
+const { globSync } = require('glob')
 
-const files= [
- "../node_helper.js",
- "../EXT-Screen.js",
- "../lib/screenLib.js"
+var files = [
+  "../" + require("../package.json").main,
+  "../node_helper.js",
 ]
+
+function searchFiles() {
+  let components = globSync('../components/*.js')
+  files = files.concat(components)
+  console.log("Found: " + files.length + " files to minify\n")
+}
 
 // import minify
 async function loadMinify() {
@@ -16,6 +26,7 @@ async function loadMinify() {
 // minify files array
 async function minifyFiles() {
   const {minify} = await loadMinify()
+  searchFiles()
   files.forEach(file => {
     new Promise(resolve => {
       minify(file)
