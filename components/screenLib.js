@@ -5,15 +5,7 @@ const exec = require('child_process').exec
 const process = require('process')
 const moment = require('moment')
 const path = require('path')
-
-var _log = function() {
-    var context = "[SCREEN]"
-    return Function.prototype.bind.call(console.log, console, context)
-}()
-
-var log = function() {
-  //do nothing
-}
+var log = (...args) => { /* do nothing */ }
 
 class SCREEN {
   constructor(config, callback, debug, detectorControl, governorControl) {
@@ -21,8 +13,8 @@ class SCREEN {
     this.sendSocketNotification = callback
     this.detector = detectorControl
     this.governor = governorControl
-    if (debug == true) log = _log
-    this.PathScript = path.dirname(require.resolve('../package.json'))+"/lib"
+    if (this.config.debug) log = (...args) => { console.log("[SCREEN] [LIB]", ...args) }
+    this.PathScript = path.dirname(require.resolve('../package.json'))+"/scripts"
     this.interval = null
     this.default = {
       animateBody: false,

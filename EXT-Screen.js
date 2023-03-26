@@ -1,8 +1,10 @@
 /*******************
-*  EXT-Screen v1.1 *
+*  EXT-Screen v1.3 *
 *  Bugsounet       *
-*  08/2022         *
+*  03/2023         *
 *******************/
+
+var logScreen = (...args) => { /* do nothing */ }
 
 Module.register("EXT-Screen", {
     requiresVersion: "2.22.0",
@@ -28,15 +30,6 @@ Module.register("EXT-Screen", {
     },
 
     start: function () {
-      mylog_ = function() {
-        var context = "[SCREEN]"
-        return Function.prototype.bind.call(console.log, console, context)
-      }()
-
-      mylog = function() {
-        //do nothing
-      }
-
       this.ignoreSender= [
         "Gateway",
         "EXT-Pir",
@@ -48,15 +41,13 @@ Module.register("EXT-Screen", {
         "EXT-SmartHome"
       ]
 
-      if (this.config.debug) mylog = mylog_
-      this.config.governorSleeping= true
-      this.checkStyle()
+      if (this.config.debug) logScreen = (...args) => { console.log("[SCREEN]", ...args) }
       this.userPresence = null
       this.lastPresence = null
-      this.init = null
       this.ready = false
-      this.awaitBeforeTurnOnTimer= null
-      mylog("is now started!")
+      this.screenDisplay = new screenDisplayer(this)
+      this.screenDisplay.checkStyle()
+      logScreen("is now started!")
     },
 
     socketNotificationReceived: function (notification, payload) {
@@ -66,10 +57,10 @@ Module.register("EXT-Screen", {
           this.ready = true
           break
         case "SCREEN_SHOWING":
-          this.screenShowing()
+          this.screenDisplay.screenShowing()
           break
         case "SCREEN_HIDING":
-          this.screenHiding()
+          this.screenDisplay.screenHiding()
           break
         case "SCREEN_TIMER":
           if (this.config.displayStyle == "Text") {
@@ -83,15 +74,7 @@ Module.register("EXT-Screen", {
             bar.value= this.config.delay - payload
           }
           else if (this.config.displayStyle != "Text") {
-            let value = (100 - ((payload * 100) / this.config.delay))/100
-            let timeOut = moment(new Date(this.config.delay-payload)).format("m:ss")
-            this.bar.animate(value, {
-              step: (state, bar) => {
-                bar.path.setAttribute('stroke', state.color)
-                bar.setText(this.config.displayCounter ? timeOut : "")
-                bar.text.style.color = state.color
-              }
-            })
+            this.screenDisplay.barAnimate(payload)
           }
           break
         case "SCREEN_PRESENCE":
@@ -140,8 +123,8 @@ Module.register("EXT-Screen", {
     notificationReceived: function (notification, payload, sender) {
       if (notification == "GW_READY") {
         if (sender.name == "Gateway") {
-          if (this.config.animateBody) this.prepareBody()
-          this.prepareBar()
+          if (this.config.animateBody) this.screenDisplay.prepareBody()
+          this.screenDisplay.prepareBar()
           this.sendSocketNotification("INIT", this.config)
         }
       }
@@ -163,7 +146,7 @@ Module.register("EXT-Screen", {
           this.sendSocketNotification("LOCK")
           let HiddenLock = true
           if (payload && payload.show) HiddenLock= false
-          if (HiddenLock) this.hideDivWithAnimatedFlip("EXT-SCREEN")
+          if (HiddenLock) this.screenDisplay.hideDivWithAnimatedFlip("EXT-SCREEN")
           if (this.ignoreSender.indexOf(sender.name) == -1) {
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenLock", { VALUES: sender.name }),
@@ -173,7 +156,7 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-FORCE_LOCK":
           this.sendSocketNotification("FORCELOCK")
-          this.hideDivWithAnimatedFlip("EXT-SCREEN")
+          this.screenDisplay.hideDivWithAnimatedFlip("EXT-SCREEN")
           if (this.ignoreSender.indexOf(sender.name) == -1) {
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenLock", { VALUES: sender.name }),
@@ -185,7 +168,7 @@ Module.register("EXT-Screen", {
           this.sendSocketNotification("UNLOCK")
           let HiddenUnLock = true
           if (payload && payload.show) HiddenUnLock= false
-          if (HiddenUnLock) this.showDivWithAnimatedFlip("EXT-SCREEN")
+          if (HiddenUnLock) this.screenDisplay.showDivWithAnimatedFlip("EXT-SCREEN")
           if (this.ignoreSender.indexOf(sender.name) == -1) {
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenUnLock", { VALUES: sender.name }),
@@ -195,7 +178,7 @@ Module.register("EXT-Screen", {
           break
         case "EXT_SCREEN-FORCE_UNLOCK":
           this.sendSocketNotification("FORCEUNLOCK")
-          this.showDivWithAnimatedFlip("EXT-SCREEN")
+          this.screenDisplay.showDivWithAnimatedFlip("EXT-SCREEN")
           if (this.ignoreSender.indexOf(sender.name) == -1) {
             this.sendNotification("EXT_ALERT", {
               message: this.translate("ScreenUnLock", { VALUES: sender.name }),
@@ -213,60 +196,7 @@ Module.register("EXT-Screen", {
     },
 
     getDom: function () {
-      var dom = document.createElement("div")
-      dom.id = "EXT-SCREEN"
-      dom.className= "animate__animated"
-      dom.style.setProperty('--animate-duration', '1s')
-
-      if (this.config.displayCounter || this.config.displayBar) {
-        /** Screen TimeOut Text **/
-        var screen = document.createElement("div")
-        screen.id = "EXT-SCREEN_SCREEN"
-        if (this.config.displayStyle != "Text" || !this.config.displayCounter) screen.className = "hidden"
-        var screenText = document.createElement("div")
-        screenText.id = "EXT-SCREEN_SCREEN_TEXT"
-        screenText.textContent = this.translate("ScreenTurnOff")
-        screenText.classList.add("bright")
-        screen.appendChild(screenText)
-        var screenCounter = document.createElement("div")
-        screenCounter.id = "EXT-SCREEN_SCREEN_COUNTER"
-        screenCounter.classList.add("bright")
-        screenCounter.textContent = "--:--"
-        screen.appendChild(screenCounter)
-
-        /** Screen TimeOut Bar **/
-        var bar = document.createElement("div")
-        bar.id = "EXT-SCREEN_BAR"
-        if ((this.config.displayStyle == "Text") || !this.config.displayBar) bar.className = "hidden"
-        var screenBar = document.createElement(this.config.displayStyle == "Bar" ? "meter" : "div")
-        screenBar.id = "EXT-SCREEN_SCREEN_BAR"
-        screenBar.classList.add(this.config.displayStyle)
-        if (this.config.displayStyle == "Bar") {
-          screenBar.value = 0
-          screenBar.max= this.config.delay
-        }
-        bar.appendChild(screenBar)
-        dom.appendChild(screen)
-        dom.appendChild(bar)
-      }
-
-      if (this.config.displayLastPresence) {
-        /** Last user Presence **/
-        var presence = document.createElement("div")
-        presence.id = "EXT-SCREEN_PRESENCE"
-        presence.className = "hidden"
-        var presenceText = document.createElement("div")
-        presenceText.id = "EXT-SCREEN_PRESENCE_TEXT"
-        presenceText.textContent = this.translate("ScreenLastPresence")
-        presence.appendChild(presenceText)
-        var presenceDate = document.createElement("div")
-        presenceDate.id = "EXT-SCREEN_PRESENCE_DATE"
-        presenceDate.classList.add("presence")
-        presenceDate.textContent = "Loading ..."
-        presence.appendChild(presenceDate)
-        dom.appendChild(presence)
-      }
-      return dom
+      return this.screenDisplay.prepare()
     },
 
     getStyles: function () {
@@ -278,8 +208,8 @@ Module.register("EXT-Screen", {
 
     getScripts: function () {
       return [
-        "/modules/EXT-Screen/scripts/progressbar.js",
-        "/modules/EXT-Screen/scripts/long-press-event.js"
+        "/modules/EXT-Screen/components/progressbar.js",
+        "/modules/EXT-Screen/components/screenDisplayer.js"
       ]
     },
 
@@ -297,123 +227,7 @@ Module.register("EXT-Screen", {
       }
     },
 
-    prepareBar: function () {
-      /** Prepare TimeOut Bar **/
-      if ((this.config.displayStyle == "Text") || (this.config.displayStyle == "Bar") || (!this.config.displayBar)) return
-      this.bar = new ProgressBar[this.config.displayStyle](document.getElementById('EXT-SCREEN_SCREEN_BAR'), {
-        strokeWidth: this.config.displayStyle == "Line" ? 2 : 5,
-        trailColor: '#1B1B1B',
-        trailWidth: 1,
-        easing: 'easeInOut',
-        duration: 500,
-        svgStyle: null,
-        from: {color: '#FF0000'},
-        to: {color: '#00FF00'},
-        text: {
-          style: {
-            position: 'absolute',
-            left: '50%',
-            top: this.config.displayStyle == "Line" ? "0" : "50%",
-            padding: 0,
-            margin: 0,
-            transform: {
-                prefix: true,
-                value: 'translate(-50%, -50%)'
-            }
-          }
-        }
-      })
-    },
-
-    prepareBody: function () {
-      document.body.id = "EXT_SCREEN_ANIMATE"
-      document.body.className= "animate__animated"
-      document.body.style.setProperty('--animate-duration', '1s')
-    },
-
-    screenShowing: function() {
-      if (this.config.animateBody && this.init) {
-        clearTimeout(this.awaitBeforeTurnOnTimer)
-        this.awaitBeforeTurnOnTimer= null
-        // don't execute rules ... to much time for wakeup screen ...
-        //await this.awaitBeforeWakeUp(this.config.animateTime)
-      }
-      MM.getModules().enumerate((module)=> {
-        module.show(500, {lockString: "EXT-SCREEN_LOCK"})
-      })
-      if (!this.init) return this.init = true
-      if (this.config.animateBody) {
-        document.body.classList.remove("animate__zoomOut")
-        document.body.style.animationFillMode = "inherit"
-        document.body.classList.add("animate__zoomIn")
-      }
-      mylog("Show All modules.")
-    },
-
-    screenHiding: function() {
-      if (this.config.animateBody) {
-        clearTimeout(this.awaitBeforeTurnOnTimer)
-        this.awaitBeforeTurnOnTimer= null
-        document.body.classList.remove("animate__zoomIn")
-        document.body.style.animationFillMode = "both"
-        document.body.classList.add("animate__zoomOut")
-        document.body.addEventListener('animationend', (e) => {
-          if (e.animationName == "zoomOut" && e.path[0].id == "EXT_SCREEN_ANIMATE") {
-            MM.getModules().enumerate((module)=> {
-              module.hide(1000, {lockString: "EXT-SCREEN_LOCK"})
-            })
-          }
-        }, {once: true})
-      } else {
-        MM.getModules().enumerate((module)=> {
-          module.hide(1000, {lockString: "EXT-SCREEN_LOCK"})
-        })
-      }
-      mylog("Hide All modules.")
-    },
-
-    /** Hide EXT with Flip animation **/
-    hideDivWithAnimatedFlip: function (div) {
-      if (!this.config.autoHide) return
-      var module = document.getElementById(div)
-      module.classList.remove("animate__flipInX")
-      module.classList.add("animate__flipOutX")
-      module.addEventListener('animationend', (e) => {
-        if (e.animationName == "flipOutX" && e.path[0].id == div) {
-          module.classList.add("hidden")
-        }
-        e.stopPropagation()
-      }, {once: true})
-    },
-
-    showDivWithAnimatedFlip: function (div) {
-      if (!this.config.autoHide) return
-      var module = document.getElementById(div)
-      module.classList.remove("hidden")
-      module.classList.remove("animate__flipOutX")
-      module.classList.add("animate__flipInX")
-    },
-
-    /** need to sleep ? **/
-    awaitBeforeWakeUp: function(ms=3000) {
-      return new Promise((resolve) => {
-        this.awaitBeforeTurnOnTimer = setTimeout(resolve, ms)
-      })
-    },
-
-    checkStyle: function () {
-      /** Crash prevent on Time Out Style Displaying **/
-      /** --> Set to "Text" if not found */
-      let Style = [ "Text", "Line", "SemiCircle", "Circle" ]
-      let found = Style.find((style) => {
-        return style == this.config.displayStyle
-      })
-      if (!found) {
-        console.error("[SCREEN] displayStyle Error ! ["+ this.config.displayStyle + "]")
-        this.config.displayStyle = "Text"
-      }
-    },
-
+    /** EXT-TelegramBot Commands **/
     EXT_TELBOTCommands: function(commander) {
       commander.add({
         command: "screen",

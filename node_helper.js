@@ -1,10 +1,10 @@
 /**********************************
-* node_helper for EXT-Screen v1.1 *
+* node_helper for EXT-Screen v1.3 *
 * BuGsounet ©03/22                *
 **********************************/
 
 const NodeHelper = require('node_helper')
-const LibScreen = require("./lib/screenLib.js")
+const LibScreen = require("./components/screenLib.js")
 var log = (...args) => { /* do nothing */ }
 
 module.exports = NodeHelper.create({
