@@ -37,8 +37,7 @@ Module.register("EXT-Screen", {
         "EXT-ScreenTouch",
         "EXT-Motion",
         "EXT-Keyboard",
-        "EXT-StreamDeck",
-        "EXT-SmartHome"
+        "EXT-StreamDeck"
       ]
 
       if (this.config.debug) logScreen = (...args) => { console.log("[SCREEN]", ...args) }
