@@ -129,11 +129,12 @@ class screenDisplayer {
       document.body.style.animationFillMode = "both"
       document.body.classList.add("animate__zoomOut")
       document.body.addEventListener('animationend', (e) => {
-        if (e.animationName == "zoomOut" && e.path[0].id == "EXT_SCREEN_ANIMATE") {
+        if (e.animationName == "zoomOut") {
           MM.getModules().enumerate((module)=> {
             module.hide(1000, {lockString: "EXT-SCREEN_LOCK"})
           })
         }
+        e.stopPropagation()
       }, {once: true})
     } else {
       MM.getModules().enumerate((module)=> {
@@ -150,7 +151,7 @@ class screenDisplayer {
     module.classList.remove("animate__flipInX")
     module.classList.add("animate__flipOutX")
     module.addEventListener('animationend', (e) => {
-      if (e.animationName == "flipOutX" && e.path[0].id == div) {
+      if (e.animationName == "flipOutX") {
         module.classList.add("hidden")
       }
       e.stopPropagation()
@@ -160,8 +161,7 @@ class screenDisplayer {
   showDivWithAnimatedFlip (div) {
     if (!this.config.autoHide) return
     var module = document.getElementById(div)
-    module.classList.remove("hidden")
-    module.classList.remove("animate__flipOutX")
+    module.classList.remove("animate__flipOutX", "hidden")
     module.classList.add("animate__flipInX")
   }
 
