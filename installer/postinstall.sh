@@ -131,8 +131,19 @@ fi
 Installer_success "Done"
 echo
 
-# the end...
-Installer_warning "Support is now moved in a dedicated Server: http://forum.bugsounet.fr"
-Installer_warning "@bugsounet"
+Installer_info "Prepare PIR sensor using"
+# for pir sensor
+sudo usermod -a -G gpio pi || echo "Error command: sudo usermod -a -G gpio pi"
+sudo chmod -f u+s /opt/vc/bin/tvservice && sudo chmod -f u+s /bin/chvt || echo "Error command: sudo chmod u+s /opt/vc/bin/tvservice && sudo chmod u+s /bin/chvt"
+Installer_success "Done"
 echo
+
+Installer_info "Rebuild MagicMirror..."
+MagicMirror-rebuild 2>/dev/null || {
+  Installer_error "Rebuild Failed"
+  exit 255
+}
+Installer_success "Done"
+echo
+
 Installer_success "$Installer_module is now installed !"
