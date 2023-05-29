@@ -80,6 +80,27 @@ Module.register("MMM-Pir", {
             this.sendNotification("MMM_PIR-OFF")
           }
           break
+        case "WARNING":
+          this.sendNotification("SHOW_ALERT", {
+            type: "notification",
+            title: "MMM-Pir",
+            message: `Warning: Library not loaded: ${payload.library}`
+          })
+          break
+        case "FatalError":
+          this.sendNotification("SHOW_ALERT", {
+            title: "MMM-Pir",
+            message: `<p>FATAL: ${payload} needed library not loaded !<br>Try to solve it with 'npm run rebuild' in MMM-Pir Folder</p>`,
+            timer: 0
+          })
+          break
+        case "SCREEN_ERROR":
+        case "PIR_ERROR":
+          this.sendNotification("SHOW_ALERT", {
+            type: "notification",
+            title: "MMM-Pir",
+            message: `Error detected: ${payload}`
+          })
       }
     },
 

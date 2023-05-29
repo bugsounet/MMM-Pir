@@ -14,6 +14,7 @@ async function parse(that) {
   if (bugsounet) {
     console.error("[MMM-Pir] [DATA] Warning:", bugsounet, "needed library not loaded !")
     console.error("[MMM-Pir] [DATA] Try to solve it with `npm run rebuild` in MMM-Pir directory")
+    that.sendSocketNotification("FatalError", bugsounet)
     return
   }
   var callbacks = {

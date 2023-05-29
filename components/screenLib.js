@@ -341,20 +341,20 @@ class SCREEN {
       case 6:
         if (set)
           exec("python monitor.py -r=1 -g="+this.config.gpio, { cwd: this.PathScript }, (err, stdout, stderr)=> {
-            if (err) console.log("[SCREEN] err:", err)
+            if (err) logError(err)
             else log("Relay is " + stdout.trim())
           })
         else
           if (this.config.clearGpioValue) {
             exec("python monitor.py -r=0 -c -g="+this.config.gpio, {cwd: this.PathScript},(err, stdout, stderr)=> {
-              if (err) console.log("[SCREEN] err:", err)
+              if (err) logError(err)
               else {
                 log("Relay is " + stdout.trim())
               }
             })
           } else {
             exec("python monitor.py -r=0 -g="+this.config.gpio, {cwd: this.PathScript},(err, stdout, stderr)=> {
-              if (err) console.log("[SCREEN] err:", err)
+              if (err) logError(err)
               else {
                 log("Relay is " + stdout.trim())
               }
@@ -365,14 +365,14 @@ class SCREEN {
         if (set) {
           if (this.config.clearGpioValue) {
             exec("python monitor.py -r=0 -c -g="+this.config.gpio, {cwd: this.PathScript},(err, stdout, stderr)=> {
-              if (err) console.log("[SCREEN] err:", err)
+              if (err) logError(err)
               else {
                 log("Relay is " + stdout.trim())
               }
             })
           } else {
             exec("python monitor.py -r=0 -g="+this.config.gpio, {cwd: this.PathScript},(err, stdout, stderr)=> {
-              if (err) console.log("[SCREEN] err:", err)
+              if (err) logError(err)
               else {
                 log("Relay is " + stdout.trim())
               }
@@ -380,7 +380,7 @@ class SCREEN {
           }
         } else {
           exec("python monitor.py -r=1 -g="+this.config.gpio, { cwd: this.PathScript }, (err, stdout, stderr)=> {
-            if (err) console.log("[SCREEN] err:", err)
+            if (err) logError(err)
             else log("Relay is " + stdout.trim())
           })
         }
@@ -402,6 +402,7 @@ class SCREEN {
 
   logError(err) {
     console.error("[MMM-Pir] [LIB] [SCREEN] " + err)
+    this.sendSocketNotification("SCREEN_ERROR", err)
   }
 }
 

@@ -35,7 +35,7 @@ class PIR {
     this.pir.watch((err, value)=> {
       if (err) {
         console.error("[MMM-Pir] [LIB] [PIR] " + err)
-        return this.callback("PIR_ERROR", err)
+        return this.callback("PIR_ERROR", err.message)
       }
       log("Sensor read value: " + value)
       if ((value == 1 && !this.config.reverseValue) || (value == 0 && this.config.reverseValue)) {
