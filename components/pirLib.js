@@ -26,6 +26,7 @@ class PIR {
     try {
       this.pir = new this.config.libGpio(this.config.gpio, 'in', 'both')
       this.callback("PIR_STARTED")
+      console.log("[MMM-Pir] [LIB] [PIR] Started!")
     } catch (err) {
       console.error("[MMM-Pir] [LIB] [PIR] " + err)
       this.running = false
