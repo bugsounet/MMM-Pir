@@ -8,26 +8,19 @@ const path = require('path')
 var log = (...args) => { /* do nothing */ }
 
 class SCREEN {
-  constructor(config, callback, debug, detectorControl, governorControl) {
+  constructor(config, callback) {
     this.config = config
     this.sendSocketNotification = callback
-    this.detector = detectorControl
-    this.governor = governorControl
-    if (this.config.debug) log = (...args) => { console.log("[SCREEN] [LIB]", ...args) }
+    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [SCREEN]", ...args) }
     this.PathScript = path.dirname(require.resolve('../package.json'))+"/scripts"
     this.interval = null
     this.default = {
-      animateBody: false,
-      animateTime: 3000,
       delay: 5 * 60 * 1000,
       turnOffDisplay: true,
       ecoMode: true,
       displayCounter: true,
       displayBar: false,
-      detectorSleeping: false,
-      governorSleeping: false,
       mode: 1,
-      delayed: 0,
       gpio: 20,
       clearGpioValue: true
     }
@@ -36,46 +29,40 @@ class SCREEN {
       mode: this.config.mode,
       running: false,
       locked: false,
-      GHLocked: false,
       power: false,
-      delayed: this.config.delayed,
-      isDelayed: false,
-      awaitBeforeTurnOff: this.config.animateBody,
-      awaitBeforeTurnOffTimer: null,
-      awaitBeforeTurnOffTime: this.config.animateTime
     }
     if (this.config.turnOffDisplay) {
       switch (this.config.mode) {
         case 0:
-          console.log("[SCREEN] Mode 0: Disabled")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 0: Disabled")
           break
         case 1:
-          console.log("[SCREEN] Mode 1: vcgencmd")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 1: vcgencmd")
           break
         case 2:
-          console.log("[SCREEN] Mode 2: dpms rpi")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 2: dpms rpi")
           break
         case 3:
-          console.log("[SCREEN] Mode 3: tvservice")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 3: tvservice")
           break
         case 4:
-          console.log("[SCREEN] Mode 4: HDMI CEC")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 4: HDMI CEC")
           break
         case 5:
-          console.log("[SCREEN] Mode 5: dpms linux")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: dpms linux")
           break
         case 6:
-          console.log("[SCREEN] Mode 6: Python script (Relay on/off)")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 6: Python script (Relay on/off)")
           break
         case 7:
-          console.log("[SCREEN] Mode 7: Python script reverse (Relay on/off)")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 7: Python script reverse (Relay on/off)")
           break
         case 8:
-          console.log("[SCREEN] Mode 8: ddcutil")
+          console.log("[MMM-Pir] [LIB] [SCREEN] Mode 8: ddcutil")
           break
         default:
           this.logError("Unknow Mode Set to 0 (Disabled)")
-          this.sendSocketNotification("ERROR", "[SCREEN] Unknow Mode (" + this.config.mode + ") Set to 0 (Disabled)")
+          this.sendSocketNotification("ERROR", "[MMM-Pir] Unknow Mode (" + this.config.mode + ") Set to 0 (Disabled)")
           this.config.mode = 0
           break
       }
@@ -86,9 +73,8 @@ class SCREEN {
     if (!this.config.turnOffDisplay && !this.config.ecoMode) return log("Disabled.")
     process.on('exit', (code) => {
       if (this.config.turnOffDisplay && this.config.mode) this.setPowerDisplay(true)
-      if (this.config.governorSleeping) this.governor("GOVERNOR_WORKING")
-      console.log('[SCREEN] ByeBye !')
-      console.log('[SCREEN] @bugsounet')
+      console.log('[MMM-Pir] [LIB] [SCREEN] See you soon !')
+      console.log('[MMM-Pir] [LIB] [SCREEN] @bugsounet')
     })
     this.start()
   }
@@ -97,8 +83,6 @@ class SCREEN {
     if (this.screen.locked || this.screen.running || (!this.config.turnOffDisplay && !this.config.ecoMode)) return
     if (!restart) log("Start.")
     else log("Restart.")
-    clearTimeout(this.screen.awaitBeforeTurnOffTimer)
-    this.screen.awaitBeforeTurnOffTimer= null
     this.sendSocketNotification("SCREEN_PRESENCE", true)
     if (!this.screen.power) {
       if (this.config.turnOffDisplay && this.config.mode) this.wantedPowerDisplay(true)
@@ -106,7 +90,6 @@ class SCREEN {
         this.sendSocketNotification("SCREEN_SHOWING")
         this.screen.power = true
       }
-      if (this.config.governorSleeping) this.governor("GOVERNOR_WORKING")
     }
     clearInterval(this.interval)
     this.interval = null
@@ -132,8 +115,6 @@ class SCREEN {
           if (this.config.turnOffDisplay && this.config.mode) this.wantedPowerDisplay(false)
         }
         this.interval = null
-        if (this.config.detectorSleeping) this.detector("DETECTOR_STOP")
-        if (this.config.governorSleeping) this.governor("GOVERNOR_SLEEPING")
         this.sendSocketNotification("SCREEN_PRESENCE", false)
         log("Stops by counter.")
       }
@@ -145,7 +126,6 @@ class SCREEN {
     if (this.screen.locked) return
 
     if (!this.screen.power) {
-      if (this.config.governorSleeping) this.governor("GOVERNOR_WORKING")
       if (this.config.turnOffDisplay && this.config.mode) this.wantedPowerDisplay(true)
       if (this.config.ecoMode) {
         this.sendSocketNotification("SCREEN_SHOWING")
@@ -165,29 +145,15 @@ class SCREEN {
     clearInterval(this.interval)
     this.interval = null
     this.screen.running = false
-    this.screen.isDelayed = false
     this.start(true)
   }
 
   wakeup() {
-    if (this.screen.GHLocked) return log("[wakeup] nop, it's Locked by GH")
-    if (this.screen.locked || this.screen.isDelayed) return
-    if (this.screen.delayed && !this.screen.power) {
-      this.screen.isDelayed = true
-      log("Delayed wakeup in", this.screen.delayed, "ms")
-      setTimeout(() => {
-        log("Delayed wakeup")
-        if (this.config.detectorSleeping) this.detector("DETECTOR_START")
-        this.reset()
-      }, this.screen.delayed)
-    } else {
-      if (!this.screen.power && this.config.detectorSleeping) this.detector("DETECTOR_START")
-      this.reset()
-    }
+    if (this.screen.locked) return
+    this.reset()
   }
 
   lock() {
-    if (this.screen.GHLocked) return log("[lock]nop, it's Locked by GH")
     if (this.screen.locked) return
     this.screen.locked = true
     clearInterval(this.interval)
@@ -197,31 +163,14 @@ class SCREEN {
   }
 
   unlock() {
-    if (this.screen.GHLocked) return log("[unlock] nop, it's Locked by GH")
-    log("Unlocked !")
+    if (!this.screen.locked) return
     this.screen.locked = false
+    log("Unlocked !")
     this.start()
   }
 
   forceEnd () {
     this.counter = 0
-  }
-
-  GHforceEndAndLock () {
-    this.screen.locked = false
-    this.start(true)
-    this.screen.running = false
-    this.screen.GHLocked = true
-    this.counter = 0
-    log("[GH] Locked !")
-  }
-
-  GHforceWakeUp () {
-    if (!this.screen.power && this.config.detectorSleeping) this.detector("DETECTOR_START")
-    this.screen.GHLocked = false
-    this.screen.locked = false
-    this.start(true)
-    log("[GH] UnLocked !")
   }
 
   wantedPowerDisplay (wanted) {
@@ -367,7 +316,6 @@ class SCREEN {
     log("Display " + (set ? "ON." : "OFF."))
     this.screen.power = set
     this.SendScreenPowerState()
-    if (this.screen.awaitBeforeTurnOff && !set) await this.sleep(this.screen.awaitBeforeTurnOffTime)
     // and finally apply rules !
     switch (this.config.mode) {
       case 1:
@@ -453,13 +401,7 @@ class SCREEN {
   }
 
   logError(err) {
-    console.error("[SCREEN] " + err)
-  }
-
-  sleep(ms=1300) {
-    return new Promise((resolve) => {
-      this.screen.awaitBeforeTurnOffTimer = setTimeout(resolve, ms)
-    })
+    console.error("[MMM-Pir] [LIB] [SCREEN] " + err)
   }
 }
 
