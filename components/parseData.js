@@ -1,5 +1,6 @@
 /** parse data from MagicMirror **/
 var _load = require("../components/loadLibraries.js")
+var log = (...args) => { /* do nothing */ }
 
 async function init(that) {
   that.lib = { error: 0 }

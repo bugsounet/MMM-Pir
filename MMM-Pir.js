@@ -84,7 +84,8 @@ Module.register("MMM-Pir", {
           this.sendNotification("SHOW_ALERT", {
             type: "notification",
             title: "MMM-Pir",
-            message: `Warning: Library not loaded: ${payload.library}`
+            message: `Warning: Library not loaded: ${payload.library}`,
+            timer: 15000
           })
           break
         case "FatalError":
@@ -99,7 +100,8 @@ Module.register("MMM-Pir", {
           this.sendNotification("SHOW_ALERT", {
             type: "notification",
             title: "MMM-Pir",
-            message: `Error detected: ${payload}`
+            message: `Error detected: ${payload}`,
+            timer: 15000
           })
       }
     },

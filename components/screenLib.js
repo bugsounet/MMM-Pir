@@ -402,7 +402,7 @@ class SCREEN {
 
   logError(err) {
     console.error("[MMM-Pir] [LIB] [SCREEN] " + err)
-    this.sendSocketNotification("SCREEN_ERROR", err)
+    this.sendSocketNotification("SCREEN_ERROR", err.message)
   }
 }
 
