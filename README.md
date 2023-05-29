@@ -15,7 +15,7 @@ Clone the module into your MagicMirror module folder and execute `npm intall` in
 ```
 cd ~/MagicMirror/modules
 git clone https://github.com/bugsounet/MMM-Pir
-cd EXT-Screen
+cd MMM-Pir
 npm install
 ```
 
@@ -28,7 +28,7 @@ To display the module insert it in the config.js file.
 
 ```js
 {
-  module: 'EXT-Screen',
+  module: 'MMM-Pir',
   position: 'top_left',
   config: {
     debug: false,
