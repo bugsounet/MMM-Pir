@@ -64,7 +64,7 @@ fi
 
 echo
 # check dependencies
-dependencies=(unclutter cec-utils ddcutil)
+dependencies=(unclutter cec-utils ddcutil build-essential)
 Installer_info "Checking all dependencies..."
 Installer_update_dependencies
 Installer_success "All Dependencies needed are installed !"
