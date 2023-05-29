@@ -51,6 +51,7 @@ async function parse(that) {
   that.pir.start()
   that.screen = new that.lib.Screen(screenConfig, callbacks.screen)
   that.screen.activate()
+  console.log("[MMM-Pir] Started!")
   that.sendSocketNotification("INITIALIZED")
 }
 

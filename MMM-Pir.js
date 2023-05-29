@@ -74,11 +74,8 @@ Module.register("MMM-Pir", {
           }
           break
         case "SCREEN_POWER":
-          if (payload) { // user presence
-            this.sendNotification("MMM_PIR-ON")
-          } else {
-            this.sendNotification("MMM_PIR-OFF")
-          }
+          if (payload) this.sendNotification("USER_PRESENCE", true)
+          else this.sendNotification("USER_PRESENCE", false)
           break
         case "WARNING":
           this.sendNotification("SHOW_ALERT", {
@@ -125,6 +122,9 @@ Module.register("MMM-Pir", {
         case "MMM_PIR-UNLOCK":
           this.sendSocketNotification("UNLOCK")
           break
+        case "USER_PRESENCE":
+          if (payload) this.sendSocketNotification("WAKEUP")
+          else this.sendSocketNotification("FORCE_END")
       }
     },
 
