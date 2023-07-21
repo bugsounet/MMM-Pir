@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.0.2",
-  "rev": "230715",
+  "version": "1.0.3",
+  "rev": "230720",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -31,9 +31,9 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "glob": "^9.3.2",
-    "magicmirror-rebuild": "https://github.com/bugsounet/MagicMirror-rebuild",
-    "minify": "^9.2.0",
+    "esbuild": "^0.18.15",
+    "glob": "^10.3.3",
+    "magicmirror-rebuild": "^1.0.8",
     "onoff": "^6.0.3"
   }
 }

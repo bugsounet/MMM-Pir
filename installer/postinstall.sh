@@ -21,8 +21,12 @@ cd "$Installer_dir"
 source utils.sh
 
 Installer_info "Minify Main code..."
-node minify.js
+node minify.js || {
+  Installer_error "Minify Failed!"
+  exit 255
+}
 Installer_success "Done"
+echo
 
 # Go back to module root
 cd ..
@@ -131,12 +135,13 @@ fi
 Installer_success "Done"
 echo
 
-Installer_info "Prepare PIR sensor using"
+# !Disabled no longer required now!
+#Installer_info "Prepare PIR sensor using"
 # for pir sensor
-sudo usermod -a -G gpio pi || echo "Error command: sudo usermod -a -G gpio pi"
-sudo chmod -f u+s /opt/vc/bin/tvservice && sudo chmod -f u+s /bin/chvt || echo "Error command: sudo chmod u+s /opt/vc/bin/tvservice && sudo chmod u+s /bin/chvt"
-Installer_success "Done"
-echo
+#sudo usermod -a -G gpio pi || echo "Error command: sudo usermod -a -G gpio pi"
+#sudo chmod -f u+s /opt/vc/bin/tvservice && sudo chmod -f u+s /bin/chvt || echo "Error command: sudo chmod u+s /opt/vc/bin/tvservice && sudo chmod u+s /bin/chvt"
+#Installer_success "Done"
+#echo
 
 Installer_info "Rebuild MagicMirror..."
 MagicMirror-rebuild 2>/dev/null || {
@@ -145,5 +150,4 @@ MagicMirror-rebuild 2>/dev/null || {
 }
 Installer_success "Done"
 echo
-
 Installer_success "$Installer_module is now installed !"

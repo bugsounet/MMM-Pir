@@ -23,6 +23,7 @@ source utils.sh
 # Go back to module root
 cd ..
 
+echo
 # check version in package.json file
 Installer_version="$(grep -Eo '\"version\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
 Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
@@ -75,6 +76,5 @@ Installer_info "Installing @sdetweil sandbox fix..."
 bash -c "$(curl -sL https://raw.githubusercontent.com/sdetweil/MagicMirror_scripts/master/fixsandbox)"
 
 echo
-Installer_info "Installing all npm libraries..."
 
 
