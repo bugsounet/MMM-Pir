@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "esbuild": "^0.18.15",
+    "esbuild": "^0.18.16",
     "glob": "^10.3.3",
     "magicmirror-rebuild": "^1.0.8",
     "onoff": "^6.0.3"
