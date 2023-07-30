@@ -1,12 +1,12 @@
 {
   "name": "MMM-Pir",
-  "version": "1.0.3",
-  "rev": "230720",
+  "version": "1.0.4",
+  "rev": "230730",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
-    "preinstall": "installer/preinstall.sh",
-    "postinstall": "installer/postinstall.sh",
+    "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils ddcutil build-essential'",
+    "postinstall": "installer/postinstall.sh -r -m",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "esbuild": "^0.18.15",
+    "esbuild": "^0.18.17",
     "glob": "^10.3.3",
     "magicmirror-rebuild": "^1.0.8",
     "onoff": "^6.0.3"
