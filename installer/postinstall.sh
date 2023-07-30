@@ -3,6 +3,21 @@
 # | npm postinstall |
 # +-----------------+
 
+rebuild=0
+minify=0
+bugsounet=0
+
+while getopts ":rmb" option; do
+  case $option in
+    r) # -r option for magicmirror rebuild
+       rebuild=1;;
+    m) # -m option for minify all sources
+       minify=1;;
+    b) # -b option display bugsounet credit
+       bugsounet=1;;
+  esac
+done
+
 # get the installer directory
 Installer_get_current_dir () {
   SOURCE="${BASH_SOURCE[0]}"
@@ -19,22 +34,20 @@ Installer_dir="$(Installer_get_current_dir)"
 # move to installler directory
 cd "$Installer_dir"
 source utils.sh
-
-Installer_info "Minify Main code..."
-node minify.js || {
-  Installer_error "Minify Failed!"
-  exit 255
-}
-Installer_success "Done"
 echo
+
+if [[ $minify == 1 ]]; then
+  Installer_info "Minify Main code..."
+  node minify.js || {
+    Installer_error "Minify Failed!"
+    exit 255
+  }
+  Installer_success "Done"
+  echo
+fi
 
 # Go back to module root
 cd ..
-
-# module name
-Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
-
-echo
 
 # Disable Screensaver
 ### Part of script of @sdetweil magicmirror_script ###
@@ -135,19 +148,23 @@ fi
 Installer_success "Done"
 echo
 
-# !Disabled no longer required now!
-#Installer_info "Prepare PIR sensor using"
-# for pir sensor
-#sudo usermod -a -G gpio pi || echo "Error command: sudo usermod -a -G gpio pi"
-#sudo chmod -f u+s /opt/vc/bin/tvservice && sudo chmod -f u+s /bin/chvt || echo "Error command: sudo chmod u+s /opt/vc/bin/tvservice && sudo chmod u+s /bin/chvt"
-#Installer_success "Done"
-#echo
+if [[ $rebuild == 1 ]]; then
+  Installer_info "Rebuild MagicMirror..."
+  MagicMirror-rebuild 2>/dev/null || {
+    Installer_error "Rebuild Failed"
+    exit 255
+  }
+  Installer_success "Done"
+  echo
+fi
 
-Installer_info "Rebuild MagicMirror..."
-MagicMirror-rebuild 2>/dev/null || {
-  Installer_error "Rebuild Failed"
-  exit 255
-}
-Installer_success "Done"
-echo
+# module name
+Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
+
+# the end...
+if [[ $bugsounet == 1 ]]; then
+  Installer_warning "Support is now moved in a dedicated Server: https://forum.bugsounet.fr"
+  Installer_warning "@bugsounet"
+  echo
+fi
 Installer_success "$Installer_module is now installed !"
