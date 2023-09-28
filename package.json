@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.0.4",
-  "rev": "230730",
+  "version": "1.0.5",
+  "rev": "230929",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "screen"
   ],
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
