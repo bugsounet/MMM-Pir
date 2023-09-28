@@ -104,7 +104,7 @@ class screenDisplayer {
 
   screenShowing() {
     MM.getModules().enumerate((module)=> {
-      module.show(200, {lockString: "MMM-PIR_LOCK"})
+      module.show(200, () => {}, {lockString: "MMM-PIR_LOCK"})
     })
     if (!this.init) return this.init = true
     _logPIR("Show All modules.")
@@ -112,7 +112,7 @@ class screenDisplayer {
 
   screenHiding() {
     MM.getModules().enumerate((module)=> {
-      module.hide(200, {lockString: "MMM-PIR_LOCK"})
+      module.hide(200, () => {}, {lockString: "MMM-PIR_LOCK"})
     })
     _logPIR("Hide All modules.")
   }
