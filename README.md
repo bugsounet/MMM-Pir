@@ -11,7 +11,7 @@ It will wake up with a Pir sensor
 
 ## Installation
 
-**Minimal node version requirement: 16.14.0**
+**Minimal node version requirement: v18**
 
 Clone the module into your MagicMirror module folder and execute `npm intall` in the module's directory.
 ```
@@ -46,7 +46,9 @@ To display the module insert it in the config.js file.
     mode6_gpio: 20,
     mode6_clearGpioValue: true,
     pir_gpio: 21,
-    pir_reverseValue: false
+    pir_reverseValue: false,
+    xrandrForceRotation: "normal",
+    wrandrForceRotation: "normal"
   }
 },
 ```
@@ -69,16 +71,20 @@ To display the module insert it in the config.js file.
  | mode6_clearGpioValue| reset GPIO value script of relay (mode 6 only) | Boolean | true |
  | pir_gpio | BCM-number of the sensor pin | Number | 21 |
  | pir_reverseValue | Reverse sensor received value | Boolean | false |
+ | xrandrForceRotation | **-mode 9 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
+ | wrandrForceRotation | **-mode 10 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
 
  * Available mode:
-   - `mode: 1` - use vgencmd (RPI only)
-   - `mode: 2` - use dpms (version RPI)
-   - `mode: 3` - use tvservice (RPI only)
+   - `mode: 1` - use vgencmd (For raspbian 10/11)
+   - `mode: 2` - use dpms (For raspbian 10/11)
+   - `mode: 3` - use tvservice (For raspbian 10/11)
    - `mode: 4` - use HDMI CEC
    - `mode: 5` - use dpms (linux version for debian, ubuntu, ...)
    - `mode: 6` - use a relay switch command controled by GPIO with python
    - `mode: 7` - use a relay switch command controled by GPIO with python (read reverse values)
    - `mode: 8` - use ddcutil (not yet documented)
+   - `mode: 9` - use xrandr use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
+   - `mode: 10` - use wlr-randr (For rapsbian 12 with wayland compositor)
    - `mode: 0` - disabled mode and disable turnOffDisplay too
 
 ## Developer Notes
@@ -105,10 +111,10 @@ npm run update
 ## Reinstall
 For reinstall this module or when an update of MagicMirror is available, you can use this command:
 
-```
+```sh
 cd ~/MagicMirror/modules/MMM-Pir
 npm run rebuild
 ```
  ## Notes: 
- `mode 1` works with bullseye OS !<br>
+ `mode 1` works with bullseye OS (raspbian 11)<br>
  Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`

@@ -1,7 +1,7 @@
 /****************
-*  MMM-Pir v1.0 *
+*  MMM-Pir v1.1 *
 *  Bugsounet    *
-*  05/2023      *
+*  10/2023      *
 *****************/
 
 var _logPIR = (...args) => { /* do nothing */ }
@@ -22,7 +22,9 @@ Module.register("MMM-Pir", {
       mode6_gpio: 20,
       mode6_clearGpioValue: true,
       pir_gpio: 21,
-      pir_reverseValue: false
+      pir_reverseValue: false,
+      xrandrForceRotation: "normal",
+      wrandrForceRotation: "normal"
     },
 
     start: function () {

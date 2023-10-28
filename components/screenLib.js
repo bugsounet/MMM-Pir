@@ -30,7 +30,15 @@ class SCREEN {
       running: false,
       locked: false,
       power: false,
+      xrandrRotation: null,
+      wrandrRotation: null,
+      hdmiPort: null,
+      forceOnStart: true
     }
+
+    this.xrandrRoation = [ "normal", "left", "right", "inverted" ]
+    this.wrandrRoation = [ "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270" ]
+
     if (this.config.turnOffDisplay) {
       switch (this.config.mode) {
         case 0:
@@ -59,6 +67,24 @@ class SCREEN {
           break
         case 8:
           console.log("[MMM-Pir] [LIB] [SCREEN] Mode 8: ddcutil")
+          break
+        case 9:
+          if (this.xrandrRoation.indexOf(this.config.xrandrForceRotation) == -1) {
+            console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 9: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`)
+            this.screen.xrandrRotation = "normal"
+          } else {
+            console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 9: xrandr (primary display) -- Rotation: ${this.config.xrandrForceRotation}`)
+            this.screen.xrandrRotation = this.config.xrandrForceRotation
+          }
+          break
+        case 10:
+          if (this.wrandrRoation.indexOf(this.config.wrandrForceRotation) == -1) {
+            console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`)
+            this.screen.wrandrRotation = "normal"
+          } else {
+            console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr (primary display) -- Rotation: ${this.config.wrandrForceRotation}`)
+            this.screen.wrandrRotation = this.config.wrandrForceRotation
+          }
           break
         default:
           this.logError("Unknow Mode Set to 0 (Disabled)")
@@ -295,21 +321,71 @@ class SCREEN {
           else {
             let responseSh = stdout.trim()
             var displaySh = responseSh.split("(sl=")[1]
-            log(responseSh)
-            log(displaySh)
             if (displaySh == "0x01)") actual = true
             this.resultDisplay(actual,wanted)
           }
         })
         break
+      case 9:
+      /** xrandr on primary display **/
+        exec("xrandr | grep 'connected primary'",
+            (err, stdout, stderr)=> {
+                if (err) {
+                    this.logError(err)
+                    this.sendSocketNotification("ERROR", `[SCREEN] xrandr command error (mode: ${this.config.mode})`)
+                }
+                else {
+                    let responseSh = stdout.trim()
+                    var power = "on"
+                    this.screen.hdmiPort = responseSh.split(" ")[0]
+                    if (responseSh.split(" ")[3] == "(normal") power = "off"
+                    if (power == "on") actual = true
+                    log(`[MODE 9] Monitor on ${this.screen.hdmiPort} is ${power}`)
+                    this.resultDisplay(actual,wanted)
+                }
+            }
+        )
+        break
+      case 10:
+      /** wl-randr on primary display **/
+        exec("WAYLAND_DISPLAY=wayland-1 wlr-randr | grep 'Enabled'",
+            (err, stdout, stderr)=> {
+                if (err) {
+                    this.logError(err)
+                    this.sendSocketNotification("ERROR", `[SCREEN] wlr-randr command error (mode: ${this.config.mode})`)
+                } else {
+                  let responseSh = stdout.trim()
+                  if (responseSh.split(" ")[1] == "yes") actual = true
+                  exec("WAYLAND_DISPLAY=wayland-1 wlr-randr",
+                    (err, stdout, stderr) => {
+                      if (err) {
+                        this.logError(err)
+                        this.sendSocketNotification("ERROR", `[SCREEN] wlr-randr scan screen command error (mode: ${this.config.mode})`)
+                      } else {
+                        let wResponse = stdout.trim()
+                        this.screen.hdmiPort = wResponse.split(" ")[0]
+                        log(`[MODE 10] Monitor on ${this.screen.hdmiPort} is ${actual}`)
+                        this.resultDisplay(actual,wanted)
+                      }
+                    })
+                }
+            }
+        )
+        break
     }
   }
 
   resultDisplay (actual,wanted) {
-    log("Display -- Actual: " + actual + " - Wanted: " + wanted)
-    this.screen.power = actual
-    if (actual && !wanted) this.setPowerDisplay(false)
-    if (!actual && wanted) this.setPowerDisplay(true)
+    if (this.screen.forceOnStart) {
+      log("Display: Force On Start")
+      this.setPowerDisplay(true)
+      this.screen.forceOnStart = false
+    } else {
+      log("Display -- Actual: " + actual + " - Wanted: " + wanted)
+      this.screen.power = actual
+      if (actual && !wanted) this.setPowerDisplay(false)
+      if (!actual && wanted) this.setPowerDisplay(true)
+    }
   }
 
   async setPowerDisplay (set) {
@@ -388,6 +464,14 @@ class SCREEN {
       case 8:
         if (set) exec("ddcutil setvcp d6 1")
         else exec("ddcutil setvcp d6 4")
+        break
+      case 9:
+        if (set) exec(`xrandr --output ${this.screen.hdmiPort} --auto --rotate ${this.screen.xrandrRotation}`)
+        else exec(`xrandr --output ${this.screen.hdmiPort} --off`)
+        break
+      case 10:
+        if (set) exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr --output ${this.screen.hdmiPort} --on --transform ${this.screen.wrandrRotation}`)
+        else exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr --output ${this.screen.hdmiPort} --off`)
         break
     }
   }

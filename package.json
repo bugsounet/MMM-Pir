@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.0.5",
-  "rev": "230929",
+  "version": "1.1.0",
+  "rev": "231028",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "screen"
   ],
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "esbuild": "^0.19.4",
+    "esbuild": "^0.19.5",
     "glob": "^10.3.10",
     "magicmirror-rebuild": "^1.0.9",
     "onoff": "^6.0.3"
