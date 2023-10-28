@@ -1,7 +1,7 @@
 /****************
-*  MMM-Pir v1.0 *
+*  MMM-Pir v1.1 *
 *  Bugsounet    *
-*  05/2023      *
+*  10/2023      *
 *****************/
 
 var _logPIR = (...args) => { /* do nothing */ }
