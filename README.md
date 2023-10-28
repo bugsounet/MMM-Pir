@@ -83,8 +83,8 @@ To display the module insert it in the config.js file.
    - `mode: 6` - use a relay switch command controled by GPIO with python
    - `mode: 7` - use a relay switch command controled by GPIO with python (read reverse values)
    - `mode: 8` - use ddcutil (not yet documented)
-   - `mode: 9` - use xrandr use xrandr (For raspbian 11)
-   - `mode: 10` - use wlr-randr (For rapsbian 12)
+   - `mode: 9` - use xrandr use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
+   - `mode: 10` - use wlr-randr (For rapsbian 12 with wayland compositor)
    - `mode: 0` - disabled mode and disable turnOffDisplay too
 
 ## Developer Notes
