@@ -44,7 +44,9 @@ async function parse(that) {
     displayBar: that.config.displayBar,
     mode: that.config.mode,
     gpio: that.config.mode6_gpio,
-    clearGpioValue: that.config.mode6_clearGpioValue
+    clearGpioValue: that.config.mode6_clearGpioValue,
+    xrandrForceRotation: that.config.xrandrForceRotation,
+    wrandrForceRotation: that.config.wrandrForceRotation
   }
 
   that.pir = new that.lib.Pir(pirConfig, callbacks.pir)
