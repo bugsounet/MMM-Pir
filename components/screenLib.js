@@ -32,6 +32,7 @@ class SCREEN {
       power: false,
       xrandrRotation: null,
       wrandrRotation: null,
+      wrandrForceMode: null,
       hdmiPort: null,
       forceOnStart: true
     }
@@ -84,6 +85,10 @@ class SCREEN {
           } else {
             console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr (primary display) -- Rotation: ${this.config.wrandrForceRotation}`)
             this.screen.wrandrRotation = this.config.wrandrForceRotation
+          }
+          if (this.config.wrandrForceMode) {
+            console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr -- ForceMode: ${this.config.wrandrForceMode}`)
+            this.screen.wrandrForceMode = this.config.wrandrForceMode
           }
           break
         default:
@@ -470,7 +475,16 @@ class SCREEN {
         else exec(`xrandr --output ${this.screen.hdmiPort} --off`)
         break
       case 10:
-        if (set) exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr --output ${this.screen.hdmiPort} --on --transform ${this.screen.wrandrRotation}`)
+        if (set) {
+          let wrandrOptions = [
+            "--output", this.screen.hdmiPort,
+            "--on",
+            "--transform", this.screen.wrandrRotation
+          ]
+          if (this.screen.wrandrForceMode) wrandrOptions.push("--mode", this.screen.wrandrForceMode)
+          wrandrOptions = wrandrOptions.join(" ")
+          exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr ${wrandrOptions}`)
+        }
         else exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr --output ${this.screen.hdmiPort} --off`)
         break
     }

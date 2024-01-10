@@ -24,7 +24,8 @@ Module.register("MMM-Pir", {
       pir_gpio: 21,
       pir_reverseValue: false,
       xrandrForceRotation: "normal",
-      wrandrForceRotation: "normal"
+      wrandrForceRotation: "normal",
+      wrandrForceMode: null
     },
 
     start: function () {
