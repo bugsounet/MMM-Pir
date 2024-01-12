@@ -48,7 +48,9 @@ To display the module insert it in the config.js file.
     pir_gpio: 21,
     pir_reverseValue: false,
     xrandrForceRotation: "normal",
-    wrandrForceRotation: "normal"
+    wrandrForceRotation: "normal",
+    wrandrForceMode: "1920x1080",
+    touchMode: 3
   }
 },
 ```
@@ -73,6 +75,8 @@ To display the module insert it in the config.js file.
  | pir_reverseValue | Reverse sensor received value | Boolean | false |
  | xrandrForceRotation | **-mode 9 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
  | wrandrForceRotation | **-mode 10 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
+ | wrandrForceMode | **-mode 10 only-** Force screen resolution mode | String | null |
+ | touchMode | Selected mode for enable/disable the screen with touch (see below) | Number | 3 |
 
  * Available mode:
    - `mode: 1` - use vgencmd (For raspbian 10/11)
@@ -86,6 +90,20 @@ To display the module insert it in the config.js file.
    - `mode: 9` - use xrandr use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
    - `mode: 10` - use wlr-randr (For rapsbian 12 with wayland compositor)
    - `mode: 0` - disabled mode and disable turnOffDisplay too
+
+  * Available touchMode:
+   - `touchMode: 0`
+     - disabled
+   - `touchMode: 1`
+     - One click on the screen will restart the timer (or Wake up the screen if needed)
+     - Double Click on the screen will shutdown the screen
+   - `touchMode: 2`
+     - One Click on the EXT-Screen area will restart the timer
+     - Long Click on the screen will shutdown or wake up the screen (toogle)
+   - `touchMode: 3`
+     - One Click on the EXT-Screen area will restart the timer
+     - Doucle Click on the EXT-Screen area will shutdown the screen
+     - One Click on the screen will wake up if shutdown
 
 ## Developer Notes
 
