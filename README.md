@@ -59,7 +59,7 @@ To display the module insert it in the config.js file.
 
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
- | debuf | enable or not debug mode | Boolean | false |
+ | debug | enable or not debug mode | Boolean | false |
  | delay | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
  | turnOffDisplay | Should the display turn off after timeout? | Boolean | true |
  | mode | mode for turn on/off your screen (see bellow) | number | 1 |
