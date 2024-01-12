@@ -1,7 +1,7 @@
 /****************
-*  MMM-Pir v1.1 *
+*  MMM-Pir v1.2 *
 *  Bugsounet    *
-*  10/2023      *
+*  01/2024      *
 *****************/
 
 var _logPIR = (...args) => { /* do nothing */ }
@@ -13,6 +13,7 @@ Module.register("MMM-Pir", {
       delay: 2 * 60 * 1000,
       turnOffDisplay: true,
       mode: 1,
+      touchMode: 3,
       ecoMode: true,
       displayCounter: true,
       displayBar: true,
@@ -35,6 +36,7 @@ Module.register("MMM-Pir", {
       this.ready = false
       this.screenDisplay = new screenDisplayer(this)
       this.screenDisplay.checkStyle()
+      this.screenTouch = new screenTouch(this)
       _logPIR("is now started!")
     },
 
@@ -42,6 +44,7 @@ Module.register("MMM-Pir", {
       switch(notification) {
         case "INITIALIZED":
           _logPIR("Ready to fight MagicMirror²!")
+          this.screenTouch.touch(this)
           this.ready = true
           break
         case "SCREEN_SHOWING":
@@ -100,7 +103,7 @@ Module.register("MMM-Pir", {
           this.sendNotification("SHOW_ALERT", {
             type: "notification",
             title: "MMM-Pir",
-            message: `Error detected: ${payload}`,
+            message: `Pir Error detected: ${payload}`,
             timer: 15000
           })
       }
@@ -142,7 +145,9 @@ Module.register("MMM-Pir", {
     getScripts: function () {
       return [
         "/modules/MMM-Pir/components/progressbar.js",
-        "/modules/MMM-Pir/components/screenDisplayer.js"
+        "/modules/MMM-Pir/components/screenDisplayer.js",
+        "/modules/MMM-Pir/components/long-press-event.js",
+        "/modules/MMM-Pir/components/screenTouch.js"
       ]
     },
 
