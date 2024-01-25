@@ -14,7 +14,7 @@ It will wake up with a Pir sensor
 **Minimal node version requirement: v18**
 
 Clone the module into your MagicMirror module folder and execute `npm install` in the module's directory.
-```
+```sh
 cd ~/MagicMirror/modules
 git clone https://github.com/bugsounet/MMM-Pir
 cd MMM-Pir
