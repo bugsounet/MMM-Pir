@@ -1,6 +1,6 @@
 # MMM-Pir
 
-After a configurated time without any user interaction the display will turn off and hide all modules for economy mode.<br>
+After a configured time without any user interaction the display will turn off and hide all modules for economy mode.<br>
 It will wake up with a Pir sensor
 
 ## Screenshot
@@ -13,7 +13,7 @@ It will wake up with a Pir sensor
 
 **Minimal node version requirement: v18**
 
-Clone the module into your MagicMirror module folder and execute `npm intall` in the module's directory.
+Clone the module into your MagicMirror module folder and execute `npm install` in the module's directory.
 ```
 cd ~/MagicMirror/modules
 git clone https://github.com/bugsounet/MMM-Pir
@@ -57,7 +57,7 @@ To display the module insert it in the config.js file.
 
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
- | debuf | enable or not debug mode | Boolean | false |
+ | debug | enable or not debug mode | Boolean | false |
  | delay | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
  | turnOffDisplay | Should the display turn off after timeout? | Boolean | true |
  | mode | mode for turn on/off your screen (see bellow) | number | 1 |
