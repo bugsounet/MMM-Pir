@@ -77,7 +77,7 @@ Module.register("MMM-Pir", {
             userPresence.textContent = this.userPresence
           }
           break
-        case "SCREEN_POWER":
+        case "SCREEN_POWERSTATUS":
           if (payload) this.sendNotification("USER_PRESENCE", true)
           else this.sendNotification("USER_PRESENCE", false)
           break
@@ -115,18 +115,23 @@ Module.register("MMM-Pir", {
       if (!this.ready) return
       switch(notification) {
         case "MMM_PIR-END":
+          /** only available if not force-locked by touch **/
           this.sendSocketNotification("FORCE_END")
           break
         case "MMM_PIR-WAKEUP":
+          /** only available if not force-locked by touch **/
           this.sendSocketNotification("WAKEUP")
           break
         case "MMM_PIR-LOCK":
+          /** only available if not force-locked by touch **/
           this.sendSocketNotification("LOCK")
           break
         case "MMM_PIR-UNLOCK":
+          /** only available if not force-locked by touch **/
           this.sendSocketNotification("UNLOCK")
           break
         case "USER_PRESENCE":
+          /** only available if not force-locked by touch **/
           if (payload) this.sendSocketNotification("WAKEUP")
           else this.sendSocketNotification("FORCE_END")
       }

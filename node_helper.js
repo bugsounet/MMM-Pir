@@ -30,6 +30,12 @@ module.exports = NodeHelper.create({
       case "UNLOCK":
         this.screen.unlock()
         break
+      case "LOCK_FORCE_END":
+        this.screen.forceLockOFF()
+        break
+      case "LOCK_FORCE_WAKEUP":
+        this.screen.forceLockON()
+        break
     }
   }
 });

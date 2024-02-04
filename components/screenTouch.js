@@ -18,25 +18,25 @@ class screenTouch {
           if (this.clickCount === 1) {
             this.clickTimer = setTimeout(() => {
               this.clickCount = 0
-              that.sendSocketNotification("WAKEUP")
+              that.sendSocketNotification("LOCK_FORCE_WAKEUP")
             }, 400)
           } else if (this.clickCount === 2) {
             clearTimeout(this.clickTimer)
             this.clickCount = 0
-            that.sendSocketNotification("FORCE_END")
+            that.sendSocketNotification("LOCK_FORCE_END")
           }
         }, false)
         break
       case 2:
       /** mode 2 **/
         TouchScreen.addEventListener('click', () => {
-          if (!that.hidden) that.sendSocketNotification("WAKEUP")
+          if (!that.hidden) that.sendSocketNotification("LOCK_FORCE_WAKEUP")
         }, false)
 
         window.addEventListener('long-press', () => {
-          if (that.hidden) that.sendSocketNotification("WAKEUP")
+          if (that.hidden) that.sendSocketNotification("LOCK_FORCE_WAKEUP")
           else {
-            that.sendSocketNotification("FORCE_END")
+            that.sendSocketNotification("LOCK_FORCE_END")
           }
         }, false)
         break
@@ -47,12 +47,12 @@ class screenTouch {
           if (this.clickCount === 1) {
             this.clickTimer = setTimeout(() => {
               this.clickCount = 0
-              that.sendSocketNotification("WAKEUP")
+              that.sendSocketNotification("LOCK_FORCE_WAKEUP")
             }, 400)
           } else if (this.clickCount === 2) {
             clearTimeout(this.clickTimer)
             this.clickCount = 0
-            that.sendSocketNotification("FORCE_END")
+            that.sendSocketNotification("LOCK_FORCE_END")
           }
         }, false)
 
@@ -60,7 +60,7 @@ class screenTouch {
           if (that.hidden) {
             clearTimeout(this.clickTimer)
             this.clickCount = 0
-            that.sendSocketNotification("WAKEUP")
+            that.sendSocketNotification("LOCK_FORCE_WAKEUP")
           }
         }, false)
         break

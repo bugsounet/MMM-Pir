@@ -98,7 +98,8 @@ class SCREEN {
         this.sendSocketNotification("ERROR", "[MMM-Pir] Unknow Mode (" + this.config.mode + ") Set to 0 (Disabled)")
         this.config.mode = 0
         break
-	  }
+    }
+    this.screenStatus()
   }
 
   activate () {
@@ -299,7 +300,7 @@ class SCREEN {
         break
       case 7:
       /** python script reverse**/
-         exec(`python monitor.py -s -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr)=> {
+        exec(`python monitor.py -s -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr)=> {
           if (err) {
             this.logError("[Display Error] " + err)
             this.sendSocketNotification("ERROR", `[SCREEN] python relay script error (mode: ${this.config.mode})`)
@@ -389,10 +390,9 @@ class SCREEN {
     }
   }
 
-  async setPowerDisplay (set) {
+  setPowerDisplay (set) {
     log("Display " + (set ? "ON." : "OFF."))
     this.screen.power = set
-    this.SendScreenPowerState()
     // and finally apply rules !
     switch (this.config.mode) {
       case 1:
@@ -490,10 +490,6 @@ class SCREEN {
     this.sendSocketNotification("SCREEN_STATE", this.screen)
   }
 
-  SendScreenPowerState() {
-    this.sendSocketNotification("SCREEN_POWER", this.screen.power)
-  }
-
   logError(err) {
     console.error("[MMM-Pir] [LIB] [SCREEN] " + err)
     this.sendSocketNotification("SCREEN_ERROR", err.message)
@@ -514,17 +510,14 @@ class SCREEN {
 
   forceLockON() {
     if (this.screen.locked && !this.screen.forceLocked) return log("[Force ON] Display is Locked!")
-    if (this.screen.power) return log("[Force ON] Display Already ON")
     this.sendForceLockState(false)
     this.screen.locked = false
     this.wakeup()
-    this.sendSocketNotification("FORCE_LOCK_END")
     log("[Force ON] Turn ON Display")
   }
 
   sendForceLockState(state) {
     this.screen.forceLocked = state
-    this.sendSocketNotification("SCREEN_FORCELOCKED", this.screen.forceLocked)
   }
 
   screenStatus() {

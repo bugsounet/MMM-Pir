@@ -30,16 +30,15 @@ async function parse(that) {
     }
   }
   let pirConfig= {
-    libGpio: that.lib.onoff.Gpio,
     debug: that.config.debug,
+    libGpio: that.lib.onoff.Gpio,
     gpio: that.config.pir_gpio,
     reverseValue: that.config.pir_reverseValue
   }
 
   let screenConfig= {
+    debug: that.config.debug,
     delay: that.config.delay,
-    turnOffDisplay: that.config.turnOffDisplay,
-    ecoMode: that.config.ecoMode,
     displayCounter: that.config.displayCounter,
     displayBar: that.config.displayBar,
     mode: that.config.mode,
