@@ -11,10 +11,8 @@ Module.register("MMM-Pir", {
     defaults: {
       debug: false,
       delay: 2 * 60 * 1000,
-      turnOffDisplay: true,
       mode: 1,
       touchMode: 3,
-      ecoMode: true,
       displayCounter: true,
       displayBar: true,
       displayStyle: "Text",

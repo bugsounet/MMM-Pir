@@ -35,9 +35,7 @@ To display the module insert it in the config.js file.
   config: {
     debug: false,
     delay: 2 * 60 * 1000,
-    turnOffDisplay: true,
     mode: 1,
-    ecoMode: true,
     displayCounter: true,
     displayBar: true,
     displayStyle: "Text",
@@ -61,9 +59,7 @@ To display the module insert it in the config.js file.
  | ------- | --- | --- | --- |
  | debug | enable or not debug mode | Boolean | false |
  | delay | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
- | turnOffDisplay | Should the display turn off after timeout? | Boolean | true |
  | mode | mode for turn on/off your screen (see bellow) | number | 1 |
- | ecoMode | Should the MagicMirror hide all module after timeout ? | Boolean | true |
  | displayCounter | Should display Count-down in screen ? | Boolean | true |
  | displayBar| Should display Count-up bar in screen ? | Boolean | true |
  | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle", "Bar" | String | Text |
