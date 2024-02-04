@@ -98,11 +98,11 @@ To display the module insert it in the config.js file.
      - One click on the screen will restart the timer (or Wake up the screen if needed)
      - Double Click on the screen will shutdown the screen
    - `touchMode: 2`
-     - One Click on the EXT-Screen area will restart the timer
+     - One Click on the MMM-Pir area will restart the timer
      - Long Click on the screen will shutdown or wake up the screen (toogle)
    - `touchMode: 3`
-     - One Click on the EXT-Screen area will restart the timer
-     - Doucle Click on the EXT-Screen area will shutdown the screen
+     - One Click on the MMM-Pir area will restart the timer
+     - Doucle Click on the MMM-Pir area will shutdown the screen
      - One Click on the screen will wake up if shutdown
 
 ## Developer Notes
