@@ -31,13 +31,9 @@ class screenDisplayer {
       var bar = document.createElement("div")
       bar.id = "MMM-PIR_BAR"
       if ((this.config.displayStyle == "Text") || !this.config.displayBar) bar.className = "hidden"
-      var screenBar = document.createElement(this.config.displayStyle == "Bar" ? "meter" : "div")
+      var screenBar = document.createElement("div")
       screenBar.id = "MMM-PIR_SCREEN_BAR"
       screenBar.classList.add(this.config.displayStyle)
-      if (this.config.displayStyle == "Bar") {
-        screenBar.value = 0
-        screenBar.max= this.config.delay
-      }
       bar.appendChild(screenBar)
       dom.appendChild(screen)
       dom.appendChild(bar)
@@ -64,21 +60,25 @@ class screenDisplayer {
 
   prepareBar() {
     /** Prepare TimeOut Bar **/
-    if ((this.config.displayStyle == "Text") || (this.config.displayStyle == "Bar") || (!this.config.displayBar)) return
+    if ((this.config.displayStyle == "Text") || (!this.config.displayBar)) return
     this.bar = new ProgressBar[this.config.displayStyle](document.getElementById('MMM-PIR_SCREEN_BAR'), {
       strokeWidth: this.config.displayStyle == "Line" ? 2 : 5,
       trailColor: '#1B1B1B',
       trailWidth: 1,
-      easing: 'easeInOut',
+      easing: 'linear',
       duration: 900,
-      svgStyle: null,
       from: {color: '#FF0000'},
       to: {color: '#00FF00'},
+      svgStyle: {
+        display: 'block',
+        width: '100%',
+        'margin-bottom': '5px'
+      },
       text: {
         style: {
           position: 'absolute',
           left: '50%',
-          top: this.config.displayStyle == "Line" ? "0" : "50%",
+          top: "50%",
           padding: 0,
           margin: 0,
           transform: {

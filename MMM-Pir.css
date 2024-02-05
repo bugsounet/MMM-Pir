@@ -1,7 +1,5 @@
 #MMM-PIR {
   font-size: large;
-  user-select: none;
-  line-height: 99%;
   min-width: 250px;
 }
 
@@ -43,18 +41,9 @@
 #MMM-PIR_SCREEN_BAR.Circle {
   width: 100px;
   height: 93px;
-  top: 10px;
+  margin-bottom: 10px;
 }
 
 #MMM-PIR_SCREEN_BAR.SemiCircle {
   width: 100px;
-  top: 10px;
 }
-
-#MMM-PIR_SCREEN_BAR.Bar {
-  margin-bottom:4px;
-  height: 4px;
-  width: 100%;
-  position:relative;
-}
-

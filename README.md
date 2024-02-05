@@ -62,7 +62,7 @@ To display the module insert it in the config.js file.
  | mode | mode for turn on/off your screen (see bellow) | number | 1 |
  | displayCounter | Should display Count-down in screen ? | Boolean | true |
  | displayBar| Should display Count-up bar in screen ? | Boolean | true |
- | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle", "Bar" | String | Text |
+ | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle" | String | Text |
  | displayLastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
  | mode6_gpio| GPIO number for control the relay (mode 6 only) | Number | 20 |
