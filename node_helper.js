@@ -1,6 +1,6 @@
-/*******************************
-* node_helper for MMM-Pir v1.0 *
-* BuGsounet ©05/22             *
+/*!*****************************
+* node_helper for MMM-Pir v1.2 *
+* BuGsounet                    *
 ********************************/
 
 const NodeHelper = require('node_helper')

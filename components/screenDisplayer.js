@@ -1,3 +1,7 @@
+/*!******************
+* Screen displayer  *
+* Bugsounet         *
+*********************/
 class screenDisplayer {
   constructor(config, Tools) {
     this.config = config

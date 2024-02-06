@@ -1,3 +1,7 @@
+/*!************
+* screenTouch *
+* Bugsounet   *
+***************/
 class screenTouch {
   constructor(mode,Tools) {
     this.mode = mode

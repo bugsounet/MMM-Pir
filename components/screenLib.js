@@ -1,5 +1,7 @@
-/** Screen management **/
-/** bugsounet **/
+/*!******************
+* Screen management *
+* Bugsounet         *
+*********************/
 
 const exec = require('child_process').exec
 const process = require('process')
