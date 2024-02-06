@@ -32,9 +32,21 @@ Module.register("MMM-Pir", {
       this.userPresence = null
       this.lastPresence = null
       this.ready = false
-      this.screenDisplay = new screenDisplayer(this)
+      let Tools = {
+        sendSocketNotification: (...args) => this.sendSocketNotification(...args),
+        hidden: () => { return this.hidden },
+        translate: (...args) => this.translate(...args)
+      }
+      let displayConfig = {
+        displayCounter: this.config.displayCounter,
+        displayBar: this.config.displayBar,
+        displayStyle: this.config.displayStyle,
+        displayLastPresence: this.config.displayLastPresence,
+        delay: this.config.delay
+      }
+      this.screenDisplay = new screenDisplayer(displayConfig, Tools)
       this.screenDisplay.checkStyle()
-      this.screenTouch = new screenTouch(this)
+      this.screenTouch = new screenTouch(this.config.touchMode, Tools)
       _logPIR("is now started!")
     },
 
@@ -42,7 +54,7 @@ Module.register("MMM-Pir", {
       switch(notification) {
         case "INITIALIZED":
           _logPIR("Ready to fight MagicMirror²!")
-          this.screenTouch.touch(this)
+          this.screenTouch.touch()
           this.ready = true
           break
         case "SCREEN_SHOWING":
@@ -51,25 +63,19 @@ Module.register("MMM-Pir", {
         case "SCREEN_HIDING":
           this.screenDisplay.screenHiding()
           break
-        case "SCREEN_TIMER":
+        case "SCREEN_OUTPUT":
           if (this.config.displayStyle == "Text") {
             let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER")
-            counter.textContent = payload
-          }
-          break
-        case "SCREEN_BAR":
-          if (this.config.displayStyle == "Bar") {
-            let bar = document.getElementById("MMM-PIR_SCREEN_BAR")
-            bar.value= this.config.delay - payload
-          }
-          else if (this.config.displayStyle != "Text") {
-            this.screenDisplay.barAnimate(payload)
+            counter.textContent = payload.timer
+          } else {
+            this.screenDisplay.barAnimate(payload.bar)
           }
           break
         case "SCREEN_PRESENCE":
+          if (!this.config.displayLastPresence) return
           if (payload) this.lastPresence = moment().format(this.config.lastPresenceTimeFormat)
           else this.userPresence = this.lastPresence
-          if (this.userPresence && this.config.displayLastPresence) {
+          if (this.userPresence) {
             let presence= document.getElementById("MMM-PIR_PRESENCE")
             presence.classList.remove("hidden")
             presence.classList.add("bright")

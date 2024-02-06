@@ -94,8 +94,8 @@ class SCREEN {
         }
         break
       default:
-        this.logError("Unknow Mode Set to 0 (Disabled)")
-        this.sendSocketNotification("ERROR", "[MMM-Pir] Unknow Mode (" + this.config.mode + ") Set to 0 (Disabled)")
+        this.logError(`Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`)
+        this.sendSocketNotification("ERROR", `[MMM-Pir] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`)
         this.config.mode = 0
         break
     }
@@ -126,9 +126,11 @@ class SCREEN {
     this.counter = this.config.delay
     this.interval = setInterval( ()=> {
       this.screen.running = true
-
-      if (this.config.displayCounter) this.sendSocketNotification("SCREEN_TIMER", moment(new Date(this.counter)).format("mm:ss"))
-      if (this.config.displayBar) this.sendSocketNotification("SCREEN_BAR", this.config.delay - this.counter )
+      let output = {
+        timer: moment(new Date(this.counter)).format("mm:ss"),
+        bar: this.config.delay - this.counter
+      }
+      this.sendSocketNotification("SCREEN_OUTPUT", output)
       if (this.counter <= 0) {
         clearInterval(this.interval)
         this.interval = null

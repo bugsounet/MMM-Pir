@@ -1,7 +1,7 @@
 class screenDisplayer {
-  constructor(that) {
-    this.config = that.config
-    this.translate = (...args) => that.translate(...args)
+  constructor(config, Tools) {
+    this.config = config
+    this.translate = (...args) => Tools.translate(...args)
     this.bar = null
     this.init = null
     console.log("[MMM-Pir] screenDisplayer Ready")
@@ -125,7 +125,7 @@ class screenDisplayer {
       return style == this.config.displayStyle
     })
     if (!found) {
-      console.error("[MMM-Pir] displayStyle Error ! ["+ this.config.displayStyle + "]")
+      console.error(`[MMM-Pir] displayStyle Error ! [${this.config.displayStyle}]`)
       this.config.displayStyle = "Text"
     }
   }

@@ -20,7 +20,7 @@ async function parse(that) {
   }
   var callbacks = {
     "screen": (noti, params) => {
-      log("Screen Callback:", noti,params)
+      log("Screen Callback:", noti,params ? params :"")
       that.sendSocketNotification(noti, params)
     },
     "pir": (noti, params) => {
