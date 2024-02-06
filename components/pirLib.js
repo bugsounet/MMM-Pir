@@ -2,10 +2,12 @@
 /** bugsounet **/
 
 var log = (...args) => { /* do nothing */ }
+const Gpio = require("onoff").Gpio
 
 class PIR {
   constructor(config, callback) {
     this.config = config
+    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [PIR]", ...args) }
     this.callback = callback
     this.default = {
       debug: this.config.debug,
@@ -13,18 +15,16 @@ class PIR {
       reverseValue: false
     }
     this.config = Object.assign({}, this.default, this.config)
-    if (!this.config.libGpio) return console.error("[MMM-Pir] [LIB] [PIR] onoff library missing!")
-    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [PIR]", ...args) }
     this.pir = null
     this.running = false
-    this.callback("PIR_INITIALIZED")
   }
 
   start () {
     if (this.running) return
+    if (this.config.gpio === 0) return console.log("[MMM-Pir] [LIB] [PIR] Disabled.")
     log("Start")
     try {
-      this.pir = new this.config.libGpio(this.config.gpio, 'in', 'both')
+      this.pir = new Gpio(this.config.gpio, 'in', 'both')
       this.callback("PIR_STARTED")
       console.log("[MMM-Pir] [LIB] [PIR] Started!")
     } catch (err) {
@@ -47,8 +47,8 @@ class PIR {
   }
 
   stop () {
-    if (!this.running) return
-    this.pir.unwatch()
+    if (!this.running || (this.config.gpio === 0)) return
+    this.pir.unexport()
     this.pir = null
     this.running = false
     this.callback("PIR_STOP")

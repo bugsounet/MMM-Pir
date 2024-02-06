@@ -18,8 +18,6 @@ class SCREEN {
     this.interval = null
     this.default = {
       delay: 5 * 60 * 1000,
-      displayCounter: true,
-      displayBar: false,
       mode: 1,
       gpio: 20,
       clearGpioValue: true,
