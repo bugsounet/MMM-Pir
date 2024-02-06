@@ -32,6 +32,8 @@
 #MMM-PIR_SCREEN_BAR {
   font-size: large;
   min-width: 100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #MMM-PIR_SCREEN_BAR.Line {
