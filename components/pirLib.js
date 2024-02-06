@@ -7,14 +7,14 @@ const Gpio = require("onoff").Gpio
 class PIR {
   constructor(config, callback) {
     this.config = config
-    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [PIR]", ...args) }
     this.callback = callback
     this.default = {
-      debug: this.config.debug,
+      debug: false,
       gpio: 21,
       reverseValue: false
     }
     this.config = Object.assign({}, this.default, this.config)
+    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [PIR]", ...args) }
     this.pir = null
     this.running = false
   }

@@ -13,10 +13,10 @@ class SCREEN {
   constructor(config, callback) {
     this.config = config
     this.sendSocketNotification = callback
-    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [SCREEN]", ...args) }
     this.PathScript = path.dirname(require.resolve('../package.json'))+"/scripts"
     this.interval = null
     this.default = {
+      debug: false,
       delay: 5 * 60 * 1000,
       mode: 1,
       gpio: 20,
@@ -25,7 +25,8 @@ class SCREEN {
       wrandrForceRotation: "normal",
       wrandrForceMode: null
     }
-    this.config = Object.assign(this.default, this.config)
+    this.config = Object.assign({}, this.default, this.config)
+    if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [SCREEN]", ...args) }
     this.screen = {
       mode: this.config.mode,
       running: false,
