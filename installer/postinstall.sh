@@ -251,7 +251,7 @@ echo
 
 if [[ $rebuild == 1 ]]; then
   Installer_info "Rebuild MagicMirror..."
-  MagicMirror-rebuild 2>/dev/null || {
+  electron-rebuild 1>/dev/null || {
     Installer_error "Rebuild Failed"
     exit 255
   }
