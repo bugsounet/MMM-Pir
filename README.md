@@ -65,7 +65,7 @@ To display the module insert it in the config.js file.
  | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle" | String | Text |
  | displayLastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
- | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disabled PIR Sensor detection | Number | 21 |
+ | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disable PIR Sensor detection | Number | 21 |
  | pir_reverseValue | Reverse sensor received value | Boolean | false |
  | mode6_gpio| **-mode 6 only-** GPIO number for control the relay (switch) | Number | 20 |
  | mode6_clearGpioValue| **-mode 6 only-** reset GPIO value script of relay (switch) | Boolean | true |
