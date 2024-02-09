@@ -65,7 +65,7 @@ To display the module insert it in the config.js file.
  | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle" | String | Text |
  | displayLastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
- | pir_gpio | BCM-number of the sensor pin | Number | 21 |
+ | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disable PIR Sensor detection | Number | 21 |
  | pir_reverseValue | Reverse sensor received value | Boolean | false |
  | mode6_gpio| **-mode 6 only-** GPIO number for control the relay (switch) | Number | 20 |
  | mode6_clearGpioValue| **-mode 6 only-** reset GPIO value script of relay (switch) | Boolean | true |
@@ -85,7 +85,7 @@ To display the module insert it in the config.js file.
    - `mode: 8` - use ddcutil (not yet documented)
    - `mode: 9` - use xrandr use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
    - `mode: 10` - use wlr-randr (For rapsbian 12 with wayland compositor)
-   - `mode: 0` - disabled mode and disable turnOffDisplay too
+   - `mode: 0` - disabled mode
 
   * Available touchMode:
    - `touchMode: 0`
@@ -100,6 +100,10 @@ To display the module insert it in the config.js file.
      - One Click on the MMM-Pir area will restart the timer
      - Doucle Click on the MMM-Pir area will shutdown the screen
      - One Click on the screen will wake up if shutdown
+
+  Notes: 
+    * If you lock your screen with TouchScreen, PIR sensor will be disabled
+    * You need to unlock your screen with touchscreen to reactivate the PIR sensor
 
 ## Developer Notes
 
