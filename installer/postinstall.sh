@@ -69,9 +69,9 @@ if [ "$screen_saver_running." != "." ]; then
   # some screensaver running
   case "$screen_saver_running" in
    mate-screensaver) echo 'Found: mate screen saver'
-        gsettings set org.mate.screensaver lock-enabled false	 2>/dev/null
-        gsettings set org.mate.screensaver idle-activation-enabled false	 2>/dev/null
-        gsettings set org.mate.screensaver lock_delay 0	 2>/dev/null
+     gsettings set org.mate.screensaver lock-enabled false    2>/dev/null
+     gsettings set org.mate.screensaver idle-activation-enabled false     2>/dev/null
+     gsettings set org.mate.screensaver lock_delay 0  2>/dev/null
      echo " $screen_saver_running disabled"
      DISPLAY=:0  mate-screensaver  >/dev/null 2>&1 &
      ((change++))
@@ -167,16 +167,78 @@ if [ -d "/etc/xdg/lxsession/LXDE-pi" ]; then
   fi
 fi
 
-if [ -e "$HOME/.config/wayfire.ini" ]; then
-  echo "Found: screen saver in wayland"
-  current_set=$(grep -m1 "dpms_timeout" $HOME/.config/wayfire.ini | awk '{print $3}')
-  if [ "$current_set" != 0 ]; then
-    echo "disable screensaver via wayfire.ini"
-    sed -i -r "s/^(dpms_timeout.*)$/dpms_timeout = 0/" $HOME/.config/wayfire.ini
-    ((change++))
-  else
-    echo "wayland screen saver already disabled"
-  fi
+if [ -e "$HOME/.config/wayfire.ini"  ]; then
+    echo "Found: wayfire.ini"
+    INI_PATH=$HOME/.config
+    WAYFIRE_CONFIG=$INI_PATH/wayfire.ini
+    IDLE='\[idle\]'
+    DPMS=dpms_timeout
+    IDLE_LINE=0
+    DPMS_LINE=0
+    DPMS_SETTING=0
+    # get the line count
+    lc=$(wc -l <$WAYFIRE_CONFIG)
+    # find the idle line and its line number
+    IDLE_STRING=$(grep -n $IDLE $WAYFIRE_CONFIG)
+    # find the dpms line and its line number
+    DPMS_STRING=$(grep -n $DPMS $WAYFIRE_CONFIG)
+    # if we found the idle line
+    if [ "$IDLE_STRING." != "." ]; then
+        #  extract line number
+        IDLE_LINE=$(echo $IDLE_STRING | awk -F: '{print $1}')
+    fi
+    # if we found the dpms line
+    if [ "$DPMS_STRING." != "." ]; then
+        # extract line number
+        DPMS_LINE=$(echo $DPMS_STRING | awk -F: '{print $1}')
+        # extract its value  (after = sign)
+        DPMS_VALUE=$(echo $DPMS_STRING | awk -F= '{print $2}')
+        # set the value to write out
+        DPMS_OUT=$DPMS_SETTING
+    fi
+
+    if [ $IDLE_LINE -ne 0 -a $DPMS_LINE -ne 0 -a $DPMS_LINE -gt $IDLE_LINE ]; then
+       # both found
+       # if we found the DPMS_VALUE != 0
+       if [ $DPMS_VALUE -ne 0 ]; then
+         sed -i "s/$DPMS=.*/$DPMS=$DPMS_OUT/g" $WAYFIRE_CONFIG
+         ((change++))
+       else
+         echo "wayfire screen saver already disabled"
+       fi
+    # if both NOT found
+    elif [ $IDLE_LINE -eq 0 -a $DPMS_LINE -eq 0 ]; then
+       # add the two lines
+       echo $IDLE | tr -d '\\' >> $WAYFIRE_CONFIG
+       echo $DPMS=$DPMS_SETTING >> $WAYFIRE_CONFIG
+       ((change++))
+       # if we found the idle line, (but not dpms)
+    elif [ $IDLE_LINE -ne 0 ]; then
+    # IDLE was found
+    if [ $DPMS_LINE -eq 0 ]; then
+       # DPMS  not found
+       # insert DPMS after idle
+       sed -i /$IDLE/a\ $DPMS=$DPMS_SETTING $WAYFIRE_CONFIG
+       ((change++))
+    fi
+    else
+       # DPMS IS found , idle not found?  weird
+       # insert idle before DPMS?? is this a problem?
+       # lets add both to the end, removing the old one first
+       # remove the dpms line, wherever it is
+       grep -v $DPMS $WAYFIRE_CONFIG>$INI_PATH/wayfire.ini.tmp
+       # add the idle  line
+       echo $IDLE | tr -d '\\' >>$INI_PATH/wayfire.ini.tmp
+       #add the dpms line
+       echo $DPMS=$DPMS_SETTING >>$INI_PATH/wayfire.ini.tmp
+       # copy the current wayfire.ini to save place
+       cp $WAYFIRE_CONFIG $WAYFIRE_CONFIG.old
+       # coppy the work ini to the correct file
+       cp $INI_PATH/wayfire.ini.tmp $WAYFIRE_CONFIG
+       # remove the work file
+       rm  $INI_PATH/wayfire.ini.tmp
+       ((change++))
+    fi
 fi
 
 if [[ "$change" -gt 0 ]]; then
@@ -189,7 +251,7 @@ echo
 
 if [[ $rebuild == 1 ]]; then
   Installer_info "Rebuild MagicMirror..."
-  MagicMirror-rebuild 2>/dev/null || {
+  electron-rebuild 1>/dev/null || {
     Installer_error "Rebuild Failed"
     exit 255
   }
