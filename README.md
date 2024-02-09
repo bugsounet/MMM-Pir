@@ -76,7 +76,7 @@ To display the module insert it in the config.js file.
 
  * Available mode:
    - `mode: 1` - use vgencmd (For raspbian 10/11)
-   - `mode: 2` - use dpms (For raspbian 10/11)
+   - `mode: 2` - use dpms (For raspbian 10/11 or raspbian 12 with x11 compositor)
    - `mode: 3` - use tvservice (For raspbian 10/11)
    - `mode: 4` - use HDMI CEC
    - `mode: 5` - use dpms (linux version for debian, ubuntu, ...)
