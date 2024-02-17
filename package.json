@@ -10,12 +10,15 @@
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json"
+    "clean": "rm -rf node_modules package-lock.json",
+    "lint": "eslint *.js installer/*.js components/*.js --resolve-plugins-relative-to . --no-eslintrc --config .eslintrc.js --ignore-path .eslintignore",
+    "lint:fix": "eslint *.js installer/*.js components/*.js --resolve-plugins-relative-to . --no-eslintrc --config .eslintrc.js --ignore-path .eslintignore --fix"
   },
   "keywords": [
     "magic mirror",
     "module",
-    "screen"
+    "screen",
+    "motion detection"
   ],
   "engines": {
     "node": ">=18"
@@ -35,5 +38,10 @@
     "esbuild": "^0.20.0",
     "glob": "^10.3.10",
     "onoff": "^6.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "@stylistic/eslint-plugin": "^1.6.2",
+    "eslint-plugin-import": "^2.29.1"
   }
 }
