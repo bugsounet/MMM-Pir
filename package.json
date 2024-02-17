@@ -17,7 +17,8 @@
   "keywords": [
     "magic mirror",
     "module",
-    "screen"
+    "screen",
+    "motion detection"
   ],
   "engines": {
     "node": ">=18"
