@@ -14,5 +14,5 @@ jobs:
         run: npm prune
 
       - name: Run ESLint
-        run: npx eslint *.js installer/*.js components/*.js --config .eslintrc.js
+        run: npx eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js
         continue-on-error: false
