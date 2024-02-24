@@ -42,7 +42,7 @@
     "onoff": "^6.0.3"
   },
   "devDependencies": {
-    "@eslint/js": "^8.56.0",
+    "@eslint/js": "^8.57.0",
     "@stylistic/eslint-plugin": "^1.6.2",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1"
