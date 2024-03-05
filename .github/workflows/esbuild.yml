@@ -3,7 +3,7 @@ name: "ESBuild Testing"
 on: [pull_request]
 
 jobs:
-  eslint:
+  esbuild:
     name: Run esbuild
     runs-on: ubuntu-latest
     steps:
