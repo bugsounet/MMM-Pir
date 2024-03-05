@@ -23,7 +23,6 @@ Module.register("MMM-Pir", {
     mode6_gpio: 20,
     mode6_clearGpioValue: true,
     pir_gpio: 21,
-    pir_reverseValue: false,
     xrandrForceRotation: "normal",
     wrandrForceRotation: "normal",
     wrandrForceMode: null

@@ -63,8 +63,7 @@ module.exports = NodeHelper.create({
     };
     let pirConfig = {
       debug: this.config.debug,
-      gpio: this.config.pir_gpio,
-      reverseValue: this.config.pir_reverseValue
+      gpio: this.config.pir_gpio
     };
 
     let screenConfig = {

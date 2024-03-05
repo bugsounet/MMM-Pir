@@ -6,13 +6,13 @@
   "main": "MMM-Pir.js",
   "scripts": {
     "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils ddcutil build-essential'",
-    "postinstall": "installer/postinstall.sh -r -m",
+    "postinstall": "installer/postinstall.sh -m",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js --fix",
+    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js --no-warn-ignored",
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js --no-warn-ignored --fix",
     "test": "npm run lint",
     "test:minify": "cd installer && node minify.js"
   },
@@ -36,10 +36,9 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "@electron/rebuild": "^3.6.0",
     "esbuild": "^0.20.1",
     "glob": "^10.3.10",
-    "onoff": "^6.0.3"
+    "python-shell": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
