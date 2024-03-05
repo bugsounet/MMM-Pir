@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.3.1",
-  "rev": "240224",
+  "version": "1.4.0",
+  "rev": "240304",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js --fix",
+    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
     "test": "npm run lint",
     "test:minify": "cd installer && node minify.js"
   },
