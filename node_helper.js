@@ -4,9 +4,9 @@
 ***************************/
 
 var log = (...args) => { /* do nothing */ };
+const NodeHelper = require("node_helper");
 const LibScreen = require("./components/screenLib.js");
 const LibPir = require("./components/pirLib.js");
-const NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({
   start () {

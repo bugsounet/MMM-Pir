@@ -95,7 +95,7 @@ Module.register("MMM-Pir", {
           message: `Screen Error detected: ${payload}`,
           timer: 15000
         });
-        break
+        break;
       case "PIR_ERROR":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
@@ -103,7 +103,7 @@ Module.register("MMM-Pir", {
           message: `Pir Error detected: ${payload}`,
           timer: 15000
         });
-        break
+        break;
     }
   },
 
