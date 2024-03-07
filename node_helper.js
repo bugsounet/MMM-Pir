@@ -1,14 +1,15 @@
-/*******************************
-* node_helper for MMM-Pir v1.2 *
-* BuGsounet                    *
-********************************/
+/**************************
+* node_helper for MMM-Pir *
+* BuGsounet               *
+***************************/
 
 var log = (...args) => { /* do nothing */ };
+const LibScreen = require("./components/screenLib.js");
+const LibPir = require("./components/pirLib.js");
 const NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({
   start () {
-    this.lib = { error: 0 };
     this.pir = null;
     this.screen = null;
   },
@@ -43,13 +44,6 @@ module.exports = NodeHelper.create({
   async parse () {
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir]", ...args); };
     console.log("[MMM-Pir] Version:", require("./package.json").version, "rev:", require("./package.json").rev);
-    let bugsounet = await this.libraries();
-    if (bugsounet) {
-      console.error("[MMM-Pir] [LIBRARY] Warning:", bugsounet, "needed library not loaded !");
-      console.error("[MMM-Pir] [LIBRARY] Try to solve it with `npm run rebuild` in MMM-Pir directory");
-      this.sendSocketNotification("FatalError", bugsounet);
-      return;
-    }
     var callbacks = {
       screen: (noti, params) => {
         log("[CALLBACK] Screen:", noti, params || "");
@@ -77,42 +71,11 @@ module.exports = NodeHelper.create({
       wrandrForceMode: this.config.wrandrForceMode
     };
 
-    this.pir = new this.lib.Pir(pirConfig, callbacks.pir);
+    this.pir = new LibPir(pirConfig, callbacks.pir);
     this.pir.start();
-    this.screen = new this.lib.Screen(screenConfig, callbacks.screen);
+    this.screen = new LibScreen(screenConfig, callbacks.screen);
     this.screen.activate();
     console.log("[MMM-Pir] Started!");
     this.sendSocketNotification("INITIALIZED");
-  },
-
-  /** Load sensible library without black screen **/
-  libraries () {
-    let libraries = [
-      // { "library to load" : "store library name" }
-      { "./components/pirLib.js": "Pir" },
-      { "./components/screenLib.js": "Screen" }
-    ];
-    let errors = 0;
-    return new Promise((resolve) => {
-      libraries.forEach((library) => {
-        for (const [name, configValues] of Object.entries(library)) {
-          let libraryToLoad = name;
-          let libraryName = configValues;
-          try {
-            if (!this.lib[libraryName]) {
-              this.lib[libraryName] = require(libraryToLoad);
-              log(`[DATABASE] Loaded: ${libraryToLoad} --> this.lib.${libraryName}`);
-            }
-          } catch (e) {
-            console.error(`[MMM-Pir] [DATABASE] ${libraryToLoad} Loading error!`, e.message);
-            this.sendSocketNotification("WARNING", { library: libraryToLoad });
-            errors++;
-            this.lib.error = errors;
-          }
-        }
-      });
-      if (!errors) console.log("[MMM-Pir] [DATABASE] All libraries loaded!");
-      resolve(errors);
-    });
   }
 });
