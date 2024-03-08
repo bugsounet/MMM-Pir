@@ -42,7 +42,6 @@ To display the module insert it in the config.js file.
     displayLastPresence: true,
     lastPresenceTimeFormat: "LL H:mm",
     pir_gpio: 21,
-    pir_reverseValue: false,
     mode6_gpio: 20,
     mode6_clearGpioValue: true,
     xrandrForceRotation: "normal",
@@ -66,7 +65,6 @@ To display the module insert it in the config.js file.
  | displayLastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
  | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disable PIR Sensor detection | Number | 21 |
- | pir_reverseValue | Reverse sensor received value | Boolean | false |
  | mode6_gpio| **-mode 6 only-** GPIO number for control the relay (switch) | Number | 20 |
  | mode6_clearGpioValue| **-mode 6 only-** reset GPIO value script of relay (switch) | Boolean | true |
  | xrandrForceRotation | **-mode 9 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
@@ -126,13 +124,6 @@ cd ~/MagicMirror/modules/MMM-Pir
 npm run update
 ```
 
-## Reinstall
-For reinstall this module or when an update of MagicMirror is available, you can use this command:
-
-```sh
-cd ~/MagicMirror/modules/MMM-Pir
-npm run rebuild
-```
  ## Notes: 
  `mode 1` works with bullseye OS (raspbian 11)<br>
  Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`

@@ -1,8 +1,8 @@
-/****************
-*  MMM-Pir v1.2 *
-*  Bugsounet    *
-*  02/2024      *
-*****************/
+/*************
+*  MMM-Pir   *
+*  Bugsounet *
+*  03/2024   *
+*************/
 
 /* global screenDisplayer, screenTouch */
 
@@ -23,7 +23,6 @@ Module.register("MMM-Pir", {
     mode6_gpio: 20,
     mode6_clearGpioValue: true,
     pir_gpio: 21,
-    pir_reverseValue: false,
     xrandrForceRotation: "normal",
     wrandrForceRotation: "normal",
     wrandrForceMode: null
@@ -89,22 +88,14 @@ Module.register("MMM-Pir", {
         if (payload) this.sendNotification("USER_PRESENCE", true);
         else this.sendNotification("USER_PRESENCE", false);
         break;
-      case "WARNING":
+      case "SCREEN_ERROR":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
           title: "MMM-Pir",
-          message: `Warning: Library not loaded: ${payload.library}`,
+          message: `Screen Error detected: ${payload}`,
           timer: 15000
         });
         break;
-      case "FatalError":
-        this.sendNotification("SHOW_ALERT", {
-          title: "MMM-Pir",
-          message: `<p>FATAL: ${payload} needed library not loaded !<br>Try to solve it with 'npm run rebuild' in MMM-Pir Folder</p>`,
-          timer: 0
-        });
-        break;
-      case "SCREEN_ERROR":
       case "PIR_ERROR":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
@@ -112,6 +103,7 @@ Module.register("MMM-Pir", {
           message: `Pir Error detected: ${payload}`,
           timer: 15000
         });
+        break;
     }
   },
 
