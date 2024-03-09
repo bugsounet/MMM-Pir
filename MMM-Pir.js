@@ -22,6 +22,7 @@ Module.register("MMM-Pir", {
     lastPresenceTimeFormat: "LL H:mm",
     mode6_gpio: 20,
     mode6_clearGpioValue: true,
+    pir_mode: 0,
     pir_gpio: 21,
     xrandrForceRotation: "normal",
     wrandrForceRotation: "normal",
