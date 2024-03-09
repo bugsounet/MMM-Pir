@@ -9,8 +9,8 @@ parser = argparse.ArgumentParser(
 
 def gpio_check(x):
     x = int(x)
-    if x < 1 or x > 21:
-        raise argparse.ArgumentTypeError("GPIO must be between 1 and 21")
+    if x < 1 or x > 29:
+        raise argparse.ArgumentTypeError("GPIO must be between 1 and 29")
     return x
 
 parser.add_argument("-g", "--gpio", help="Define GPIO", type=gpio_check, required=True)
