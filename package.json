@@ -1,12 +1,12 @@
 {
   "name": "MMM-Pir",
-  "version": "1.4.0",
-  "rev": "240304",
+  "version": "1.5.0",
+  "rev": "240310",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
     "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils ddcutil python3 python-is-python3 python3-gpiozero'",
-    "postinstall": "installer/postinstall.sh -m",
+    "postinstall": "installer/postinstall.sh -m -r",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
@@ -36,8 +36,11 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
+    "@electron/rebuild": "^3.6.0",
     "esbuild": "^0.20.1",
     "glob": "^10.3.10",
+    "nan": "^2.19.0",
+    "onoff": "^6.0.3",
     "python-shell": "^5.0.0"
   },
   "devDependencies": {

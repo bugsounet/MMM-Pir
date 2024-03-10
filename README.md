@@ -41,13 +41,14 @@ To display the module insert it in the config.js file.
     displayStyle: "Text",
     displayLastPresence: true,
     lastPresenceTimeFormat: "LL H:mm",
-    pir_gpio: 21,
     mode6_gpio: 20,
     mode6_clearGpioValue: true,
     xrandrForceRotation: "normal",
     wrandrForceRotation: "normal",
     wrandrForceMode: "1920x1080",
-    touchMode: 3
+    touchMode: 3,
+    pir_gpio: 21,
+    pir_mode: 0,
   }
 },
 ```
@@ -64,13 +65,14 @@ To display the module insert it in the config.js file.
  | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle" | String | Text |
  | displayLastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
- | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disable PIR Sensor detection | Number | 21 |
  | mode6_gpio| **-mode 6 only-** GPIO number for control the relay (switch) | Number | 20 |
  | mode6_clearGpioValue| **-mode 6 only-** reset GPIO value script of relay (switch) | Boolean | true |
  | xrandrForceRotation | **-mode 9 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
  | wrandrForceRotation | **-mode 10 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
  | wrandrForceMode | **-mode 10 only-** Force screen resolution mode | String | null |
  | touchMode | Selected mode for enable/disable the screen with touch (see below) | Number | 3 |
+ | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disable PIR Sensor detection | Number | 21 |
+ | pir_mode | Detection mode (see bellow) | Number | 0 |
 
  * Available mode:
    - `mode: 1` - use vgencmd (For raspbian 10/11)
@@ -99,6 +101,11 @@ To display the module insert it in the config.js file.
      - Doucle Click on the MMM-Pir area will shutdown the screen
      - One Click on the screen will wake up if shutdown
 
+  * Available pir_mode:
+   - `pir_mode: 0` - use `onoff` library (For Raspberry Pi 3b+ and 4)
+   - `pir_mode: 1` - use python script with RPI.GPIO library (For Raspberry Pi 3b+ and 4)
+   - `pir_mode: 2` - use python script with gpiozero library (For Raspberry Pi 5, not tested on other Raspberry Pi)
+
   Notes: 
     * If you lock your screen with TouchScreen, PIR sensor will be disabled
     * You need to unlock your screen with touchscreen to reactivate the PIR sensor
@@ -124,6 +131,13 @@ cd ~/MagicMirror/modules/MMM-Pir
 npm run update
 ```
 
- ## Notes: 
+## Reinstall
+For reinstall this module or when an update of MagicMirror is available, you can use this command:
+```sh
+cd ~/MagicMirror/modules/MMM-Pir
+npm run rebuild
+```
+
+## Notes: 
  `mode 1` works with bullseye OS (raspbian 11)<br>
  Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`
