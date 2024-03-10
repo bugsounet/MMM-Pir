@@ -86,7 +86,10 @@ class PIR {
     });
 
     this.pir.end((err,code,signal) => {
-      if (err) console.error("[MMM-Pir] [LIB] [PIR] [PYTHON]",err);
+      if (err) {
+        console.error("[MMM-Pir] [LIB] [PIR] [PYTHON]",err);
+        this.callback("PIR_ERROR", err.message);
+      }
       console.warn(`[MMM-Pir] [LIB] [PIR] [PYTHON] The exit code was: ${code}`);
       console.warn(`[MMM-Pir] [LIB] [PIR] [PYTHON] The exit signal was: ${signal}`);
     });
@@ -150,7 +153,10 @@ class PIR {
     });
 
     this.pir.end((err,code,signal) => {
-      if (err) console.error("[MMM-Pir] [LIB] [PIR] [PYTHON]",err);
+      if (err) {
+        console.error("[MMM-Pir] [LIB] [PIR] [PYTHON]",err);
+        this.callback("PIR_ERROR", err.message);
+      }
       console.warn(`[MMM-Pir] [LIB] [PIR] [PYTHON] The exit code was: ${code}`);
       console.warn(`[MMM-Pir] [LIB] [PIR] [PYTHON] The exit signal was: ${signal}`);
     });
