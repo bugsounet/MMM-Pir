@@ -64,7 +64,7 @@ class PIR {
 
     this.pir = new PythonShell("MotionSensor.py", options);
     this.callback("PIR_STARTED");
-    console.log("[MMM-Pir] [LIB] [PIR] Started in MODE 1!");
+    console.log("[MMM-Pir] [LIB] [PIR] Started in MODE 2!");
     this.running = true;
 
     this.pir.on("message", (message) => {
@@ -128,7 +128,7 @@ class PIR {
 
     this.pir = new PythonShell("gpioSensor.py", options);
     this.callback("PIR_STARTED");
-    console.log("[MMM-Pir] [LIB] [PIR] Started in MODE 2!");
+    console.log("[MMM-Pir] [LIB] [PIR] Started in MODE 1!");
     this.running = true;
 
     this.pir.on("message", (message) => {
