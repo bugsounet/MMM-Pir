@@ -1,0 +1,21 @@
+name: "Complete build Testing"
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Run complete build testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clone MagicMirror²
+        run: cd && git clone https://github.com/MagicMirrorOrg/MagicMirror && cd MagicMirror && npm install
+
+      - name: Copy MMM-Pir to MagicMirror²
+        run: cp -R ../MMM-Pir ~/MagicMirror/modules/
+
+      - name: Install MMM-Pir
+        run: cd ~/MagicMirror/modules/MMM-Pir && npm install
+        continue-on-error: false
