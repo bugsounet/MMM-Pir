@@ -102,9 +102,9 @@ To display the module insert it in the config.js file.
      - One Click on the screen will wake up if shutdown
 
   * Available pir_mode:
-   - `pir_mode: 0` - use `onoff` library (For Raspberry Pi 3b+ and 4)
-   - `pir_mode: 1` - use python script with RPI.GPIO library (For Raspberry Pi 3b+ and 4)
-   - `pir_mode: 2` - use python script with gpiozero library (For Raspberry Pi 5, not tested on other Raspberry Pi)
+    - `pir_mode: 0` - use `onoff` library (For Raspberry Pi 3b+ and 4)
+    - `pir_mode: 1` - use python script with RPI.GPIO library (For Raspberry Pi 3b+ and 4)
+    - `pir_mode: 2` - use python script with gpiozero library (For Raspberry Pi 5, not tested on other Raspberry Pi)
 
   Notes: 
     * If you lock your screen with TouchScreen, PIR sensor will be disabled
