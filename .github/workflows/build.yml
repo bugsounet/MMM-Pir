@@ -1,4 +1,4 @@
-name: "MagicMirror² and MMM-Pir build Testing"
+name: "MagicMirror² (master) and MMM-Pir build Testing"
 
 on: [pull_request]
 
