@@ -126,11 +126,35 @@ To display the module insert it in the config.js file.
   * `USER_PRESENCE` with payload `true` or `false` like `MMM_PIR-WAKEUP` or `MMM_PIR-END` notification
 
 ## Update
+
+### Manual update
+
+In a terminal try this command:
 ```sh
 cd ~/MagicMirror/modules/MMM-Pir
 npm run update
 ```
 
+### Automatic Update from [updatenotification](https://develop.docs.magicmirror.builders/modules/updatenotification.html) default module
+
+Since MagicMirror² v2.27.x, we are able to Update automaticaly any modules from `updatenotification`.<br>
+Let's add `MMM-Pir` rule
+
+```js
+  {
+    module: "updatenotification",
+    position: "top_center",
+    config: {
+      updateAutorestart: true, // restart MagicMirror automaticaly after update
+      updates: [
+        // MMM-Pir rule
+        {
+          "MMM-Pir": "npm run update"
+        },
+      ]
+    }
+  },
+```
 ## Reinstall
 For reinstall this module or when an update of MagicMirror is available, you can use this command:
 ```sh
