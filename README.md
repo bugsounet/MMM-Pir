@@ -156,7 +156,7 @@ Let's add `MMM-Pir` rule
   },
 ```
 ## Reinstall
-For reinstall this module or when an update of MagicMirror is available, you can use this command:
+For reinstall this module or when an update of MagicMirror² is available, you can use this command:
 ```sh
 cd ~/MagicMirror/modules/MMM-Pir
 npm run rebuild
