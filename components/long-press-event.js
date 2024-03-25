@@ -66,7 +66,7 @@
             !(window.mozRequestAnimationFrame && window.mozCancelRequestAnimationFrame) && // Firefox 5 ships without cancel support
             !window.oRequestAnimationFrame && !window.msRequestAnimationFrame) return window.setTimeout(fn, delay);
 
-        var start = new Date().getTime();
+        var start = new Date(Date.now()).getTime();
         var handle = {};
 
         var loop = function () {
