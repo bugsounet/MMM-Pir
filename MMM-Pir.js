@@ -155,8 +155,8 @@ Module.register("MMM-Pir", {
     return [
       "/modules/MMM-Pir/components/progressbar.js",
       "/modules/MMM-Pir/components/screenDisplayer.js",
-      "/modules/MMM-Pir/components/long-press-event.js",
-      "/modules/MMM-Pir/components/screenTouch.js"
+      "/modules/MMM-Pir/components/screenTouch.js",
+      "/modules/MMM-Pir/node_modules/long-press-event/dist/long-press-event.min.js"
     ];
   },
 

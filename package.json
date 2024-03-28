@@ -37,15 +37,15 @@
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
-    "esbuild": "^0.20.1",
+    "esbuild": "^0.20.2",
     "glob": "^10.3.10",
-    "nan": "^2.19.0",
+    "long-press-event": "^2.4.6",
     "onoff": "^6.0.3",
     "python-shell": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
-    "@stylistic/eslint-plugin": "^1.6.3",
+    "@stylistic/eslint-plugin": "^1.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1"
   }

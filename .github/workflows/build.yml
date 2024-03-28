@@ -1,0 +1,26 @@
+name: "MagicMirror² (master) and MMM-Pir build Testing"
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Test install MMM-Pir
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MagicMirror²
+        uses: actions/checkout@v4
+        with:
+          repository: MagicMirrorOrg/MagicMirror
+
+      - name: Install MagicMirror²
+        run: npm install
+
+      - name: Checkout MMM-Pir
+        uses: actions/checkout@v4
+        with:
+          path: MagicMirror/modules/MMM-Pir
+
+      - name: Install MMM-Pir
+        run: npm install
+        working-directory: MagicMirror/modules/MMM-Pir
+        continue-on-error: false
