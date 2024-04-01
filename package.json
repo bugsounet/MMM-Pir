@@ -38,7 +38,7 @@
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
     "esbuild": "^0.20.2",
-    "glob": "^10.3.10",
+    "glob": "^10.3.12",
     "long-press-event": "^2.4.6",
     "onoff": "^6.0.3",
     "python-shell": "^5.0.0"
