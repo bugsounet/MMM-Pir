@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.5.0",
-  "rev": "240310",
+  "version": "1.5.1",
+  "rev": "240402",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
