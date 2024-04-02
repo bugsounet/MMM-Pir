@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.5.0",
-  "rev": "240310",
+  "version": "1.5.1",
+  "rev": "240402",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -37,15 +37,15 @@
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
-    "esbuild": "^0.20.1",
-    "glob": "^10.3.10",
-    "nan": "^2.19.0",
+    "esbuild": "^0.20.2",
+    "glob": "^10.3.12",
+    "long-press-event": "^2.4.6",
     "onoff": "^6.0.3",
     "python-shell": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
-    "@stylistic/eslint-plugin": "^1.6.3",
+    "@stylistic/eslint-plugin": "^1.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1"
   }
