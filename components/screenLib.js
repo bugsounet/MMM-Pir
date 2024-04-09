@@ -304,7 +304,7 @@ class SCREEN {
           else {
             let responsePy = stdout.trim();
             log(`Response PY -- Check State: ${responsePy}`);
-            if (responsePy === 1) actual = true;
+            if (responsePy === "1") actual = true;
             this.resultDisplay(actual, wanted);
           }
         });
@@ -320,7 +320,7 @@ class SCREEN {
           else {
             let responsePy = stdout.trim();
             log(`Response PY -- Check State (reverse): ${responsePy}`);
-            if (responsePy === 0) actual = true;
+            if (responsePy === "0") actual = true;
             this.resultDisplay(actual, wanted);
           }
         });
