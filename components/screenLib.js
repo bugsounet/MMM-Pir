@@ -105,10 +105,8 @@ class SCREEN {
   }
 
   activate () {
-    process.on("exit", (code) => {
+    process.on("exit", () => {
       if (this.config.mode) this.setPowerDisplay(true);
-      console.log("[MMM-Pir] [LIB] [SCREEN] See you soon !");
-      console.log("[MMM-Pir] [LIB] [SCREEN] @bugsounet");
     });
     this.start();
   }
