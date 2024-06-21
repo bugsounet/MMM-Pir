@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.5.2",
-  "rev": "240519",
+  "version": "1.5.3",
+  "rev": "240621",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -40,6 +40,7 @@
     "esbuild": "^0.21.5",
     "glob": "^10.4.2",
     "long-press-event": "^2.5.0",
+    "nan": "^2.20.0",
     "onoff": "^6.0.3",
     "python-shell": "^5.0.0"
   },
