@@ -102,9 +102,9 @@ To display the module insert it in the config.js file.
      - One Click on the screen will wake up if shutdown
 
   * Available pir_mode:
-    - `pir_mode: 0` - use `onoff` library (For Raspberry Pi 3b+ and 4)
-    - `pir_mode: 1` - use python script with RPI.GPIO library (For Raspberry Pi 3b+ and 4)
-    - `pir_mode: 2` - use python script with gpiozero library (For Raspberry Pi 5, not tested on other Raspberry Pi)
+    - `pir_mode: 0` - use `onoff` library (For Raspberry Pi 3b+ and 4 with Rapsbian 10/11)
+    - `pir_mode: 1` - use python script with RPI.GPIO library (For Raspberry Pi 3b+ and 4 with Raspbian 10/11)
+    - `pir_mode: 2` - use python script with gpiozero library (For Raspberry Pi 5 (not tested on other Raspberry Pi) with Raspbian 11/12)
 
   Notes: 
     * If you lock your screen with TouchScreen, PIR sensor will be disabled
@@ -163,5 +163,7 @@ npm run rebuild
 ```
 
 ## Notes: 
- `mode 1` works with bullseye OS (raspbian 11)<br>
- Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`
+ * `mode 1` works with bullseye OS (raspbian 11)<br>
+ ↪️ Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`
+ * `Pir Error detected: EINVAL: invalid argument, write`: Means that `pir_mode: 0` is not suported on your system (`onoff` [old] library)<br>
+ ↪️ Just try another `pir_mode` value (`1` or `2`)
