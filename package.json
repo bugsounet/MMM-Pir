@@ -38,7 +38,7 @@
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
     "esbuild": "^0.23.0",
-    "glob": "^10.4.3",
+    "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
     "nan": "^2.20.0",
     "onoff": "^6.0.3",
