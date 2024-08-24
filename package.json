@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "1.5.3",
-  "rev": "240701",
+  "version": "1.5.4",
+  "rev": "240824",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -37,8 +37,8 @@
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
-    "esbuild": "^0.22.0",
-    "glob": "^10.4.2",
+    "esbuild": "^0.23.1",
+    "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
     "nan": "^2.20.0",
     "onoff": "^6.0.3",
