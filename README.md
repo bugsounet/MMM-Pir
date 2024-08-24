@@ -162,8 +162,11 @@ cd ~/MagicMirror/modules/MMM-Pir
 npm run rebuild
 ```
 
-## Notes: 
+## Notes
  * `mode 1` works with bullseye OS (raspbian 11)<br>
  ↪️ Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`
  * `Pir Error detected: EINVAL: invalid argument, write`: Means that `pir_mode: 0` is not suported on your system (`onoff` [old] library)<br>
  ↪️ Just try another `pir_mode` value (`1` or `2`)
+
+## Support
+ * Get assistance on [bugsounet website](https://www.bugsounet.fr)
