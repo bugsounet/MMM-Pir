@@ -1,7 +1,7 @@
 # MMM-Pir
 
 After a configured time without any user interaction the display will turn off and hide all modules for economy mode.<br>
-It will wake up with a Pir sensor
+It will wake up with a Pir sensor or Touch screen
 
 ## Screenshot
 
@@ -11,7 +11,7 @@ It will wake up with a Pir sensor
 
 ## Installation
 
-**Minimal node version requirement: v18**
+**Minimal node version requirement: v20**
 
 Clone the module into your MagicMirror module folder and execute `npm install` in the module's directory.
 ```sh
@@ -88,27 +88,27 @@ To display the module insert it in the config.js file.
    - `mode: 0` - disabled mode
 
   * Available touchMode:
-   - `touchMode: 0`
-     - disabled
-   - `touchMode: 1`
-     - One click on the screen will restart the timer (or Wake up the screen if needed)
-     - Double Click on the screen will shutdown the screen
-   - `touchMode: 2`
-     - One Click on the MMM-Pir area will restart the timer
-     - Long Click on the screen will shutdown or wake up the screen (toogle)
-   - `touchMode: 3`
-     - One Click on the MMM-Pir area will restart the timer
-     - Doucle Click on the MMM-Pir area will shutdown the screen
-     - One Click on the screen will wake up if shutdown
+    - `touchMode: 0`
+      - Touch mode is disabled
+    - `touchMode: 1`
+      - One click on the screen will restart the timer (or Wake up the screen if needed)
+      - Double Click on the screen will shutdown the screen
+    - `touchMode: 2`
+      - One Click on the MMM-Pir area will restart the timer
+      - Long Click on the screen will shutdown or wake up the screen (toogle)
+    - `touchMode: 3`
+      - One Click on the MMM-Pir area will restart the timer
+      - Doucle Click on the MMM-Pir area will shutdown the screen
+      - One Click on the screen will wake up if shutdown
 
   * Available pir_mode:
     - `pir_mode: 0` - use `onoff` library (For Raspberry Pi 3b+ and 4 with Rapsbian 10/11)
     - `pir_mode: 1` - use python script with RPI.GPIO library (For Raspberry Pi 3b+ and 4 with Raspbian 10/11)
     - `pir_mode: 2` - use python script with gpiozero library (For Raspberry Pi 3b+, 5 (not tested on Raspberry Pi 4) with Raspbian 11/12)
 
-  Notes: 
-    * If you lock your screen with TouchScreen, PIR sensor will be disabled
-    * You need to unlock your screen with touchscreen to reactivate the PIR sensor
+  * Notes:
+    - If you lock your screen with TouchScreen, PIR sensor will be disabled
+    - You need to unlock your screen with touchscreen to reactivate the PIR sensor
 
 ## Developer Notes
 
