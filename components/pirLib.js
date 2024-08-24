@@ -34,6 +34,12 @@ class PIR {
         console.log("[MMM-Pir] [LIB] [PIR] Mode 2 Selected (gpiozero)");
         this.gpiozeroDetect();
         break;
+      /*
+      case 3:
+        console.log("[MMM-Pir] [LIB] [PIR] Mode 3 Selected (gpiod library)");
+        this.gpiodDetect();
+        break;
+      */
       default:
         console.warn(`[MMM-Pir] [LIB] [PIR] mode: ${this.config.mode} is not a valid value`);
         console.warn("[MMM-Pir] [LIB] [PIR] set mode 0");
@@ -73,7 +79,7 @@ class PIR {
       log(`Sensor read value: ${value}`);
       if (value === 1) {
         this.callback("PIR_DETECTED");
-        log(`Detected presence (value: ${value})`);
+        log("Detected presence");
       }
     });
   }
@@ -161,6 +167,58 @@ class PIR {
       console.warn(`[MMM-Pir] [LIB] [PIR] [PYTHON] The exit signal was: ${signal}`);
     });
   }
+
+  /* experimental */
+
+  /*
+  gpiodDetect () {
+    try {
+      const { version, Chip, Line } = require("node-libgpiod");
+      this.pirChip = new Chip(this.config.chip);
+      this.pirLine = new Line(this.pirChip, this.config.gpio);
+      this.pirLine.requestInputMode();
+      this.callback("PIR_STARTED");
+      console.log("[MMM-Pir] [LIB] [PIR] Started!");
+    } catch (err) {
+      if (this.pirLine != null) {
+        try {
+          this.pirLine.release();
+          this.pirLine = null;
+        } catch (err) {
+          console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] " + err);
+        }
+      }
+      console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] " + err);
+      this.running = false;
+      return this.callback("PIR_ERROR", err.message);
+    }
+    this.running = true;
+
+    this.pollfunc = function () {
+      var line = this.pirLine;
+      if (this.running) {
+        try {
+          var value = line.getValue();
+          if (value != this.oldstate) {
+            this.oldstate = value;
+            log("Sensor read value: " + value);
+            if (value == 1) {
+              this.callback("PIR_DETECTED");
+              log("Detected presence");
+            }
+          }
+        } catch (err) {
+          console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] " + err);
+          this.callback("PIR_ERROR", err);
+        }
+
+        setTimeout(() => this.pollfunc(), 100);
+      }
+    };
+
+    setTimeout(() => this.pollfunc(), 100);
+  };
+  */
 }
 
 module.exports = PIR;
