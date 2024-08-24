@@ -1,11 +1,11 @@
 {
   "name": "MMM-Pir",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "rev": "240824",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
-    "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils ddcutil python3 python-is-python3 python3-gpiozero'",
+    "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils ddcutil python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
     "postinstall": "installer/postinstall.sh -m -r",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
@@ -32,7 +32,7 @@
   "author": "bugsounet",
   "license": "MIT",
   "bugs": {
-    "url": "https://forum.bugsounet.fr/"
+    "url": "https://www.bugsounet.fr/"
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
@@ -41,6 +41,7 @@
     "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
     "nan": "^2.20.0",
+    "node-libgpiod": "^0.4.6",
     "onoff": "^6.0.3",
     "python-shell": "^5.0.0"
   },
