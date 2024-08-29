@@ -223,6 +223,7 @@ class PIR {
     setInterval(() => this.pir(), 1000);
   };
 
+  /** todo better... */
   ChipDetect () {
     const { version, Chip, Line } = require("node-libgpiod");
     return new Promise ((resolve) => {
