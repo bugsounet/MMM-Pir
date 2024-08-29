@@ -53,7 +53,13 @@ class PIR {
   stop () {
     if (!this.running || (this.config.gpio === 0)) return;
     if (this.config.mode === 0) this.pir.unexport();
-    else this.pir.kill();
+    else {
+      if (this.config.mode === 3 && this.pirLine) {
+        this.pirLine.release();
+        this.pirLine = null;
+      }
+      else this.pir.kill();
+    }
     this.pir = null;
     this.running = false;
     this.callback("PIR_STOP");
@@ -174,8 +180,25 @@ class PIR {
   async gpiodDetect () {
     try {
       const { version, Chip, Line } = require("node-libgpiod");
+      const numbers = [0,1,2,3,4,5,6,7,8,9,10];
 
-      this.pirChipNumber = await this.ChipDetect();
+      numbers.every((number) => {
+        try {
+          this.pirChip = new Chip(number);
+          const label = this.pirChip.getChipLabel();
+          if (label.includes("pinctrl-")) {
+            /* found chip */
+            console.log(`[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip ${number}: ${chip.getChipLabel()}`);
+            this.pirChipNumber = number;
+            return false;
+          }
+        } catch {
+          /* out of chip */
+          return false;
+        }
+        /* try next chip */
+        return true;
+      });
 
       if (this.pirChipNumber === -1) {
         console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] No Chip Found!");
@@ -183,7 +206,6 @@ class PIR {
         return;
       }
 
-      this.pirChip = new Chip(this.pirChipNumber);
       this.pirLine = new Line(this.pirChip, this.config.gpio);
       this.pirLine.requestInputMode();
       this.callback("PIR_STARTED");
@@ -221,26 +243,6 @@ class PIR {
       }
     };
     setInterval(() => this.pir(), 1000);
-  };
-
-  /** todo better... */
-  ChipDetect () {
-    const { version, Chip, Line } = require("node-libgpiod");
-    return new Promise ((resolve) => {
-      var chip = new Chip(0);
-      if (chip.getChipLabel().includes("pinctrl-")) {
-        console.log("[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip 0");
-        resolve(0);
-      } else {
-        chip = new Chip(4);
-        if (chip.getChipLabel().includes("pinctrl-")) {
-          console.log("[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip 4");
-          resolve(4);
-        } else {
-          resolve(-1);
-        }
-      }
-    });
   }
 }
 
