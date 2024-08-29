@@ -16,6 +16,9 @@ class PIR {
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [PIR]", ...args); };
     this.pir = null;
     this.running = false;
+    this.pirChip = null;
+    this.pirLine = null;
+    this.pirChipNumber = -1;
   }
 
   start () {
@@ -34,12 +37,10 @@ class PIR {
         console.log("[MMM-Pir] [LIB] [PIR] Mode 2 Selected (gpiozero)");
         this.gpiozeroDetect();
         break;
-      /*
       case 3:
         console.log("[MMM-Pir] [LIB] [PIR] Mode 3 Selected (gpiod library)");
         this.gpiodDetect();
         break;
-      */
       default:
         console.warn(`[MMM-Pir] [LIB] [PIR] mode: ${this.config.mode} is not a valid value`);
         console.warn("[MMM-Pir] [LIB] [PIR] set mode 0");
@@ -170,55 +171,76 @@ class PIR {
 
   /* experimental */
 
-  /*
-  gpiodDetect () {
+  async gpiodDetect () {
     try {
       const { version, Chip, Line } = require("node-libgpiod");
-      this.pirChip = new Chip(this.config.chip);
+
+      this.pirChipNumber = await ChipDetect();
+
+      if (this.pirChipNumber === -1) {
+        console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] No Chip Found!");
+        this.running = false;
+        return;
+      }
+
+      this.pirChip = new Chip(this.pirChipNumber);
       this.pirLine = new Line(this.pirChip, this.config.gpio);
       this.pirLine.requestInputMode();
       this.callback("PIR_STARTED");
       console.log("[MMM-Pir] [LIB] [PIR] Started!");
     } catch (err) {
-      if (this.pirLine != null) {
-        try {
-          this.pirLine.release();
-          this.pirLine = null;
-        } catch (err) {
-          console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] " + err);
-        }
+      if (this.pirLine) {
+        this.pirLine.release();
+        this.pirLine = null;
       }
-      console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] " + err);
+
+      console.error(`[MMM-Pir] [LIB] [PIR] [GPIOD] ${err}`);
       this.running = false;
       return this.callback("PIR_ERROR", err.message);
     }
+
     this.running = true;
 
-    this.pollfunc = function () {
+    this.pir = () => {
       var line = this.pirLine;
       if (this.running) {
         try {
           var value = line.getValue();
-          if (value != this.oldstate) {
+          if (value !== this.oldstate) {
             this.oldstate = value;
-            log("Sensor read value: " + value);
-            if (value == 1) {
+            log(`Sensor read value: ${value}`);
+            if (value === 1) {
               this.callback("PIR_DETECTED");
               log("Detected presence");
             }
           }
         } catch (err) {
-          console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] " + err);
+          console.error(`[MMM-Pir] [LIB] [PIR] [GPIOD] ${err}`);
           this.callback("PIR_ERROR", err);
-        }
-
-        setTimeout(() => this.pollfunc(), 100);
+        };
       }
     };
-
-    setTimeout(() => this.pollfunc(), 100);
+    setInterval(() => this.pir(), 1000);
   };
-  */
+
+  ChipDetect () {
+    const { version, Chip, Line } = require("node-libgpiod");
+    return new Promise ((resolve) => {
+      var chip = new Chip(0);
+      if (chip.getChipLabel().includes("pinctrl-")) {
+        console.log("[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip 0");
+        resolve(0);
+      } else {
+        chip = new Chip(3);
+        if (chip.getChipLabel().includes("pinctrl-")) {
+          console.log("[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip 4");
+          resolve(4);
+        } else {
+          resolve(-1);
+        }
+      }
+    });
+  }
 }
 
 module.exports = PIR;
