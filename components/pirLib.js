@@ -175,7 +175,7 @@ class PIR {
     try {
       const { version, Chip, Line } = require("node-libgpiod");
 
-      this.pirChipNumber = await ChipDetect();
+      this.pirChipNumber = await this.ChipDetect();
 
       if (this.pirChipNumber === -1) {
         console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] No Chip Found!");
