@@ -231,7 +231,7 @@ class PIR {
         console.log("[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip 0");
         resolve(0);
       } else {
-        chip = new Chip(3);
+        chip = new Chip(4);
         if (chip.getChipLabel().includes("pinctrl-")) {
           console.log("[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip 4");
           resolve(4);
