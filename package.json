@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
   "version": "1.6.0",
-  "rev": "240824",
+  "rev": "240921",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -47,9 +47,7 @@
     "python-shell": "^5.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^8.57.0",
-    "@stylistic/eslint-plugin": "1.8.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-import": "^2.29.1"
+    "@stylistic/eslint-plugin": "^2.8.0",
+    "eslint": "^9.11.0"
   }
 }
