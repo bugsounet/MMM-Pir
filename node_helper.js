@@ -44,6 +44,7 @@ module.exports = NodeHelper.create({
   async parse () {
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir]", ...args); };
     console.log("[MMM-Pir] Version:", require("./package.json").version, "rev:", require("./package.json").rev);
+    log("Config:", this.config)
     var callbacks = {
       screen: (noti, params) => {
         log("[CALLBACK] Screen:", noti, params || "");
@@ -57,19 +58,19 @@ module.exports = NodeHelper.create({
     };
     let pirConfig = {
       debug: this.config.debug,
-      gpio: this.config.pir_gpio,
-      mode: this.config.pir_mode
+      gpio: this.config.Pir.gpio,
+      mode: this.config.Pir.mode
     };
 
     let screenConfig = {
       debug: this.config.debug,
-      delay: this.config.delay,
-      mode: this.config.mode,
-      gpio: this.config.mode6_gpio,
-      clearGpioValue: this.config.mode6_clearGpioValue,
-      xrandrForceRotation: this.config.xrandrForceRotation,
-      wrandrForceRotation: this.config.wrandrForceRotation,
-      wrandrForceMode: this.config.wrandrForceMode
+      delay: this.config.Display.delay,
+      mode: this.config.Display.mode,
+      gpio: this.config.Display.mode6_gpio,
+      clearGpioValue: this.config.Display.mode6_clearGpioValue,
+      xrandrForceRotation: this.config.Display.xrandrForceRotation,
+      wrandrForceRotation: this.config.Display.wrandrForceRotation,
+      wrandrForceMode: this.config.Display.wrandrForceMode
     };
 
     if (!this.pir && !this.screen) {

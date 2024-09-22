@@ -1,7 +1,7 @@
 /*************
 *  MMM-Pir   *
 *  Bugsounet *
-*  03/2024   *
+*  09/2024   *
 *************/
 
 /* global screenDisplayer, screenTouch */
@@ -12,21 +12,27 @@ Module.register("MMM-Pir", {
   requiresVersion: "2.23.0",
   defaults: {
     debug: false,
-    delay: 2 * 60 * 1000,
-    mode: 1,
-    touchMode: 3,
-    displayCounter: true,
-    displayBar: true,
-    displayStyle: "Text",
-    displayLastPresence: true,
-    lastPresenceTimeFormat: "LL H:mm",
-    mode6_gpio: 20,
-    mode6_clearGpioValue: true,
-    pir_mode: 0,
-    pir_gpio: 21,
-    xrandrForceRotation: "normal",
-    wrandrForceRotation: "normal",
-    wrandrForceMode: null
+    Display: {
+      delay: 2 * 60 * 1000,
+      mode: 1,
+      displayCounter: true,
+      displayBar: true,
+      displayStyle: "Text",
+      displayLastPresence: true,
+      lastPresenceTimeFormat: "LL H:mm",
+      mode6_gpio: 20,
+      mode6_clearGpioValue: true,
+      xrandrForceRotation: "normal",
+      wrandrForceRotation: "normal",
+      wrandrForceMode: null
+    },
+    Pir: {
+      mode: 0,
+      gpio: 21
+    },
+    Touch: {
+      mode: 3
+    }
   },
 
   start () {
@@ -40,15 +46,15 @@ Module.register("MMM-Pir", {
       translate: (...args) => this.translate(...args)
     };
     let displayConfig = {
-      displayCounter: this.config.displayCounter,
-      displayBar: this.config.displayBar,
-      displayStyle: this.config.displayStyle,
-      displayLastPresence: this.config.displayLastPresence,
-      delay: this.config.delay
+      displayCounter: this.config.Display.displayCounter,
+      displayBar: this.config.Display.displayBar,
+      displayStyle: this.config.Display.displayStyle,
+      displayLastPresence: this.config.Display.displayLastPresence,
+      delay: this.config.Display.delay
     };
     this.screenDisplay = new screenDisplayer(displayConfig, Tools);
     this.screenDisplay.checkStyle();
-    this.screenTouch = new screenTouch(this.config.touchMode, Tools);
+    this.screenTouch = new screenTouch(this.config.Touch, Tools);
     _logPIR("is now started!");
   },
 
@@ -66,7 +72,7 @@ Module.register("MMM-Pir", {
         this.screenDisplay.screenHiding();
         break;
       case "SCREEN_OUTPUT":
-        if (this.config.displayStyle === "Text") {
+        if (this.config.Display.displayStyle === "Text") {
           let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER");
           counter.textContent = payload.timer;
         } else {
@@ -74,8 +80,8 @@ Module.register("MMM-Pir", {
         }
         break;
       case "SCREEN_PRESENCE":
-        if (!this.config.displayLastPresence) return;
-        if (payload) this.lastPresence = moment().format(this.config.lastPresenceTimeFormat);
+        if (!this.config.Display.displayLastPresence) return;
+        if (payload) this.lastPresence = moment().format(this.config.Display.lastPresenceTimeFormat);
         else this.userPresence = this.lastPresence;
         if (this.userPresence) {
           let presence = document.getElementById("MMM-PIR_PRESENCE");
@@ -116,27 +122,22 @@ Module.register("MMM-Pir", {
     if (!this.ready) return;
     switch (notification) {
       case "MMM_PIR-END":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("FORCE_END");
         break;
       case "MMM_PIR-WAKEUP":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("WAKEUP");
         break;
       case "MMM_PIR-LOCK":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("LOCK");
         break;
       case "MMM_PIR-UNLOCK":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("UNLOCK");
         break;
       case "USER_PRESENCE":
-
         /** only available if not force-locked by touch **/
         if (payload) this.sendSocketNotification("WAKEUP");
         else this.sendSocketNotification("FORCE_END");

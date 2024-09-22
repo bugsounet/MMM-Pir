@@ -19,7 +19,6 @@ class screenDisplayer {
     dom.id = "MMM-PIR";
 
     if (this.config.displayCounter || this.config.displayBar) {
-
       /** Screen TimeOut Text **/
       var screen = document.createElement("div");
       screen.id = "MMM-PIR_SCREEN";
@@ -48,7 +47,6 @@ class screenDisplayer {
     }
 
     if (this.config.displayLastPresence) {
-
       /** Last user Presence **/
       var presence = document.createElement("div");
       presence.id = "MMM-PIR_PRESENCE";
@@ -68,7 +66,6 @@ class screenDisplayer {
   }
 
   prepareBar () {
-
     /** Prepare TimeOut Bar **/
     if ((this.config.displayStyle === "Text") || (!this.config.displayBar)) return;
     this.bar = new ProgressBar[this.config.displayStyle](document.getElementById("MMM-PIR_SCREEN_BAR"), {
@@ -128,7 +125,6 @@ class screenDisplayer {
   }
 
   checkStyle () {
-
     /** Crash prevent on Time Out Style Displaying **/
     /** --> Set to "Text" if not found */
     let Style = ["Text", "Line", "SemiCircle", "Circle"];
