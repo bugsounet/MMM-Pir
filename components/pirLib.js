@@ -129,7 +129,7 @@ class PIR {
       if (this.pirChipNumber === -1) {
         console.error("[MMM-Pir] [LIB] [PIR] [GPIOD] No Chip Found!");
         this.running = false;
-        return;
+        return this.callback("PIR_ERROR", "No Chip Found!");
       }
 
       this.pirLine = new Line(this.pirChip, this.config.gpio);
