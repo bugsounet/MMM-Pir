@@ -44,7 +44,7 @@ module.exports = NodeHelper.create({
   async parse () {
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir]", ...args); };
     console.log("[MMM-Pir] Version:", require("./package.json").version, "rev:", require("./package.json").rev);
-    log("Config:", this.config)
+    log("Config:", this.config);
     var callbacks = {
       screen: (noti, params) => {
         log("[CALLBACK] Screen:", noti, params || "");
