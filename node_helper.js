@@ -72,11 +72,20 @@ module.exports = NodeHelper.create({
       wrandrForceMode: this.config.wrandrForceMode
     };
 
-    this.pir = new LibPir(pirConfig, callbacks.pir);
-    this.pir.start();
-    this.screen = new LibScreen(screenConfig, callbacks.screen);
-    this.screen.activate();
-    console.log("[MMM-Pir] Started!");
+    if (!this.pir && !this.screen) {
+      /* will allow multi-instance
+       *
+       * don't load again lib and screen scripts
+       * just only use it if loaded
+       */
+      this.pir = new LibPir(pirConfig, callbacks.pir);
+      this.pir.start();
+      this.screen = new LibScreen(screenConfig, callbacks.screen);
+      this.screen.activate();
+      console.log("[MMM-Pir] Started!");
+    } else {
+      console.log("[MMM-Pir] Already Started!");
+    }
     this.sendSocketNotification("INITIALIZED");
   }
 });
