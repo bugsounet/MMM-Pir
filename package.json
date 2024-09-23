@@ -38,7 +38,7 @@
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
     "@electron/rebuild": "^3.6.0",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.24.0",
     "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
     "nan": "^2.20.0",
