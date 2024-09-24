@@ -13,15 +13,13 @@ Module.register("MMM-Pir", {
   defaults: {
     debug: false,
     Display: {
-      delay: 2 * 60 * 1000,
+      timeout: 2 * 60 * 1000,
       mode: 1,
-      displayCounter: true,
-      displayBar: true,
-      displayStyle: "Text",
-      displayLastPresence: true,
+      counter: true,
+      bar: true,
+      style: "Text",
+      lastPresence: true,
       lastPresenceTimeFormat: "LL H:mm",
-      mode6_gpio: 20,
-      mode6_clearGpioValue: true,
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null
@@ -46,11 +44,11 @@ Module.register("MMM-Pir", {
       translate: (...args) => this.translate(...args)
     };
     let displayConfig = {
-      displayCounter: this.config.Display.displayCounter,
-      displayBar: this.config.Display.displayBar,
-      displayStyle: this.config.Display.displayStyle,
-      displayLastPresence: this.config.Display.displayLastPresence,
-      delay: this.config.Display.delay
+      counter: this.config.Display.counter,
+      bar: this.config.Display.bar,
+      style: this.config.Display.style,
+      lastPresence: this.config.Display.lastPresence,
+      timeout: this.config.Display.timeout
     };
     this.screenDisplay = new screenDisplayer(displayConfig, Tools);
     this.screenDisplay.checkStyle();
@@ -72,7 +70,7 @@ Module.register("MMM-Pir", {
         this.screenDisplay.screenHiding();
         break;
       case "SCREEN_OUTPUT":
-        if (this.config.Display.displayStyle === "Text") {
+        if (this.config.Display.style === "Text") {
           let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER");
           counter.textContent = payload.timer;
         } else {
@@ -80,7 +78,7 @@ Module.register("MMM-Pir", {
         }
         break;
       case "SCREEN_PRESENCE":
-        if (!this.config.Display.displayLastPresence) return;
+        if (!this.config.Display.lastPresence) return;
         if (payload) this.lastPresence = moment().format(this.config.Display.lastPresenceTimeFormat);
         else this.userPresence = this.lastPresence;
         if (this.userPresence) {

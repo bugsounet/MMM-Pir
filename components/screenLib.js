@@ -18,7 +18,7 @@ class SCREEN {
     this.interval = null;
     this.default = {
       debug: false,
-      delay: 5 * 60 * 1000,
+      timeout: 5 * 60 * 1000,
       mode: 1,
       gpio: 20,
       clearGpioValue: true,
@@ -55,20 +55,11 @@ class SCREEN {
       case 2:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 2: dpms rpi");
         break;
-      case 3:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 3: tvservice");
-        break;
       case 4:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 4: HDMI CEC");
         break;
       case 5:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: dpms linux");
-        break;
-      case 6:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 6: Python script (Relay on/off)");
-        break;
-      case 7:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 7: Python script reverse (Relay on/off)");
         break;
       case 8:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 8: ddcutil");
@@ -123,12 +114,12 @@ class SCREEN {
     }
     clearInterval(this.interval);
     this.interval = null;
-    this.counter = this.config.delay;
+    this.counter = this.config.timeout;
     this.interval = setInterval(() => {
       this.screen.running = true;
       let output = {
         timer: moment(new Date(this.counter)).format("mm:ss"),
-        bar: this.config.delay - this.counter
+        bar: this.config.timeout - this.counter
       };
       this.sendSocketNotification("SCREEN_OUTPUT", output);
       if (this.counter <= 0) {
@@ -243,21 +234,6 @@ class SCREEN {
           }
         });
         break;
-      case 3:
-
-        /** tvservice **/
-        exec("tvservice -s | grep Hz", (err, stdout, stderr) => {
-          if (err) {
-            this.logError(err);
-            this.sendSocketNotification("ERROR", `[SCREEN] tvservice command error (mode: ${this.config.mode})`);
-          }
-          else {
-            let responseSh = stdout.trim();
-            if (responseSh) actual = true;
-            this.resultDisplay(actual, wanted);
-          }
-        });
-        break;
       case 4:
 
         /** CEC **/
@@ -287,38 +263,6 @@ class SCREEN {
             let responseSh = stdout.trim();
             var displaySh = responseSh.split(" ")[2];
             if (displaySh === "On") actual = true;
-            this.resultDisplay(actual, wanted);
-          }
-        });
-        break;
-      case 6:
-
-        /** python script **/
-        exec(`python monitor.py -s -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-          if (err) {
-            this.logError(`[Display Error] ${err}`);
-            this.sendSocketNotification("ERROR", `[SCREEN] python relay script error (mode: ${this.config.mode})`);
-          }
-          else {
-            let responsePy = stdout.trim();
-            log(`Response PY -- Check State: ${responsePy}`);
-            if (responsePy === "1") actual = true;
-            this.resultDisplay(actual, wanted);
-          }
-        });
-        break;
-      case 7:
-
-        /** python script reverse**/
-        exec(`python monitor.py -s -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-          if (err) {
-            this.logError(`[Display Error] ${err}`);
-            this.sendSocketNotification("ERROR", `[SCREEN] python relay script error (mode: ${this.config.mode})`);
-          }
-          else {
-            let responsePy = stdout.trim();
-            log(`Response PY -- Check State (reverse): ${responsePy}`);
-            if (responsePy === "0") actual = true;
             this.resultDisplay(actual, wanted);
           }
         });
@@ -414,10 +358,6 @@ class SCREEN {
         if (set) exec("DISPLAY=:0 xset dpms force on");
         else exec("DISPLAY=:0 xset dpms force off");
         break;
-      case 3:
-        if (set) exec("tvservice -p && sudo chvt 6 && sudo chvt 7");
-        else exec("tvservice -o");
-        break;
       case 4:
         if (set) exec("echo 'on 0' | cec-client -s");
         else exec("echo 'standby 0' | cec-client -s");
@@ -425,52 +365,6 @@ class SCREEN {
       case 5:
         if (set) exec("xset dpms force on");
         else exec("xset dpms force off");
-        break;
-      case 6:
-        if (set) exec(`python monitor.py -r=1 -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-          if (err) this.logError(err);
-          else log(`Relay is ${stdout.trim()}`);
-        });
-        else
-          if (this.config.clearGpioValue) {
-            exec(`python monitor.py -r=0 -c -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-              if (err) this.logError(err);
-              else {
-                log(`Relay is ${stdout.trim()}`);
-              }
-            });
-          } else {
-            exec(`python monitor.py -r=0 -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-              if (err) this.logError(err);
-              else {
-                log(`Relay is ${stdout.trim()}`);
-              }
-            });
-          }
-        break;
-      case 7:
-        if (set) {
-          if (this.config.clearGpioValue) {
-            exec(`python monitor.py -r=0 -c -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-              if (err) this.logError(err);
-              else {
-                log(`Relay is ${stdout.trim()}`);
-              }
-            });
-          } else {
-            exec(`python monitor.py -r=0 -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-              if (err) this.logError(err);
-              else {
-                log(`Relay is ${stdout.trim()}`);
-              }
-            });
-          }
-        } else {
-          exec(`python monitor.py -r=1 -g=${this.config.gpio}`, { cwd: this.PathScript }, (err, stdout, stderr) => {
-            if (err) this.logError(err);
-            else log(`Relay is ${stdout.trim()}`);
-          });
-        }
         break;
       case 8:
         if (set) exec("ddcutil setvcp d6 1");

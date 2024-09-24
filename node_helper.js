@@ -64,10 +64,8 @@ module.exports = NodeHelper.create({
 
     let screenConfig = {
       debug: this.config.debug,
-      delay: this.config.Display.delay,
+      timeout: this.config.Display.timeout,
       mode: this.config.Display.mode,
-      gpio: this.config.Display.mode6_gpio,
-      clearGpioValue: this.config.Display.mode6_clearGpioValue,
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
       wrandrForceMode: this.config.Display.wrandrForceMode

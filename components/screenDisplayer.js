@@ -18,11 +18,11 @@ class screenDisplayer {
     var dom = document.createElement("div");
     dom.id = "MMM-PIR";
 
-    if (this.config.displayCounter || this.config.displayBar) {
+    if (this.config.counter || this.config.bar) {
       /** Screen TimeOut Text **/
       var screen = document.createElement("div");
       screen.id = "MMM-PIR_SCREEN";
-      if (this.config.displayStyle !== "Text" || !this.config.displayCounter) screen.className = "hidden";
+      if (this.config.style !== "Text" || !this.config.counter) screen.className = "hidden";
       var screenText = document.createElement("div");
       screenText.id = "MMM-PIR_SCREEN_TEXT";
       screenText.textContent = this.translate("ScreenTurnOff");
@@ -37,16 +37,16 @@ class screenDisplayer {
       /** Screen TimeOut Bar **/
       var bar = document.createElement("div");
       bar.id = "MMM-PIR_BAR";
-      if ((this.config.displayStyle === "Text") || !this.config.displayBar) bar.className = "hidden";
+      if ((this.config.style === "Text") || !this.config.bar) bar.className = "hidden";
       var screenBar = document.createElement("div");
       screenBar.id = "MMM-PIR_SCREEN_BAR";
-      screenBar.classList.add(this.config.displayStyle);
+      screenBar.classList.add(this.config.style);
       bar.appendChild(screenBar);
       dom.appendChild(screen);
       dom.appendChild(bar);
     }
 
-    if (this.config.displayLastPresence) {
+    if (this.config.lastPresence) {
       /** Last user Presence **/
       var presence = document.createElement("div");
       presence.id = "MMM-PIR_PRESENCE";
@@ -67,9 +67,9 @@ class screenDisplayer {
 
   prepareBar () {
     /** Prepare TimeOut Bar **/
-    if ((this.config.displayStyle === "Text") || (!this.config.displayBar)) return;
-    this.bar = new ProgressBar[this.config.displayStyle](document.getElementById("MMM-PIR_SCREEN_BAR"), {
-      strokeWidth: this.config.displayStyle === "Line" ? 2 : 5,
+    if ((this.config.style === "Text") || (!this.config.bar)) return;
+    this.bar = new ProgressBar[this.config.style](document.getElementById("MMM-PIR_SCREEN_BAR"), {
+      strokeWidth: this.config.style === "Line" ? 2 : 5,
       trailColor: "#1B1B1B",
       trailWidth: 1,
       easing: "linear",
@@ -98,12 +98,12 @@ class screenDisplayer {
   }
 
   barAnimate (payload) {
-    let value = (100 - ((payload * 100) / this.config.delay)) / 100;
-    let timeOut = moment(new Date(this.config.delay - payload)).format("m:ss");
+    let value = (100 - ((payload * 100) / this.config.timeout)) / 100;
+    let timeOut = moment(new Date(this.config.timeout - payload)).format("m:ss");
     this.bar.animate(value, {
       step: (state, bar) => {
         bar.path.setAttribute("stroke", state.color);
-        bar.setText(this.config.displayCounter ? timeOut : "");
+        bar.setText(this.config.counter ? timeOut : "");
         bar.text.style.color = state.color;
       }
     });
@@ -129,11 +129,11 @@ class screenDisplayer {
     /** --> Set to "Text" if not found */
     let Style = ["Text", "Line", "SemiCircle", "Circle"];
     let found = Style.find((style) => {
-      return style === this.config.displayStyle;
+      return style === this.config.style;
     });
     if (!found) {
-      console.error(`[MMM-Pir] displayStyle Error ! [${this.config.displayStyle}]`);
-      this.config.displayStyle = "Text";
+      console.error(`[MMM-Pir] Display.style Error ! [${this.config.style}]`);
+      this.config.style = "Text";
     }
   }
 }
