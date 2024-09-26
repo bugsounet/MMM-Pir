@@ -12,8 +12,8 @@
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/progressbar.js --no-warn-ignored",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/progressbar.js --no-warn-ignored --fix",
+    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --no-warn-ignored",
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --no-warn-ignored --fix",
     "test": "npm run lint",
     "test:minify": "cd installer && node minify.js"
   },
@@ -43,6 +43,7 @@
     "long-press-event": "^2.5.0",
     "nan": "^2.20.0",
     "node-libgpiod": "^0.4.6",
+    "progressbar.js": "^1.1.1",
     "python-shell": "^5.0.0"
   },
   "devDependencies": {

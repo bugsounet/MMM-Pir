@@ -152,10 +152,10 @@ Module.register("MMM-Pir", {
 
   getScripts () {
     return [
-      "/modules/MMM-Pir/components/progressbar.js",
       "/modules/MMM-Pir/components/screenDisplayer.js",
       "/modules/MMM-Pir/components/screenTouch.js",
-      "/modules/MMM-Pir/node_modules/long-press-event/dist/long-press-event.min.js"
+      "/modules/MMM-Pir/node_modules/long-press-event/dist/long-press-event.min.js",
+      "/modules/MMM-Pir/node_modules/progressbar.js/dist/progressbar.min.js"
     ];
   },
 
