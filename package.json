@@ -12,8 +12,8 @@
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --no-warn-ignored",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --no-warn-ignored --fix",
+    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
     "test": "npm run lint",
     "test:minify": "cd installer && node minify.js"
   },
@@ -48,6 +48,6 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2.8.0",
-    "eslint": "^9.11.0"
+    "eslint": "^9.11.1"
   }
 }
