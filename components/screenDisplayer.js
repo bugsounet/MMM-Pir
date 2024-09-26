@@ -11,6 +11,8 @@ class screenDisplayer {
     this.translate = (...args) => Tools.translate(...args);
     this.bar = null;
     this.init = null;
+    this.style = "Text";
+    this.checkStyle();
     console.log("[MMM-Pir] screenDisplayer Ready");
   }
 
@@ -22,7 +24,7 @@ class screenDisplayer {
       /** Screen TimeOut Text **/
       var screen = document.createElement("div");
       screen.id = "MMM-PIR_SCREEN";
-      if (this.config.style !== "Text" || !this.config.counter) screen.className = "hidden";
+      if (this.style !== "Text" || !this.config.counter) screen.className = "hidden";
       var screenText = document.createElement("div");
       screenText.id = "MMM-PIR_SCREEN_TEXT";
       screenText.textContent = this.translate("ScreenTurnOff");
@@ -37,10 +39,10 @@ class screenDisplayer {
       /** Screen TimeOut Bar **/
       var bar = document.createElement("div");
       bar.id = "MMM-PIR_BAR";
-      if ((this.config.style === "Text") || !this.config.bar) bar.className = "hidden";
+      if ((this.style === "Text") || !this.config.bar) bar.className = "hidden";
       var screenBar = document.createElement("div");
       screenBar.id = "MMM-PIR_SCREEN_BAR";
-      screenBar.classList.add(this.config.style);
+      screenBar.classList.add(this.style);
       bar.appendChild(screenBar);
       dom.appendChild(screen);
       dom.appendChild(bar);
@@ -67,9 +69,9 @@ class screenDisplayer {
 
   prepareBar () {
     /** Prepare TimeOut Bar **/
-    if ((this.config.style === "Text") || (!this.config.bar)) return;
-    this.bar = new ProgressBar[this.config.style](document.getElementById("MMM-PIR_SCREEN_BAR"), {
-      strokeWidth: this.config.style === "Line" ? 2 : 5,
+    if ((this.style === "Text") || (!this.config.bar)) return;
+    this.bar = new ProgressBar[this.style](document.getElementById("MMM-PIR_SCREEN_BAR"), {
+      strokeWidth: this.style === "Line" ? 2 : 5,
       trailColor: "#1B1B1B",
       trailWidth: 1,
       easing: "linear",
@@ -128,12 +130,15 @@ class screenDisplayer {
     /** Crash prevent on Time Out Style Displaying **/
     /** --> Set to "Text" if not found */
     let Style = ["Text", "Line", "SemiCircle", "Circle"];
-    let found = Style.find((style) => {
-      return style === this.config.style;
+    let found = Style.find((style, value) => {
+      return value === this.config.style;
     });
-    if (!found) {
+    if (found) {
+      this.style = found;
+      console.log(`[MMM-Pir] Display.style: ${this.style}`);
+    } else {
       console.error(`[MMM-Pir] Display.style Error ! [${this.config.style}]`);
-      this.config.style = "Text";
+      this.style = "Text";
     }
   }
 }

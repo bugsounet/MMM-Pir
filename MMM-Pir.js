@@ -17,7 +17,7 @@ Module.register("MMM-Pir", {
       mode: 1,
       counter: true,
       bar: true,
-      style: "Text",
+      style: 0,
       lastPresence: true,
       lastPresenceTimeFormat: "LL H:mm",
       xrandrForceRotation: "normal",
@@ -51,7 +51,6 @@ Module.register("MMM-Pir", {
       timeout: this.config.Display.timeout
     };
     this.screenDisplay = new screenDisplayer(displayConfig, Tools);
-    this.screenDisplay.checkStyle();
     this.screenTouch = new screenTouch(this.config.Touch, Tools);
     _logPIR("is now started!");
   },
@@ -70,7 +69,7 @@ Module.register("MMM-Pir", {
         this.screenDisplay.screenHiding();
         break;
       case "SCREEN_OUTPUT":
-        if (this.config.Display.style === "Text") {
+        if (this.screenDisplay.style === "Text") {
           let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER");
           counter.textContent = payload.timer;
         } else {
