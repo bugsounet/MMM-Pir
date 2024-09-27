@@ -3,8 +3,6 @@
 * Bugsounet         *
 *********************/
 
-/* global ProgressBar, _logPIR */
-
 class screenDisplayer {
   constructor (config, Tools) {
     this.config = config;
@@ -13,6 +11,9 @@ class screenDisplayer {
     this.init = null;
     this.style = "Text";
     this.checkStyle();
+    this.colorFrom = "#FF0000";
+    this.colorTo = "#00FF00";
+    this.checkColor();
     console.log("[MMM-Pir] screenDisplayer Ready");
   }
 
@@ -74,10 +75,10 @@ class screenDisplayer {
       strokeWidth: this.style === "Line" ? 2 : 5,
       trailColor: "#1B1B1B",
       trailWidth: 1,
-      easing: "linear",
+      easing: "bounce",
       duration: 900,
-      from: { color: "#FF0000" },
-      to: { color: "#00FF00" },
+      from: { color: this.colorFrom },
+      to: { color: this.colorTo },
       svgStyle: {
         display: "block",
         width: "100%",
@@ -100,12 +101,12 @@ class screenDisplayer {
   }
 
   barAnimate (payload) {
-    let value = (100 - ((payload * 100) / this.config.timeout)) / 100;
-    let timeOut = moment(new Date(this.config.timeout - payload)).format("m:ss");
+    let value = payload.bar;
+    let timeOut = this.config.counter ? payload.timer : "";
     this.bar.animate(value, {
       step: (state, bar) => {
         bar.path.setAttribute("stroke", state.color);
-        bar.setText(this.config.counter ? timeOut : "");
+        bar.setText(timeOut);
         bar.text.style.color = state.color;
       }
     });
@@ -140,5 +141,14 @@ class screenDisplayer {
       console.error(`[MMM-Pir] Display.style Error ! [${this.config.style}]`);
       this.style = "Text";
     }
+  }
+
+  checkColor () {
+    /** check valid HEXA color **/
+    if (this.style === "Text") return;
+    let from = CSS.supports("color", this.config.colorFrom) && this.config.colorFrom.startsWith("#");
+    if (from) this.colorFrom = this.config.colorFrom;
+    let to = CSS.supports("color", this.config.colorTo) && this.config.colorTo.startsWith("#");
+    if (to) this.colorTo = this.config.colorTo;
   }
 }

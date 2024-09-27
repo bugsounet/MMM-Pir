@@ -13,6 +13,8 @@ Module.register("MMM-Pir", {
   defaults: {
     debug: false,
     Display: {
+      colorFrom: "#FF0000",
+      colorTo: "#00FF00",
       timeout: 2 * 60 * 1000,
       mode: 1,
       counter: true,
@@ -44,6 +46,8 @@ Module.register("MMM-Pir", {
       translate: (...args) => this.translate(...args)
     };
     let displayConfig = {
+      colorFrom:this.config.Display.colorFrom,
+      colorTo:this.config.Display.colorTo,
       counter: this.config.Display.counter,
       bar: this.config.Display.bar,
       style: this.config.Display.style,
@@ -73,7 +77,7 @@ Module.register("MMM-Pir", {
           let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER");
           counter.textContent = payload.timer;
         } else {
-          this.screenDisplay.barAnimate(payload.bar);
+          this.screenDisplay.barAnimate(payload);
         }
         break;
       case "SCREEN_PRESENCE":

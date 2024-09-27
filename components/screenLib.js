@@ -111,7 +111,7 @@ class SCREEN {
       this.screen.running = true;
       let output = {
         timer: moment(new Date(this.counter)).format("mm:ss"),
-        bar: this.config.timeout - this.counter
+        bar: (this.counter/this.config.timeout).toFixed(3)
       };
       this.sendSocketNotification("SCREEN_OUTPUT", output);
       if (this.counter <= 0) {
