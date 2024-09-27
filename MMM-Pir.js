@@ -18,8 +18,7 @@ Module.register("MMM-Pir", {
       timeout: 2 * 60 * 1000,
       mode: 1,
       counter: true,
-      bar: true,
-      style: 0,
+      style: 1,
       lastPresence: true,
       lastPresenceTimeFormat: "LL H:mm",
       xrandrForceRotation: "normal",
@@ -37,8 +36,6 @@ Module.register("MMM-Pir", {
 
   start () {
     if (this.config.debug) _logPIR = (...args) => { console.log("[MMM-Pir]", ...args); };
-    this.userPresence = null;
-    this.lastPresence = null;
     this.ready = false;
     let Tools = {
       sendSocketNotification: (...args) => this.sendSocketNotification(...args),
@@ -49,9 +46,9 @@ Module.register("MMM-Pir", {
       colorFrom:this.config.Display.colorFrom,
       colorTo:this.config.Display.colorTo,
       counter: this.config.Display.counter,
-      bar: this.config.Display.bar,
       style: this.config.Display.style,
       lastPresence: this.config.Display.lastPresence,
+      lastPresenceTimeFormat: this.config.Display.lastPresenceTimeFormat,
       timeout: this.config.Display.timeout
     };
     this.screenDisplay = new screenDisplayer(displayConfig, Tools);
@@ -73,24 +70,10 @@ Module.register("MMM-Pir", {
         this.screenDisplay.screenHiding();
         break;
       case "SCREEN_OUTPUT":
-        if (this.screenDisplay.style === "Text") {
-          let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER");
-          counter.textContent = payload.timer;
-        } else {
-          this.screenDisplay.barAnimate(payload);
-        }
+        this.screenDisplay.updateDisplay(payload);
         break;
       case "SCREEN_PRESENCE":
-        if (!this.config.Display.lastPresence) return;
-        if (payload) this.lastPresence = moment().format(this.config.Display.lastPresenceTimeFormat);
-        else this.userPresence = this.lastPresence;
-        if (this.userPresence) {
-          let presence = document.getElementById("MMM-PIR_PRESENCE");
-          presence.classList.remove("hidden");
-          presence.classList.add("bright");
-          let userPresence = document.getElementById("MMM-PIR_PRESENCE_DATE");
-          userPresence.textContent = this.userPresence;
-        }
+        this.screenDisplay.updatePresence(payload);
         break;
       case "SCREEN_POWERSTATUS":
         if (payload) this.sendNotification("USER_PRESENCE", true);
@@ -117,7 +100,7 @@ Module.register("MMM-Pir", {
 
   notificationReceived (notification, payload, sender) {
     if (notification === "MODULE_DOM_CREATED") {
-      this.screenDisplay.prepareBar();
+      this.screenDisplay.prepareStyle();
       this.sendSocketNotification("INIT", this.config);
     }
     if (!this.ready) return;
@@ -146,7 +129,7 @@ Module.register("MMM-Pir", {
   },
 
   getDom () {
-    return this.screenDisplay.prepare();
+    return this.screenDisplay.prepareDom();
   },
 
   getStyles () {

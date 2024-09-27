@@ -7,46 +7,58 @@ class screenDisplayer {
   constructor (config, Tools) {
     this.config = config;
     this.translate = (...args) => Tools.translate(...args);
+    this.default = {
+      colorFrom: "#FF0000",
+      colorTo: "#00FF00",
+      counter: true,
+      style: 1,
+      lastPresence: true,
+      lastPresenceTimeFormat: "LL H:mm",
+      timeout: 2 * 60 * 1000
+    };
+    this.config = Object.assign({}, this.default, this.config);
     this.bar = null;
     this.init = null;
     this.style = "Text";
     this.checkStyle();
     this.colorFrom = "#FF0000";
     this.colorTo = "#00FF00";
+    this.userPresence = null;
+    this.lastPresence = null;
     this.checkColor();
     console.log("[MMM-Pir] screenDisplayer Ready");
   }
 
-  prepare () {
+  prepareDom () {
     var dom = document.createElement("div");
     dom.id = "MMM-PIR";
 
-    if (this.config.counter || this.config.bar) {
-      /** Screen TimeOut Text **/
+    if (this.style === "Text" && this.config.counter) {
+      /** Screen TimeOut with Text **/
       var screen = document.createElement("div");
-      screen.id = "MMM-PIR_SCREEN";
-      if (this.style !== "Text" || !this.config.counter) screen.className = "hidden";
+      screen.id = "MMM-PIR_TEXT";
       var screenText = document.createElement("div");
-      screenText.id = "MMM-PIR_SCREEN_TEXT";
+      screenText.id = "MMM-PIR_TEXT_TRANSLATE";
       screenText.textContent = this.translate("ScreenTurnOff");
       screenText.classList.add("bright");
       screen.appendChild(screenText);
+
       var screenCounter = document.createElement("div");
-      screenCounter.id = "MMM-PIR_SCREEN_COUNTER";
+      screenCounter.id = "MMM-PIR_TEXT_COUNTER";
       screenCounter.classList.add("bright");
       screenCounter.textContent = "--:--";
       screen.appendChild(screenCounter);
 
-      /** Screen TimeOut Bar **/
-      var bar = document.createElement("div");
-      bar.id = "MMM-PIR_BAR";
-      if ((this.style === "Text") || !this.config.bar) bar.className = "hidden";
-      var screenBar = document.createElement("div");
-      screenBar.id = "MMM-PIR_SCREEN_BAR";
-      screenBar.classList.add(this.style);
-      bar.appendChild(screenBar);
       dom.appendChild(screen);
-      dom.appendChild(bar);
+    } else {
+      if (this.style !== "None") {
+        /** Screen TimeOut with Style **/
+        var screenStyle = document.createElement("div");
+        screenStyle.id = "MMM-PIR_STYLE";
+        screenStyle.classList.add(this.style);
+
+        dom.appendChild(screenStyle);
+      }
     }
 
     if (this.config.lastPresence) {
@@ -61,17 +73,17 @@ class screenDisplayer {
       var presenceDate = document.createElement("div");
       presenceDate.id = "MMM-PIR_PRESENCE_DATE";
       presenceDate.classList.add("presence");
-      presenceDate.textContent = "Loading ...";
+      presenceDate.textContent = "Unknow";
       presence.appendChild(presenceDate);
       dom.appendChild(presence);
     }
     return dom;
   }
 
-  prepareBar () {
-    /** Prepare TimeOut Bar **/
-    if ((this.style === "Text") || (!this.config.bar)) return;
-    this.bar = new ProgressBar[this.style](document.getElementById("MMM-PIR_SCREEN_BAR"), {
+  prepareStyle () {
+    /** Prepare TimeOut with Style **/
+    if (this.style === "Text" || this.style === "None") return;
+    this.bar = new ProgressBar[this.style](document.getElementById("MMM-PIR_STYLE"), {
       strokeWidth: this.style === "Line" ? 2 : 5,
       trailColor: "#1B1B1B",
       trailWidth: 1,
@@ -100,6 +112,18 @@ class screenDisplayer {
     });
   }
 
+  updateDisplay (payload) {
+    if (this.style === "None") return;
+    if (this.style === "Text") {
+      if (this.config.counter) {
+        let counter = document.getElementById("MMM-PIR_TEXT_COUNTER");
+        counter.textContent = payload.timer;
+      }
+    } else {
+      this.barAnimate(payload);
+    }
+  }
+
   barAnimate (payload) {
     let value = payload.bar;
     let timeOut = this.config.counter ? payload.timer : "";
@@ -110,6 +134,19 @@ class screenDisplayer {
         bar.text.style.color = state.color;
       }
     });
+  }
+
+  updatePresence (payload) {
+    if (!this.config.lastPresence) return;
+    if (payload) this.lastPresence = moment().format(this.config.lastPresenceTimeFormat);
+    else this.userPresence = this.lastPresence;
+    if (this.userPresence) {
+      let presence = document.getElementById("MMM-PIR_PRESENCE");
+      presence.classList.remove("hidden");
+      presence.classList.add("bright");
+      let userPresence = document.getElementById("MMM-PIR_PRESENCE_DATE");
+      userPresence.textContent = this.userPresence;
+    }
   }
 
   screenShowing () {
@@ -130,7 +167,7 @@ class screenDisplayer {
   checkStyle () {
     /** Crash prevent on Time Out Style Displaying **/
     /** --> Set to "Text" if not found */
-    let Style = ["Text", "Line", "SemiCircle", "Circle"];
+    let Style = [ "None", "Text", "Line", "SemiCircle", "Circle"];
     let found = Style.find((style, value) => {
       return value === this.config.style;
     });
@@ -145,7 +182,7 @@ class screenDisplayer {
 
   checkColor () {
     /** check valid HEXA color **/
-    if (this.style === "Text") return;
+    if (this.style === "Text" || this.style === "None") return;
     let from = CSS.supports("color", this.config.colorFrom) && this.config.colorFrom.startsWith("#");
     if (from) this.colorFrom = this.config.colorFrom;
     let to = CSS.supports("color", this.config.colorTo) && this.config.colorTo.startsWith("#");
