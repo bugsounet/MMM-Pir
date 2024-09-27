@@ -358,7 +358,7 @@ class SCREEN {
     if (this.screen.running) this.counter = 0;
     this.screen.running = false;
     this.forceTurnOffScreen();
-    this.sendSocketNotification("SCREEN_OUTPUT", {timer: "00:00", bar: 0});
+    this.sendSocketNotification("SCREEN_OUTPUT", { timer: "00:00", bar: 0 });
     log("[Force OFF] Turn OFF Display");
   }
 
