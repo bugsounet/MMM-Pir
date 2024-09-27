@@ -20,8 +20,6 @@ class SCREEN {
       debug: false,
       timeout: 5 * 60 * 1000,
       mode: 1,
-      gpio: 20,
-      clearGpioValue: true,
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null
@@ -49,9 +47,6 @@ class SCREEN {
       case 0:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 0: Disabled");
         break;
-      case 1:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 1: vcgencmd");
-        break;
       case 2:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 2: dpms rpi");
         break;
@@ -60,9 +55,6 @@ class SCREEN {
         break;
       case 5:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: dpms linux");
-        break;
-      case 8:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 8: ddcutil");
         break;
       case 9:
         if (this.xrandrRoation.indexOf(this.config.xrandrForceRotation) === -1) {
@@ -198,27 +190,10 @@ class SCREEN {
     var actual = false;
     switch (this.config.mode) {
       case 0:
-
         /** disabled **/
         log("Disabled mode");
         break;
-      case 1:
-
-        /** vcgencmd **/
-        exec("/usr/bin/vcgencmd display_power", (err, stdout, stderr) => {
-          if (err) {
-            this.logError(err);
-            this.sendSocketNotification("ERROR", `[SCREEN] vcgencmd command error (mode: ${this.config.mode})`);
-          }
-          else {
-            var displaySh = stdout.trim();
-            actual = Boolean(Number(displaySh.substr(displaySh.length - 1)));
-            this.resultDisplay(actual, wanted);
-          }
-        });
-        break;
       case 2:
-
         /** dpms rpi**/
         actual = false;
         exec("DISPLAY=:0 xset q | grep Monitor", (err, stdout, stderr) => {
@@ -235,7 +210,6 @@ class SCREEN {
         });
         break;
       case 4:
-
         /** CEC **/
         exec("echo 'pow 0' | cec-client -s -d 1", (err, stdout, stderr) => {
           if (err) {
@@ -252,7 +226,6 @@ class SCREEN {
         });
         break;
       case 5:
-
         /** dmps linux **/
         exec("xset q | grep Monitor", (err, stdout, stderr) => {
           if (err) {
@@ -267,24 +240,7 @@ class SCREEN {
           }
         });
         break;
-      case 8:
-
-        /** ddcutil **/
-        exec("ddcutil getvcp d6", (err, stdout, stderr) => {
-          if (err) {
-            this.logError(err);
-            this.sendSocketNotification("ERROR", `[SCREEN] ddcutil command error (mode: ${this.config.mode})`);
-          }
-          else {
-            let responseSh = stdout.trim();
-            var displaySh = responseSh.split("(sl=")[1];
-            if (displaySh === "0x01)") actual = true;
-            this.resultDisplay(actual, wanted);
-          }
-        });
-        break;
       case 9:
-
         /** xrandr on primary display **/
         exec("xrandr | grep 'connected primary'",
           (err, stdout, stderr) => {
@@ -304,7 +260,6 @@ class SCREEN {
           });
         break;
       case 10:
-
         /** wl-randr on primary display **/
         exec("WAYLAND_DISPLAY=wayland-1 wlr-randr | grep 'Enabled'",
           (err, stdout, stderr) => {
@@ -350,10 +305,6 @@ class SCREEN {
     this.screen.power = set;
     // and finally apply rules !
     switch (this.config.mode) {
-      case 1:
-        if (set) exec("/usr/bin/vcgencmd display_power 1");
-        else exec("/usr/bin/vcgencmd display_power 0");
-        break;
       case 2:
         if (set) exec("DISPLAY=:0 xset dpms force on");
         else exec("DISPLAY=:0 xset dpms force off");
@@ -365,10 +316,6 @@ class SCREEN {
       case 5:
         if (set) exec("xset dpms force on");
         else exec("xset dpms force off");
-        break;
-      case 8:
-        if (set) exec("ddcutil setvcp d6 1");
-        else exec("ddcutil setvcp d6 4");
         break;
       case 9:
         if (set) exec(`xrandr --output ${this.screen.hdmiPort} --auto --rotate ${this.screen.xrandrRotation}`);
