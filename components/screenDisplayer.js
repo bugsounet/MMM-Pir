@@ -8,6 +8,7 @@ class screenDisplayer {
     this.config = config;
     this.translate = (...args) => Tools.translate(...args);
     this.default = {
+      animate: true,
       colorFrom: "#FF0000",
       colorTo: "#00FF00",
       counter: true,
@@ -150,18 +151,65 @@ class screenDisplayer {
   }
 
   screenShowing () {
-    MM.getModules().enumerate((module) => {
-      module.show(200, () => {}, { lockString: "MMM-PIR_LOCK" });
-    });
     if (!this.init) return this.init = true;
+    MM.getModules().enumerate((module) => {
+      let speed = 200;
+      let options = { lockString: "MMM-PIR_LOCK" };
+      if (this.config.animate && module.data.position) {
+        options.animate = this.animateFromPosition(module.data.position, true);
+        speed = 500;
+      }
+      module.show(speed, () => {}, options);
+    });
     _logPIR("Show All modules.");
   }
 
   screenHiding () {
     MM.getModules().enumerate((module) => {
-      module.hide(200, () => {}, { lockString: "MMM-PIR_LOCK" });
+      let speed = 200;
+      let options = { lockString: "MMM-PIR_LOCK" };
+      if (this.config.animate && module.data.position) {
+        options.animate = this.animateFromPosition(module.data.position, false);
+        speed = 500;
+      }
+      module.hide(500, () => {}, options);
     });
     _logPIR("Hide All modules.");
+  }
+
+  animateFromPosition (position, show) {
+    let animateShow = {
+      fullscreen_below: "FadeIn",
+      top_bar: "backInDown",
+      top_left: "backInLeft",
+      top_center: "backInDown",
+      top_right: "backInRight",
+      upper_third: "zoomIn",
+      middle_center: "zoomIn",
+      lower_third: "zoomIn",
+      bottom_bar: "backInUp",
+      bottom_left: "backInLeft",
+      bottom_center: "backInUp",
+      bottom_right: "backInRight",
+      fullscreen_above: "FadeIn"
+    };
+    let animateHide = {
+      fullscreen_below: "FadeOut",
+      top_bar: "backOutUp",
+      top_left: "backOutLeft",
+      top_center: "backOutUp",
+      top_right: "backOutRight",
+      upper_third: "zoomOut",
+      middle_center: "zoomOut",
+      lower_third: "zoomOut",
+      bottom_bar: "backOutDown",
+      bottom_left: "backOutLeft",
+      bottom_center: "backOutDown",
+      bottom_right: "backOutRight",
+      fullscreen_above: "FadeOut"
+    };
+    if (show) return animateShow[position];
+    else return animateHide[position];
   }
 
   checkStyle () {

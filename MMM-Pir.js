@@ -13,6 +13,7 @@ Module.register("MMM-Pir", {
   defaults: {
     debug: false,
     Display: {
+      animate: true,
       colorFrom: "#FF0000",
       colorTo: "#00FF00",
       timeout: 2 * 60 * 1000,
@@ -42,16 +43,7 @@ Module.register("MMM-Pir", {
       hidden: () => { return this.hidden; },
       translate: (...args) => this.translate(...args)
     };
-    let displayConfig = {
-      colorFrom:this.config.Display.colorFrom,
-      colorTo:this.config.Display.colorTo,
-      counter: this.config.Display.counter,
-      style: this.config.Display.style,
-      lastPresence: this.config.Display.lastPresence,
-      lastPresenceTimeFormat: this.config.Display.lastPresenceTimeFormat,
-      timeout: this.config.Display.timeout
-    };
-    this.screenDisplay = new screenDisplayer(displayConfig, Tools);
+    this.screenDisplay = new screenDisplayer(this.config.Display, Tools);
     this.screenTouch = new screenTouch(this.config.Touch, Tools);
     _logPIR("is now started!");
   },
