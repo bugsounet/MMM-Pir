@@ -140,7 +140,8 @@ class SCREEN {
       if (this.config.availability) {
         this.screen.uptime = Math.floor(process.uptime());
         this.screen.availabilityPercent = (this.screen.availabilityCounter*100)/this.screen.uptime;
-        this.screen.availabilityTimeSec = this.screen.uptime > 86400 ? (this.screen.availabilityPercent * 864) : this.screen.availabilityCounter;
+        //this.screen.availabilityTimeSec = this.screen.uptime > 86400 ? (this.screen.availabilityPercent * 864) : this.screen.availabilityCounter;
+        this.screen.availabilityTimeSec = this.screen.availabilityCounter;
         this.screen.availabilityTimeHuman = this.screen.availabilityTimeSec.toHHMMSS();
         this.screen.output.availabilityPercent = parseFloat(this.screen.availabilityPercent.toFixed(1));
         this.screen.output.availability = this.screen.availabilityTimeHuman;
