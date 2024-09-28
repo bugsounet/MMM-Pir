@@ -59,6 +59,7 @@ class SCREEN {
       case 9:
         if (this.xrandrRoation.indexOf(this.config.xrandrForceRotation) === -1) {
           console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 9: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`);
+          this.sendSocketNotification("SCREEN_ERROR", `Mode 9: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`);
           this.screen.xrandrRotation = "normal";
         } else {
           console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 9: xrandr (primary display) -- Rotation: ${this.config.xrandrForceRotation}`);
@@ -68,6 +69,7 @@ class SCREEN {
       case 10:
         if (this.wrandrRoation.indexOf(this.config.wrandrForceRotation) === -1) {
           console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`);
+          this.sendSocketNotification("SCREEN_ERROR", `Mode 10: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`);
           this.screen.wrandrRotation = "normal";
         } else {
           console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr (primary display) -- Rotation: ${this.config.wrandrForceRotation}`);
@@ -79,8 +81,8 @@ class SCREEN {
         }
         break;
       default:
-        this.logError(`Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
-        this.sendSocketNotification("ERROR", `[MMM-Pir] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
+        console.error(`[MMM-Pir] [LIB] [SCREEN] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
+        this.sendSocketNotification("SCREEN_ERROR", `Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
         this.config.mode = 0;
         break;
     }
@@ -198,8 +200,8 @@ class SCREEN {
         actual = false;
         exec("DISPLAY=:0 xset q | grep Monitor", (err, stdout, stderr) => {
           if (err) {
-            this.logError(err);
-            this.sendSocketNotification("ERROR", `[SCREEN] dpms command error (mode: ${this.config.mode})`);
+            console.error(`[MMM-Pir] [LIB] [SCREEN] ${err}`);
+            this.sendSocketNotification("SCREEN_ERROR", `dpms command error (mode: ${this.config.mode})`);
           }
           else {
             let responseSh = stdout.trim();
@@ -213,9 +215,9 @@ class SCREEN {
         /** CEC **/
         exec("echo 'pow 0' | cec-client -s -d 1", (err, stdout, stderr) => {
           if (err) {
-            this.logError(err);
-            this.logError(`HDMI CEC Error: ${stdout}`);
-            this.sendSocketNotification("ERROR", `[SCREEN] HDMI CEC command error (mode: ${this.config.mode})`);
+            console.error(`[MMM-Pir] [LIB] [SCREEN] ${err}`);
+            console.error(`[MMM-Pir] [LIB] [SCREEN] HDMI CEC Error: ${stdout}`);
+            this.sendSocketNotification("SCREEN_ERROR", `HDMI CEC command error (mode: ${this.config.mode})`);
           } else {
             let responseSh = stdout.trim();
             var displaySh = responseSh.split("\n")[1].split(" ")[2];
@@ -229,8 +231,8 @@ class SCREEN {
         /** dmps linux **/
         exec("xset q | grep Monitor", (err, stdout, stderr) => {
           if (err) {
-            this.logError(`[Display Error] ${err}`);
-            this.sendSocketNotification("ERROR", `[SCREEN] dpms linux command error (mode: ${this.config.mode})`);
+            console.error(`[MMM-Pir] [LIB] [SCREEN] [Display Error] dpms linux: ${err}`);
+            this.sendSocketNotification("SCREEN_ERROR", `dpms linux command error (mode: ${this.config.mode})`);
           }
           else {
             let responseSh = stdout.trim();
@@ -245,8 +247,8 @@ class SCREEN {
         exec("xrandr | grep 'connected primary'",
           (err, stdout, stderr) => {
             if (err) {
-              this.logError(err);
-              this.sendSocketNotification("ERROR", `[SCREEN] xrandr command error (mode: ${this.config.mode})`);
+              console.error(`[MMM-Pir] [LIB] [SCREEN] xrandr: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", `xrandr command error (mode: ${this.config.mode})`);
             }
             else {
               let responseSh = stdout.trim();
@@ -264,16 +266,16 @@ class SCREEN {
         exec("WAYLAND_DISPLAY=wayland-1 wlr-randr | grep 'Enabled'",
           (err, stdout, stderr) => {
             if (err) {
-              this.logError(err);
-              this.sendSocketNotification("ERROR", `[SCREEN] wlr-randr command error (mode: ${this.config.mode})`);
+              console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", `wlr-randr command error (mode: ${this.config.mode})`);
             } else {
               let responseSh = stdout.trim();
               if (responseSh.split(" ")[1] === "yes") actual = true;
               exec("WAYLAND_DISPLAY=wayland-1 wlr-randr",
                 (err, stdout, stderr) => {
                   if (err) {
-                    this.logError(err);
-                    this.sendSocketNotification("ERROR", `[SCREEN] wlr-randr scan screen command error (mode: ${this.config.mode})`);
+                    console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
+                    this.sendSocketNotification("SCREEN_ERROR", `wlr-randr scan screen command error (mode: ${this.config.mode})`);
                   } else {
                     let wResponse = stdout.trim();
                     this.screen.hdmiPort = wResponse.split(" ")[0];
@@ -341,11 +343,6 @@ class SCREEN {
 
   state () {
     this.sendSocketNotification("SCREEN_STATE", this.screen);
-  }
-
-  logError (err) {
-    console.error(`[MMM-Pir] [LIB] [SCREEN] ${err}`);
-    this.sendSocketNotification("SCREEN_ERROR", err.message);
   }
 
   /** Force Lock ON/OFF display **/
