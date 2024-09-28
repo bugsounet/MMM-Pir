@@ -460,17 +460,53 @@ class SCREEN {
         break;
       case 5:
         if (set) {
-          exec("ddcutil setvcp d6 1", (err, stdout, stderr) => {
+          exec("ddcutil setvcp d6 1 --noverify", (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power ON: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON)");
+            } else {
+              // 5 second delay
+              setTimeout(() => {
+                exec("ddcutil getvcp d6", (err, stdout, stderr) => {
+                  if (err) {
+                    console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${err}`);
+                    this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON check)");
+                  }
+                  else {
+                    let responseSh = stdout.trim();
+                    var displaySh = responseSh.split("(sl=")[1];
+                    if (displaySh !== "0x01)") {
+                      console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${responseSh}`);
+                      this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON verify)");
+                    }
+                  }
+                });
+              }, 5000);
             }
           });
         } else {
-          exec("ddcutil setvcp d6 4", (err, stdout, stderr) => {
+          exec("ddcutil setvcp d6 4 --noverify", (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power OFF: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF)");
+            } else {
+              // 1 second delay
+              setTimeout(() => {
+                exec("ddcutil getvcp d6", (err, stdout, stderr) => {
+                  if (err) {
+                    console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${err}`);
+                    this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF check)");
+                  }
+                  else {
+                    let responseSh = stdout.trim();
+                    var displaySh = responseSh.split("(sl=")[1];
+                    if (displaySh !== "0x04)") {
+                      console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${responseSh}`);
+                      this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF verify)");
+                    }
+                  }
+                });
+              }, 1000);
             }
           });
         }
