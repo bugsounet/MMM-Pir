@@ -16,6 +16,7 @@ class screenDisplayer {
       lastPresence: true,
       lastPresenceTimeFormat: "LL H:mm",
       availability: true,
+      autoDimmer: false,
       timeout: 2 * 60 * 1000
     };
     this.config = Object.assign({}, this.default, this.config);
@@ -132,6 +133,13 @@ class screenDisplayer {
   }
 
   updateDisplay (payload) {
+    if (this.config.availability && payload.availability) {
+      let availability= document.getElementById("MMM-PIR_AVAILABILITY_DATA");
+      availability.textContent= `${payload.availability} (${payload.availabilityPercent}%)`;
+    }
+    if (this.config.autoDimmer && payload.dimmer) {
+      this.opacityRegions(payload.dimmer);
+    }
     if (this.style === "None") return;
     if (this.style === "Text") {
       if (this.config.counter) {
@@ -140,10 +148,6 @@ class screenDisplayer {
       }
     } else {
       this.barAnimate(payload);
-    }
-    if (this.config.availability && payload.availability) {
-      let availability= document.getElementById("MMM-PIR_AVAILABILITY_DATA");
-      availability.textContent= `${payload.availability} (${payload.availabilityPercent}%)`;
     }
   }
 
@@ -257,5 +261,12 @@ class screenDisplayer {
     if (from) this.colorFrom = this.config.colorFrom;
     let to = CSS.supports("color", this.config.colorTo) && this.config.colorTo.startsWith("#");
     if (to) this.colorTo = this.config.colorTo;
+  }
+
+  opacityRegions (dimmer) {
+    var regions = document.querySelectorAll(".region");
+    regions.forEach((region) => {
+      region.style.opacity = dimmer;
+    });
   }
 }

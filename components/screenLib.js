@@ -21,6 +21,7 @@ class SCREEN {
       timeout: 5 * 60 * 1000,
       mode: 1,
       availability: true,
+      autoDimmer: false,
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null
@@ -43,9 +44,11 @@ class SCREEN {
       availabilityPercent: 0,
       availabilityTimeHuman: 0,
       availabilityTimeSec: 0,
+      dimmerFrom: this.config.timeout / 4,
       output: {
         timer: "--:--",
         bar: 1,
+        dimmer: 1,
         availabilityPercent: 100,
         availability: 0
       }
@@ -133,6 +136,9 @@ class SCREEN {
       this.sendSocketNotification("SCREEN_SHOWING");
       this.screen.power = true;
     }
+    if (this.config.autoDimmer) {
+      this.screen.output.dimmer = 1;
+    }
     clearInterval(this.interval);
     this.interval = null;
     this.counter = this.config.timeout;
@@ -147,6 +153,10 @@ class SCREEN {
         this.screen.output.availability = this.screen.availabilityTimeHuman;
       }
       this.screen.running = true;
+      if (this.config.autoDimmer && (this.counter <= this.screen.dimmerFrom)) {
+        this.screen.output.dimmer = 1 - ((this.screen.dimmerFrom - this.counter) / this.screen.dimmerFrom);
+      }
+
       this.screen.output.timer = moment(new Date(this.counter)).format("mm:ss");
       this.screen.output.bar = (this.counter/this.config.timeout).toFixed(3);
 
