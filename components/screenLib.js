@@ -93,7 +93,10 @@ class SCREEN {
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 4: HDMI CEC");
         break;
       case 5:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: dpms linux");
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: ddcutil");
+        break;
+      case 6:
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 6: dpms linux");
         break;
       default:
         console.error(`[MMM-Pir] [LIB] [SCREEN] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
@@ -318,11 +321,26 @@ class SCREEN {
         });
         break;
       case 5:
+        /** ddcutil **/
+        exec("ddcutil getvcp d6", (err, stdout, stderr) => {
+          if (err) {
+            console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${err}`);
+            this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode: 5)");
+          }
+          else {
+            let responseSh = stdout.trim();
+            var displaySh = responseSh.split("(sl=")[1];
+            if (displaySh === "0x01)") actual = true;
+            this.resultDisplay(actual, wanted);
+          }
+        });
+        break;
+      case 6:
         /** dmps linux **/
         exec("xset q | grep Monitor", (err, stdout, stderr) => {
           if (err) {
             console.error(`[MMM-Pir] [LIB] [SCREEN] [Display Error] dpms linux: ${err}`);
-            this.sendSocketNotification("SCREEN_ERROR", "dpms linux command error (mode: 5)");
+            this.sendSocketNotification("SCREEN_ERROR", "dpms linux command error (mode: 6)");
           }
           else {
             let responseSh = stdout.trim();
@@ -433,17 +451,34 @@ class SCREEN {
         break;
       case 5:
         if (set) {
+          exec("ddcutil setvcp d6 1", (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power ON: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON)");
+            }
+          });
+        } else {
+          exec("ddcutil setvcp d6 4", (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power OFF: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF)");
+            }
+          });
+        }
+        break;
+      case 6:
+        if (set) {
           exec("xset dpms force on", (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power ON: ${err}`);
-              this.sendSocketNotification("SCREEN_ERROR", "dpms linux command error (mode 5 power ON)");
+              this.sendSocketNotification("SCREEN_ERROR", "dpms linux command error (mode 6 power ON)");
             }
           });
         } else {
           exec("xset dpms force off", (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power OFF: ${err}`);
-              this.sendSocketNotification("SCREEN_ERROR", "dpms linux command error (mode 5 power OFF)");
+              this.sendSocketNotification("SCREEN_ERROR", "dpms linux command error (mode 6 power OFF)");
             }
           });
         }
