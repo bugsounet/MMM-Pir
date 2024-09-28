@@ -47,38 +47,38 @@ class SCREEN {
       case 0:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 0: Disabled");
         break;
+      case 1:
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 1: dpms rpi");
+        break;
       case 2:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 2: dpms rpi");
-        break;
-      case 4:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 4: HDMI CEC");
-        break;
-      case 5:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: dpms linux");
-        break;
-      case 9:
         if (this.xrandrRoation.indexOf(this.config.xrandrForceRotation) === -1) {
-          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 9: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`);
-          this.sendSocketNotification("SCREEN_ERROR", `Mode 9: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`);
+          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 2: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`);
+          this.sendSocketNotification("SCREEN_ERROR", `Mode 2: xrandr invalid Rotation --> ${this.config.xrandrForceRotation}, Set to default: normal`);
           this.screen.xrandrRotation = "normal";
         } else {
-          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 9: xrandr (primary display) -- Rotation: ${this.config.xrandrForceRotation}`);
+          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 2: xrandr (primary display) -- Rotation: ${this.config.xrandrForceRotation}`);
           this.screen.xrandrRotation = this.config.xrandrForceRotation;
         }
         break;
-      case 10:
+      case 3:
         if (this.wrandrRoation.indexOf(this.config.wrandrForceRotation) === -1) {
-          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`);
-          this.sendSocketNotification("SCREEN_ERROR", `Mode 10: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`);
+          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`);
+          this.sendSocketNotification("SCREEN_ERROR", `Mode 3: wlr-randr invalid Rotation --> ${this.config.wrandrForceRotation}, Set to default: normal`);
           this.screen.wrandrRotation = "normal";
         } else {
-          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr (primary display) -- Rotation: ${this.config.wrandrForceRotation}`);
+          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr (primary display) -- Rotation: ${this.config.wrandrForceRotation}`);
           this.screen.wrandrRotation = this.config.wrandrForceRotation;
         }
         if (this.config.wrandrForceMode) {
           console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 10: wlr-randr -- ForceMode: ${this.config.wrandrForceMode}`);
           this.screen.wrandrForceMode = this.config.wrandrForceMode;
         }
+        break;
+      case 4:
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 4: HDMI CEC");
+        break;
+      case 5:
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 5: dpms linux");
         break;
       default:
         console.error(`[MMM-Pir] [LIB] [SCREEN] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
@@ -195,7 +195,7 @@ class SCREEN {
         /** disabled **/
         log("Disabled mode");
         break;
-      case 2:
+      case 1:
         /** dpms rpi**/
         actual = false;
         exec("DISPLAY=:0 xset q | grep Monitor", (err, stdout, stderr) => {
@@ -210,6 +210,50 @@ class SCREEN {
             this.resultDisplay(actual, wanted);
           }
         });
+        break;
+      case 2:
+        /** xrandr on primary display **/
+        exec("xrandr | grep 'connected primary'",
+          (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] xrandr: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", `xrandr command error (mode: ${this.config.mode})`);
+            }
+            else {
+              let responseSh = stdout.trim();
+              var power = "on";
+              this.screen.hdmiPort = responseSh.split(" ")[0];
+              if (responseSh.split(" ")[3] === "(normal") power = "off";
+              if (power === "on") actual = true;
+              log(`[MODE 9] Monitor on ${this.screen.hdmiPort} is ${power}`);
+              this.resultDisplay(actual, wanted);
+            }
+          });
+        break;
+      case 3:
+        /** wl-randr on primary display **/
+        exec("WAYLAND_DISPLAY=wayland-1 wlr-randr | grep 'Enabled'",
+          (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", `wlr-randr command error (mode: ${this.config.mode})`);
+            } else {
+              let responseSh = stdout.trim();
+              if (responseSh.split(" ")[1] === "yes") actual = true;
+              exec("WAYLAND_DISPLAY=wayland-1 wlr-randr",
+                (err, stdout, stderr) => {
+                  if (err) {
+                    console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
+                    this.sendSocketNotification("SCREEN_ERROR", `wlr-randr scan screen command error (mode: ${this.config.mode})`);
+                  } else {
+                    let wResponse = stdout.trim();
+                    this.screen.hdmiPort = wResponse.split(" ")[0];
+                    log(`[MODE 10] Monitor on ${this.screen.hdmiPort} is ${actual}`);
+                    this.resultDisplay(actual, wanted);
+                  }
+                });
+            }
+          });
         break;
       case 4:
         /** CEC **/
@@ -242,50 +286,6 @@ class SCREEN {
           }
         });
         break;
-      case 9:
-        /** xrandr on primary display **/
-        exec("xrandr | grep 'connected primary'",
-          (err, stdout, stderr) => {
-            if (err) {
-              console.error(`[MMM-Pir] [LIB] [SCREEN] xrandr: ${err}`);
-              this.sendSocketNotification("SCREEN_ERROR", `xrandr command error (mode: ${this.config.mode})`);
-            }
-            else {
-              let responseSh = stdout.trim();
-              var power = "on";
-              this.screen.hdmiPort = responseSh.split(" ")[0];
-              if (responseSh.split(" ")[3] === "(normal") power = "off";
-              if (power === "on") actual = true;
-              log(`[MODE 9] Monitor on ${this.screen.hdmiPort} is ${power}`);
-              this.resultDisplay(actual, wanted);
-            }
-          });
-        break;
-      case 10:
-        /** wl-randr on primary display **/
-        exec("WAYLAND_DISPLAY=wayland-1 wlr-randr | grep 'Enabled'",
-          (err, stdout, stderr) => {
-            if (err) {
-              console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
-              this.sendSocketNotification("SCREEN_ERROR", `wlr-randr command error (mode: ${this.config.mode})`);
-            } else {
-              let responseSh = stdout.trim();
-              if (responseSh.split(" ")[1] === "yes") actual = true;
-              exec("WAYLAND_DISPLAY=wayland-1 wlr-randr",
-                (err, stdout, stderr) => {
-                  if (err) {
-                    console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
-                    this.sendSocketNotification("SCREEN_ERROR", `wlr-randr scan screen command error (mode: ${this.config.mode})`);
-                  } else {
-                    let wResponse = stdout.trim();
-                    this.screen.hdmiPort = wResponse.split(" ")[0];
-                    log(`[MODE 10] Monitor on ${this.screen.hdmiPort} is ${actual}`);
-                    this.resultDisplay(actual, wanted);
-                  }
-                });
-            }
-          });
-        break;
     }
   }
 
@@ -307,23 +307,15 @@ class SCREEN {
     this.screen.power = set;
     // and finally apply rules !
     switch (this.config.mode) {
-      case 2:
+      case 1:
         if (set) exec("DISPLAY=:0 xset dpms force on");
         else exec("DISPLAY=:0 xset dpms force off");
         break;
-      case 4:
-        if (set) exec("echo 'on 0' | cec-client -s");
-        else exec("echo 'standby 0' | cec-client -s");
-        break;
-      case 5:
-        if (set) exec("xset dpms force on");
-        else exec("xset dpms force off");
-        break;
-      case 9:
+      case 2:
         if (set) exec(`xrandr --output ${this.screen.hdmiPort} --auto --rotate ${this.screen.xrandrRotation}`);
         else exec(`xrandr --output ${this.screen.hdmiPort} --off`);
         break;
-      case 10:
+      case 3:
         if (set) {
           let wrandrOptions = [
             "--output",
@@ -337,6 +329,14 @@ class SCREEN {
           exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr ${wrandrOptions}`);
         }
         else exec(`WAYLAND_DISPLAY=wayland-1 wlr-randr --output ${this.screen.hdmiPort} --off`);
+        break;
+      case 4:
+        if (set) exec("echo 'on 0' | cec-client -s");
+        else exec("echo 'standby 0' | cec-client -s");
+        break;
+      case 5:
+        if (set) exec("xset dpms force on");
+        else exec("xset dpms force off");
         break;
     }
   }
