@@ -69,7 +69,8 @@ module.exports = NodeHelper.create({
       autoDimmer: this.config.Display.autoDimmer,
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
-      wrandrForceMode: this.config.Display.wrandrForceMode
+      wrandrForceMode: this.config.Display.wrandrForceMode,
+      wrandrDisplayName: this.config.Display.wrandrDisplayName
     };
 
     if (!this.pir && !this.screen) {
