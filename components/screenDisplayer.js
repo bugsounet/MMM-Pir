@@ -15,6 +15,7 @@ class screenDisplayer {
       style: 1,
       lastPresence: true,
       lastPresenceTimeFormat: "LL H:mm",
+      availability: true,
       timeout: 2 * 60 * 1000
     };
     this.config = Object.assign({}, this.default, this.config);
@@ -78,6 +79,23 @@ class screenDisplayer {
       presence.appendChild(presenceDate);
       dom.appendChild(presence);
     }
+
+    if (this.config.availability) {
+      /** availability of the screen **/
+      var availability = document.createElement("div");
+      availability.id = "MMM-PIR_AVAILABILITY";
+      availability.classList.add("bright");
+      var availabilityText = document.createElement("div");
+      availabilityText.id = "MMM-PIR_AVAILABILITY_TEXT";
+      availabilityText.textContent = this.translate("ScreenAvailability");
+      availability.appendChild(availabilityText);
+      var availabilityValue = document.createElement("div");
+      availabilityValue.id = "MMM-PIR_AVAILABILITY_DATA";
+      availabilityValue.classList.add("availability");
+      availabilityValue.textContent = "--:--:-- (---%)";
+      availability.appendChild(availabilityValue);
+      dom.appendChild(availability);
+    }
     return dom;
   }
 
@@ -122,6 +140,10 @@ class screenDisplayer {
       }
     } else {
       this.barAnimate(payload);
+    }
+    if (this.config.availability && payload.availability) {
+      let availability= document.getElementById("MMM-PIR_AVAILABILITY_DATA");
+      availability.textContent= `${payload.availability} (${payload.availabilityPercent}%)`;
     }
   }
 

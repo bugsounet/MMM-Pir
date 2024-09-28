@@ -5,5 +5,6 @@
   "ScreenTurnOff": "Mise en veille dans:",
   "ScreenLastPresence": "Dernière Présence:",
   "ScreenPowerOn": "Allumage de l'écran",
-  "ScreenPowerOff": "Extinction de l'écran"
+  "ScreenPowerOff": "Extinction de l'écran",
+  "ScreenAvailability": "Disponibilité écran:"
 }

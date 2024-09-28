@@ -64,3 +64,13 @@
 #MMM-PIR_PRESENCE_TEXT {
   margin-right: 10px;
 }
+
+/* availability */
+#MMM-PIR_AVAILABILITY {
+  font-size: large;
+  display: flex;
+}
+
+#MMM-PIR_AVAILABILITY_TEXT {
+  margin-right: 10px;
+}

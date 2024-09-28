@@ -20,6 +20,7 @@ class SCREEN {
       debug: false,
       timeout: 5 * 60 * 1000,
       mode: 1,
+      availability: true,
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null
@@ -36,7 +37,18 @@ class SCREEN {
       wrandrForceMode: null,
       hdmiPort: null,
       forceOnStart: true,
-      forceLocked: false
+      forceLocked: false,
+      uptime: Math.floor(process.uptime()),
+      availabilityCounter: Math.floor(process.uptime()),
+      availabilityPercent: 0,
+      availabilityTimeHuman: 0,
+      availabilityTimeSec: 0,
+      output: {
+        timer: "--:--",
+        bar: 1,
+        availabilityPercent: 100,
+        availability: 0
+      }
     };
 
     this.status = false;
@@ -86,6 +98,21 @@ class SCREEN {
         this.config.mode = 0;
         break;
     }
+
+    if (this.config.availability) {
+      Number.prototype.toHHMMSS = function () {
+        var sec_num = parseInt(this, 10); // don't forget the second param
+        var hours   = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours   < 10) {hours   = `0${hours}`;}
+        if (minutes < 10) {minutes = `0${minutes}`;}
+        if (seconds < 10) {seconds = `0${seconds}`;}
+        return `${hours}:${minutes}:${seconds}`;
+      };
+    }
+
     this.screenStatus();
   }
 
@@ -110,12 +137,20 @@ class SCREEN {
     this.interval = null;
     this.counter = this.config.timeout;
     this.interval = setInterval(() => {
+      if (this.config.availability) {
+        this.screen.uptime = Math.floor(process.uptime());
+        this.screen.availabilityPercent = (this.screen.availabilityCounter*100)/this.screen.uptime;
+        this.screen.availabilityTimeSec = this.screen.uptime > 86400 ? (this.screen.availabilityPercent * 864) : this.screen.availabilityCounter;
+        this.screen.availabilityTimeHuman = this.screen.availabilityTimeSec.toHHMMSS();
+        this.screen.output.availabilityPercent = parseFloat(this.screen.availabilityPercent.toFixed(1));
+        this.screen.output.availability = this.screen.availabilityTimeHuman;
+      }
       this.screen.running = true;
-      let output = {
-        timer: moment(new Date(this.counter)).format("mm:ss"),
-        bar: (this.counter/this.config.timeout).toFixed(3)
-      };
-      this.sendSocketNotification("SCREEN_OUTPUT", output);
+      this.screen.output.timer = moment(new Date(this.counter)).format("mm:ss");
+      this.screen.output.bar = (this.counter/this.config.timeout).toFixed(3);
+
+      this.sendSocketNotification("SCREEN_OUTPUT", this.screen.output);
+
       if (this.counter <= 0) {
         clearInterval(this.interval);
         this.interval = null;
@@ -437,6 +472,7 @@ class SCREEN {
 
   screenStatus () {
     setInterval(() => {
+      if (this.screen.power && this.config.availability) this.screen.availabilityCounter++;
       let status = this.screen.power;
       if (status !== this.status) {
         this.sendSocketNotification("SCREEN_POWERSTATUS", status);

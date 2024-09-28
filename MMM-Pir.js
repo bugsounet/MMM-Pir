@@ -22,6 +22,7 @@ Module.register("MMM-Pir", {
       style: 1,
       lastPresence: true,
       lastPresenceTimeFormat: "LL H:mm",
+      availability: true,
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null
