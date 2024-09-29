@@ -1,7 +1,7 @@
 # MMM-Pir
 
 After a configured time without any user interaction the display will turn off and hide all modules for economy mode.<br>
-It will wake up with a Pir sensor or Touch screen
+It will wake up with a Pir sensor, Touch screen or crontab
 
 ## Screenshot
 
@@ -18,7 +18,7 @@ Clone the module into your MagicMirror module folder and execute `npm install` i
 cd ~/MagicMirror/modules
 git clone https://github.com/bugsounet/MMM-Pir
 cd MMM-Pir
-npm install
+npm setup
 ```
 
 This module will verify if all screen saver is disabled and disable it if needed
@@ -32,62 +32,93 @@ To display the module insert it in the config.js file.
 {
   module: 'MMM-Pir',
   position: 'top_left',
+  configDeepMerge: true,
   config: {
     debug: false,
-    delay: 2 * 60 * 1000,
-    mode: 1,
-    displayCounter: true,
-    displayBar: true,
-    displayStyle: "Text",
-    displayLastPresence: true,
-    lastPresenceTimeFormat: "LL H:mm",
-    mode6_gpio: 20,
-    mode6_clearGpioValue: true,
-    xrandrForceRotation: "normal",
-    wrandrForceRotation: "normal",
-    wrandrForceMode: "1920x1080",
-    touchMode: 3,
-    pir_gpio: 21,
-    pir_mode: 0,
+    Display: {
+      timeout: 2 * 60 * 1000,
+      animate: true,
+      style: 1,
+      colorFrom: "#FF0000",
+      colorTo: "#00FF00",
+      mode: 1,
+      counter: true,
+      lastPresence: true,
+      lastPresenceTimeFormat: "LL H:mm",
+      availability: true,
+      autoDimmer: false,
+      xrandrForceRotation: "normal",
+      wrandrForceRotation: "normal",
+      wrandrForceMode: null,
+      wrandrDisplayName: "wayland-0"
+    },
+    Pir: {
+      mode: 0,
+      gpio: 21
+    },
+    Touch: {
+      mode: 3
+    }
   }
 },
 ```
 
 ### Detailed Configuration
-
+#### Root Configuration
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
  | debug | enable or not debug mode | Boolean | false |
- | delay | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
+#### Display Configuration
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
+ | timeout | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
+ | animate | Animate all modules on turn on/off your screen | Boolean | true |
+ | style| Style of the Count-down. (see bellow) | String | Text |
+ | colorFrom | Color of the start of the color gradient (default: Red in HEXA) | String | #FF0000 |
+ | colorTo | Color of the start of the color gradient (default: Green in HEXA) | String | #00FF00 |
  | mode | mode for turn on/off your screen (see bellow) | number | 1 |
- | displayCounter | Should display Count-down in screen ? | Boolean | true |
- | displayBar| Should display Count-up bar in screen ? | Boolean | true |
- | displayStyle| Style of the Count-down. Available: "Text", "Line", "SemiCircle", "Circle" | String | Text |
- | displayLastPresence| Display the date of the last user presence | Boolean | true |
+ | counter | Should display Count-down in screen ? | Boolean | true |
+ | lastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
- | mode6_gpio| **-mode 6 only-** GPIO number for control the relay (switch) | Number | 20 |
- | mode6_clearGpioValue| **-mode 6 only-** reset GPIO value script of relay (switch) | Boolean | true |
- | xrandrForceRotation | **-mode 9 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
- | wrandrForceRotation | **-mode 10 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
- | wrandrForceMode | **-mode 10 only-** Force screen resolution mode | String | null |
- | touchMode | Selected mode for enable/disable the screen with touch (see below) | Number | 3 |
- | pir_gpio | BCM-number of the sensor pin. Use `0`, if you want to disable PIR Sensor detection | Number | 21 |
- | pir_mode | Detection mode (see bellow) | Number | 0 |
+ | availability | Display screen availability time | Boolean | true |
+ | autoDimmer | creen dimmer when timeout is 1/4 time left and use opacity from 100% to 0% | Boolean | false |
+ | xrandrForceRotation | **-mode 2 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
+ | wrandrForceRotation | **-mode 3 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
+ | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
+ | wrandrDisplayName | **-mode 3 only-** wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
+
+ * Available style:
+   - `style: 0` - Don't display Count-up bar in screen
+   - `style: 1` - Display count-up in text mode
+   - `style: 2` - Display count-up with `Line` style
+   - `style: 3` - Display count-up with `SemiCircle` style
+   - `style: 4` - Display count-up with `Circle` style
 
  * Available mode:
-   - `mode: 1` - use vgencmd (For raspbian 10/11)
-   - `mode: 2` - use dpms (For raspbian 10/11 or raspbian 12 with x11 compositor)
-   - `mode: 3` - use tvservice (For raspbian 10/11)
-   - `mode: 4` - use HDMI CEC
-   - `mode: 5` - use dpms (linux version for debian, ubuntu, ...)
-   - `mode: 6` - use a relay switch command controled by GPIO with python
-   - `mode: 7` - use a relay switch command controled by GPIO with python (read reverse values)
-   - `mode: 8` - use ddcutil (not yet documented)
-   - `mode: 9` - use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
-   - `mode: 10` - use wlr-randr (For rapsbian 12 with wayland compositor)
    - `mode: 0` - disabled mode
+   - `mode: 1` - use dpms (For raspbian 10/11 or raspbian 12 with x11 compositor)
+   - `mode: 2` - use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
+   - `mode: 3` - use wlr-randr (For rapsbian 12 with wayland compositor)
+   - `mode: 4` - use HDMI CEC
+   - `mode: 5` - use ddcutil (not yet documented)
+   - `mode: 6` - use dpms (linux version for debian, ubuntu, ...)
 
-  * Available touchMode:
+#### Pir Configuration
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
+ | mode | Detection mode (see bellow) | Number | 0 |
+ | gpio | BCM-number of the sensor pin. | Number | 21 |
+
+* Available mode:
+    - `mode: 0` - use node-libgpiod library
+    - `mode: 1` - use python script with gpiozero library
+
+ ⚠ You can disable PIR Sensor detection by using `gpio: 0`
+ 
+#### Touch Configuration
+ | mode | Selected mode for enable/disable the screen with touch (see below) | Number | 3 |
+
+* Available mode:
     - `touchMode: 0`
       - Touch mode is disabled
     - `touchMode: 1`
@@ -100,10 +131,6 @@ To display the module insert it in the config.js file.
       - One Click on the MMM-Pir area will restart the timer
       - Doucle Click on the MMM-Pir area will shutdown the screen
       - One Click on the screen will wake up if shutdown
-
-  * Available pir_mode:
-    - `pir_mode: 0` - use node-libgpiod library
-    - `pir_mode: 1` - use python script with gpiozero library
 
   * Notes:
     - If you lock your screen with TouchScreen, PIR sensor will be disabled
