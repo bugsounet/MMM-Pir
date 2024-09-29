@@ -7,6 +7,7 @@ var log = (...args) => { /* do nothing */ };
 const NodeHelper = require("node_helper");
 const LibScreen = require("./components/screenLib.js");
 const LibPir = require("./components/pirLib.js");
+const LibCron = require("./components/cronJob.js");
 
 module.exports = NodeHelper.create({
   start () {
@@ -54,6 +55,9 @@ module.exports = NodeHelper.create({
         log("[CALLBACK] Pir:", noti, params || "");
         if (noti === "PIR_DETECTED") this.screen.wakeup();
         else this.sendSocketNotification(noti, params);
+      },
+      cron: (noti,params) => {
+        log("[CALLBACK] Cron:", noti, params || "");
       }
     };
     let pirConfig = {
@@ -73,6 +77,12 @@ module.exports = NodeHelper.create({
       wrandrDisplayName: this.config.Display.wrandrDisplayName
     };
 
+    let cronConfig = {
+      debug: this.config.debug,
+      ON: this.config.Cron.ON,
+      OFF: this.config.Cron.OFF
+    }
+
     if (!this.pir && !this.screen) {
       /* will allow multi-instance
        *
@@ -81,8 +91,13 @@ module.exports = NodeHelper.create({
        */
       this.pir = new LibPir(pirConfig, callbacks.pir);
       this.pir.start();
+
       this.screen = new LibScreen(screenConfig, callbacks.screen);
       this.screen.activate();
+
+      this.cron = new LibCron(cronConfig, callbacks.cron);
+      this.cron.start();
+
       console.log("[MMM-Pir] Started!");
     } else {
       console.log("[MMM-Pir] Already Started!");

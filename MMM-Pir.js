@@ -33,6 +33,10 @@ Module.register("MMM-Pir", {
       mode: 0,
       gpio: 21
     },
+    Cron: {
+      ON: [],
+      OFF: []
+    },
     Touch: {
       mode: 3
     }
