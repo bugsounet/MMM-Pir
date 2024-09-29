@@ -56,6 +56,10 @@ To display the module insert it in the config.js file.
       mode: 0,
       gpio: 21
     },
+    Cron: {
+      ON: [],
+      OFF: []
+    },
     Touch: {
       mode: 3
     }
@@ -114,8 +118,110 @@ To display the module insert it in the config.js file.
     - `mode: 1` - use python script with gpiozero library
 
  ⚠ You can disable PIR Sensor detection by using `gpio: 0`
- 
+
+#### Cron Configuration
+This is the rule to turn your screen on and off based on a set time event
+
+Each event have an object format:
+```js
+{
+  dayOfWeek: <Array of days>,
+  hour: <hour>,
+  minute: <minute>
+}
+```
+
+`dayOfWeek` is an array of number
+This number define the day:
+  - `0`: Sunday
+  - `1`: Monday
+  - `2`: Tuesday
+  - `3`: Wednesday
+  - `4`: Thursday
+  - `5`: Friday
+  - `6`: Saturday
+
+##### Sample
+sample if you want to create an event from Monday to Thursday at 07h45:
+
+```js
+{
+  dayOfWeek: [1,2,3,4],
+  hour: 7,
+  minute: 45
+}
+```
+
+sample if you want to create an event every Friday at 08h00
+
+```js
+{
+  dayOfWeek: [5],
+  hour: 8,
+  minute: 0
+}
+```
+
+sample if you want to create an event from Monday to Friday at 17h00
+```js
+{
+  dayOfWeek: [1,2,3,4,5],
+  hour: 17,
+  minute: 0
+}
+```
+
+##### Create ON/OFF events
+
+Let's create ON and OFF now
+I want to apply this rules:
+
+---> Screen is ON:
+ * from Monday to Thursday at 07h45
+ * every Friday at 08h00
+
+So, `ON` rules will be:
+
+```js
+ON: [
+  {
+    dayOfWeek: [1,2,3,4],
+    hour: 07,
+    minute: 45
+  },
+  {
+    dayOfWeek: [5],
+    hour: 08,
+    minute: 00
+  }
+],
+```
+
+---> Screen is OFF
+  * from Monday to Friday at 17h00
+
+So, `OFF` rules will be:
+
+```js
+OFF: [
+  {
+    dayOfWeek: [1,2,3,4,5],
+    hour: 17,
+    minute: 00
+  }
+]
+```
+
+Let's apply your own rules !
+
+##### Notes
+  * When `ON` event started: counter will be not displayed
+  * When `OFF` event started: counter will be functional and turn off the screen when done
+  * Don't be stupid! Don't create an ON event equal to OFF event
+
 #### Touch Configuration
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
  | mode | Selected mode for enable/disable the screen with touch (see below) | Number | 3 |
 
 * Available mode:
