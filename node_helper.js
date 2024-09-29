@@ -81,7 +81,7 @@ module.exports = NodeHelper.create({
       debug: this.config.debug,
       ON: this.config.Cron.ON,
       OFF: this.config.Cron.OFF
-    }
+    };
 
     if (!this.pir && !this.screen) {
       /* will allow multi-instance
