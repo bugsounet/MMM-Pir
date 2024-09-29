@@ -5,8 +5,8 @@
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
-    "dependencies": "installer/dependencies.sh -d 'unclutter cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
-    "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
+    "dependencies": "installer/dependencies.sh -d 'unclutter ddcutil cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
+    "preinstall": "installer/preinstall.sh -d 'unclutter ddcutil cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
     "postinstall": "installer/postinstall.sh -m -r",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
