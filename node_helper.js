@@ -56,8 +56,11 @@ module.exports = NodeHelper.create({
         if (noti === "PIR_DETECTED") this.screen.wakeup();
         else this.sendSocketNotification(noti, params);
       },
-      cron: (noti,params) => {
-        log("[CALLBACK] Cron:", noti, params || "");
+      cron: {
+        cronState: (param) => {
+          log("[CALLBACK] Cron: cronState", param);
+          this.screen.cronState(param);
+        }
       }
     };
     let pirConfig = {
@@ -74,7 +77,8 @@ module.exports = NodeHelper.create({
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
       wrandrForceMode: this.config.Display.wrandrForceMode,
-      wrandrDisplayName: this.config.Display.wrandrDisplayName
+      wrandrDisplayName: this.config.Display.wrandrDisplayName,
+      animate: this.config.Display.animate
     };
 
     let cronConfig = {

@@ -34,18 +34,24 @@ class SCREEN {
       running: false,
       locked: false,
       power: false,
+      awaitBeforeTurnOff: this.config.animate,
+      awaitBeforeTurnOffTimer: null,
+      awaitBeforeTurnOffTime: 1000, //2000,
+      uptime: Math.floor(process.uptime()),
+      availabilityCounter: Math.floor(process.uptime()),
+      availabilityPercent: 0,
+      availabilityTimeHuman: 0,
+      availabilityTimeSec: 0,
+      forceLocked: false,
+      cronStarted: false,
+      cronON: false,
+      cronOFF: false,
       xrandrRotation: null,
       wrandrRotation: null,
       wrandrForceMode: null,
       wrandrDisplayName: null,
       hdmiPort: null,
       forceOnStart: true,
-      forceLocked: false,
-      uptime: Math.floor(process.uptime()),
-      availabilityCounter: Math.floor(process.uptime()),
-      availabilityPercent: 0,
-      availabilityTimeHuman: 0,
-      availabilityTimeSec: 0,
       dimmerFrom: this.config.timeout / 4,
       output: {
         timer: "--:--",
@@ -57,6 +63,7 @@ class SCREEN {
     };
 
     this.status = false;
+
     this.xrandrRotation = ["normal", "left", "right", "inverted"];
     this.wrandrRotation = ["normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270"];
 
@@ -134,6 +141,7 @@ class SCREEN {
   activate () {
     process.on("exit", () => {
       if (this.config.mode) this.setPowerDisplay(true);
+      //this.governor("GOVERNOR_WORKING");
     });
     this.start();
   }
@@ -142,8 +150,11 @@ class SCREEN {
     if (this.screen.locked || this.screen.running) return;
     if (!restart) log("Start.");
     else log("Restart.");
+    clearTimeout(this.screen.awaitBeforeTurnOffTimer);
+    this.screen.awaitBeforeTurnOffTimer= null;
     this.sendSocketNotification("SCREEN_PRESENCE", true);
     if (!this.screen.power) {
+      //this.governor("GOVERNOR_WORKING");
       if (this.config.mode) this.wantedPowerDisplay(true);
       this.sendSocketNotification("SCREEN_SHOWING");
       this.screen.power = true;
@@ -154,6 +165,8 @@ class SCREEN {
     clearInterval(this.interval);
     this.interval = null;
     this.counter = this.config.timeout;
+
+    //main loop
     this.interval = setInterval(() => {
       if (this.config.availability) {
         this.screen.uptime = Math.floor(process.uptime());
@@ -164,6 +177,7 @@ class SCREEN {
         this.screen.output.availabilityPercent = parseFloat(this.screen.availabilityPercent.toFixed(1));
         this.screen.output.availability = this.screen.availabilityTimeHuman;
       }
+
       this.screen.running = true;
       if (this.config.autoDimmer && (this.counter <= this.screen.dimmerFrom)) {
         this.screen.output.dimmer = 1 - ((this.screen.dimmerFrom - this.counter) / this.screen.dimmerFrom);
@@ -190,6 +204,9 @@ class SCREEN {
     this.sendSocketNotification("SCREEN_HIDING");
     this.screen.power = false;
     if (this.config.mode) this.wantedPowerDisplay(false);
+    //if (this.config.detectorSleeping) this.detector("DETECTOR_STOP");
+    this.screen.dimmer = 0;
+    //this.governor("GOVERNOR_SLEEPING");
     this.sendSocketNotification("SCREEN_PRESENCE", false);
   }
 
@@ -197,6 +214,7 @@ class SCREEN {
     if (this.screen.locked) return;
 
     if (!this.screen.power) {
+      //this.governor("GOVERNOR_WORKING");
       if (this.config.mode) this.wantedPowerDisplay(true);
       this.sendSocketNotification("SCREEN_SHOWING");
       this.screen.power = true;
@@ -219,6 +237,7 @@ class SCREEN {
 
   wakeup () {
     if (this.screen.locked) return;
+    //if (!this.screen.power && this.config.detectorSleeping) this.detector("DETECTOR_START");
     this.reset();
   }
 
@@ -375,10 +394,12 @@ class SCREEN {
     }
   }
 
-  setPowerDisplay (set) {
+  async setPowerDisplay (set) {
     log(`Display ${set ? "ON." : "OFF."}`);
     this.screen.power = set;
     // and finally apply rules !
+    this.SendScreenPowerState();
+    if (this.screen.awaitBeforeTurnOff && !set) await this.sleep(this.screen.awaitBeforeTurnOffTime);
     switch (this.config.mode) {
       case 1:
         if (set) {
@@ -535,6 +556,43 @@ class SCREEN {
     this.sendSocketNotification("SCREEN_STATE", this.screen);
   }
 
+  SendScreenPowerState () {
+    this.sendSocketNotification("SCREEN_POWER", this.screen.power);
+  }
+
+  sleep (ms=1300) {
+    return new Promise((resolve) => {
+      this.screen.awaitBeforeTurnOffTimer = setTimeout(resolve, ms);
+    });
+  }
+
+  /** Cron Rules **/
+  cronState (state) {
+    /* disabled
+    this.screen.cronStarted= state.started;
+    this.screen.cronON= state.ON;
+    this.screen.cronOFF= state.OFF;
+    log("[CRON] Turn cron state to", state);
+    if (!this.screen.cronStarted) return;
+    if ((!this.screen.cronON && !this.screen.cronOFF) || this.screen.cronON) {
+      // and... consider first start
+      this.sendForceLockState(true);
+      if (this.screen.cronON) {
+        this.screen.locked = false;
+        this.wakeup();
+      }
+      this.screen.cronON = true;
+      this.screen.cronOFF = false;
+      this.lock();
+    } else if (this.screen.cronOFF) {
+      this.sendForceLockState(false);
+      this.screen.cronON = false;
+      this.screen.cronOFF = true;
+      this.unlock();
+    }
+    */
+  }
+
   /** Force Lock ON/OFF display **/
   forceLockOFF () {
     if (!this.screen.power) return log("[Force OFF] Display Already OFF");
@@ -551,14 +609,26 @@ class SCREEN {
 
   forceLockON () {
     if (this.screen.locked && !this.screen.forceLocked) return log("[Force ON] Display is Locked!");
+    if (this.screen.power && this.screen.cronStarted) return log("[Force ON] Display Already ON");
     this.sendForceLockState(false);
     this.screen.locked = false;
     this.wakeup();
+    if (this.screen.cronStarted) {
+      if (this.screen.cronON) this.sendForceLockState(true);
+      this.lock();
+    }
+    this.sendSocketNotification("FORCE_LOCK_END");
     log("[Force ON] Turn ON Display");
+  }
+
+  forceLockToggle () {
+    if (this.screen.power) this.forceLockOFF();
+    else this.forceLockON();
   }
 
   sendForceLockState (state) {
     this.screen.forceLocked = state;
+    this.sendSocketNotification("SCREEN_FORCELOCKED", this.screen.forceLocked);
   }
 
   screenStatus () {
@@ -567,6 +637,7 @@ class SCREEN {
       let status = this.screen.power;
       if (status !== this.status) {
         this.sendSocketNotification("SCREEN_POWERSTATUS", status);
+        if (this.config.mode === 0) this.sendSocketNotification("SCREEN_POWER", this.screen.power);
         log("[POWER] Display from", this.status, "--->", status);
       }
       this.status = status;
