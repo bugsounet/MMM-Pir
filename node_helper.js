@@ -8,11 +8,14 @@ const NodeHelper = require("node_helper");
 const LibScreen = require("./components/screenLib.js");
 const LibPir = require("./components/pirLib.js");
 const LibCron = require("./components/cronJob.js");
+const LibGovernor = require("./components/governorLib.js");
 
 module.exports = NodeHelper.create({
   start () {
     this.pir = null;
     this.screen = null;
+    this.cron = null;
+    this.governor = null;
   },
 
   socketNotificationReceived (notification, payload) {
@@ -83,8 +86,16 @@ module.exports = NodeHelper.create({
 
     let cronConfig = {
       debug: this.config.debug,
+      mode: this.config.Cron.mode,
       ON: this.config.Cron.ON,
       OFF: this.config.Cron.OFF
+    };
+
+    let governorConfig = {
+      debug: this.config.debug,
+      useCallback: false,
+      sleeping: this.config.Governor.sleeping,
+      working: this.config.Governor.working
     };
 
     if (!this.pir && !this.screen) {
@@ -101,6 +112,9 @@ module.exports = NodeHelper.create({
 
       this.cron = new LibCron(cronConfig, callbacks.cron);
       this.cron.start();
+
+      this.governor = new LibGovernor(governorConfig, callbacks.governor);
+      this.governor.start();
 
       console.log("[MMM-Pir] Started!");
     } else {

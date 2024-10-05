@@ -16,7 +16,7 @@ class GOVERNOR {
       working: "ondemand"
     };
     this.config = Object.assign(this.default, this.config);
-    if (this.config.debug === true) log = (...args) => { console.log("[GOVERNOR]", ...args); };
+    if (this.config.debug === true) log = (...args) => { console.log("[MMM-Pir] [LIB] [GOVERNOR]", ...args); };
     this.MyGovernor = [ "conservative", "ondemand" , "userspace" , "powersave" , "performance" ];
     this.Governor = {
       actived : false,
@@ -24,11 +24,13 @@ class GOVERNOR {
       actual : "",
       error: null
     };
-    console.log("[GOVERNOR] Governor library initialized...");
+    console.log("[MMM-Pir] [LIB] [GOVERNOR] Governor library initialized...");
   }
   start () {
     this.Governor.wanted = this.config.working;
+    /* disabled (prepare code)
     this.apply();
+    */
     log("Start");
   }
 
@@ -47,7 +49,7 @@ class GOVERNOR {
       if (error) {
         this.Governor.actived= false;
         this.Governor.error= "Incompatible with your system.";
-        console.log("[GOVERNOR] Error: Incompatible with your system.");
+        console.log("[MMM-Pir] [LIB] [GOVERNOR] Error: Incompatible with your system.");
         if (this.config.useCallback) this.callback(this.Governor);
         return;
       }
@@ -69,7 +71,7 @@ class GOVERNOR {
           }
         });
         if (!this.Governor.actived) {
-          console.log(`[GOVERNOR] Error: unknow Governor (${this.Governor.wanted})`);
+          console.log(`[MMM-Pir] [LIB] [GOVERNOR] Error: unknow Governor (${this.Governor.wanted})`);
           this.Governor.error= `Unknow Governor (${this.Governor.wanted})`;
           this.Governor.actived = false;
           if (this.config.useCallback) this.callback(this.Governor);

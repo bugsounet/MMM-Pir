@@ -34,11 +34,16 @@ Module.register("MMM-Pir", {
       gpio: 21
     },
     Cron: {
+      mode: 0,
       ON: [],
       OFF: []
     },
     Touch: {
       mode: 3
+    },
+    Governor: {
+      sleeping: "ondemand",
+      working: "performance"
     }
   },
 
