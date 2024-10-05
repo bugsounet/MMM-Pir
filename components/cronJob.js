@@ -8,6 +8,7 @@ class cronJob {
     this.cronON = [];
     this.cronOFF = [];
     this.Manager = {
+      mode: 0,
       ON: false,
       OFF: false,
       started: false
@@ -46,6 +47,21 @@ class cronJob {
       console.log("[MMM-Pir] [LIB] [CRON] [OFF] no cron defined");
     } else {
       log("[OFF] Result:", this.cronOFF);
+    }
+
+    switch (this.config.mode) {
+      case 0:
+        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 0");
+        this.config.mode = 0;
+        break;
+      case 1:
+        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 0");
+        this.config.mode = 1;
+        break;
+      default:
+        console.error(`[MMM-Pir] [LIB] [CRON] [MODE] Unknow Mode (${this.config.mode}) Change mode to 0`);
+        this.config.mode = 0;
+        break;
     }
   }
 
