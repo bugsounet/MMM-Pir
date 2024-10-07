@@ -1,51 +1,76 @@
+/* Main */
 #MMM-PIR {
   font-size: large;
   min-width: 250px;
+  display: inline-flex;
+  flex-direction: column;
 }
 
 #MMM-PIR.hidden {
   display: none;
 }
 
+/* Text */
 #MMM-PIR_TEXT {
-  margin-right: 10px;
-}
-
-#MMM-PIR_PRESENCE,
-#MMM-PIR_SCREEN {
   font-size: large;
   display: flex;
 }
 
-#MMM-PIR_PRESENCE.hidden,
-#MMM-PIR_BAR.hidden,
-#MMM-PIR_SCREEN.hidden {
+#MMM-PIR_TEXT.hidden {
   display: none;
 }
 
-#MMM-PIR_PRESENCE_TEXT,
-#MMM-PIR_SCREEN_TEXT {
+#MMM-PIR_TEXT_TRANSLATE {
   margin-right: 10px;
 }
 
+/* Style */
 
-#MMM-PIR_SCREEN_BAR {
+#MMM-PIR_STYLE {
   font-size: large;
   min-width: 100px;
   margin-left: auto;
   margin-right: auto;
 }
 
-#MMM-PIR_SCREEN_BAR.Line {
+#MMM-PIR_STYLE.Line {
   height: 40px;
 }
 
-#MMM-PIR_SCREEN_BAR.Circle {
+#MMM-PIR_STYLE.Circle {
   width: 100px;
   height: 93px;
   margin-bottom: 10px;
 }
 
-#MMM-PIR_SCREEN_BAR.SemiCircle {
+#MMM-PIR_STYLE.SemiCircle {
   width: 100px;
+}
+
+#MMM-PIR_STYLE.hidden {
+  display: none;
+}
+
+/* Presence */
+#MMM-PIR_PRESENCE {
+  font-size: large;
+  display: flex;
+}
+
+#MMM-PIR_PRESENCE.hidden {
+  display: none;
+}
+
+#MMM-PIR_PRESENCE_TEXT {
+  margin-right: 10px;
+}
+
+/* availability */
+#MMM-PIR_AVAILABILITY {
+  font-size: large;
+  display: flex;
+}
+
+#MMM-PIR_AVAILABILITY_TEXT {
+  margin-right: 10px;
 }
