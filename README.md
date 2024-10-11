@@ -62,6 +62,10 @@ To display the module insert it in the config.js file.
     },
     Touch: {
       mode: 3
+    },
+    Governor: {
+      sleeping: 4,
+      working: 2
     }
   }
 },
@@ -241,6 +245,32 @@ Let's apply your own rules !
   * Notes:
     - If you lock your screen with TouchScreen, PIR sensor will be disabled
     - You need to unlock your screen with touchscreen to reactivate the PIR sensor
+
+#### Governor Configuration
+
+CPU governor enables the operating system to scale the CPU frequency up or down in order to save power or improve performance.
+
+On each boot of your RPI, your governor is set automaticaly to `ondemand`.
+
+This configuration allows to change it dynamicaly
+
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
+ | sleeping | Governor number mode when your screen is turned off | Number | 4 |
+ | working | Governor number mode when your screen is turned on | Number | 2 |
+
+* Available `sleeping` and `working` mode:
+  - `0`: Disable any governor mode change
+  - `1`: Apply `conservative` governor mode
+  - `2`: Apply `ondemand` governor mode
+  - `3`: Apply `userspace` governor mode
+  - `4`: Apply `powersave` governor mode
+  - `5`: Apply `performance` governor mode
+
+
+If you want a maximum of CPU power, `performance` is the best choice !
+
+If you want an economy mode of CPU power, `powersave` is the best choice !
 
 ## Developer Notes
 

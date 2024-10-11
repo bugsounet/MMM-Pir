@@ -13,7 +13,8 @@ var log = (...args) => { /* do nothing */ };
 class SCREEN {
   constructor (config, callback) {
     this.config = config;
-    this.sendSocketNotification = callback;
+    this.sendSocketNotification = callback.sendSocketNotification;
+    this.governor = callback.governor;
     this.PathScript = `${path.dirname(require.resolve("../package.json"))}/scripts`;
     this.interval = null;
     this.default = {
@@ -141,7 +142,7 @@ class SCREEN {
   activate () {
     process.on("exit", () => {
       if (this.config.mode) this.setPowerDisplay(true);
-      //this.governor("GOVERNOR_WORKING");
+      this.governor("WORKING");
     });
     this.start();
   }
@@ -154,7 +155,7 @@ class SCREEN {
     this.screen.awaitBeforeTurnOffTimer= null;
     this.sendSocketNotification("SCREEN_PRESENCE", true);
     if (!this.screen.power) {
-      //this.governor("GOVERNOR_WORKING");
+      this.governor("WORKING");
       if (this.config.mode) this.wantedPowerDisplay(true);
       this.sendSocketNotification("SCREEN_SHOWING");
       this.screen.power = true;
@@ -206,7 +207,7 @@ class SCREEN {
     if (this.config.mode) this.wantedPowerDisplay(false);
     //if (this.config.detectorSleeping) this.detector("DETECTOR_STOP");
     this.screen.dimmer = 0;
-    //this.governor("GOVERNOR_SLEEPING");
+    this.governor("SLEEPING");
     this.sendSocketNotification("SCREEN_PRESENCE", false);
   }
 
@@ -214,7 +215,7 @@ class SCREEN {
     if (this.screen.locked) return;
 
     if (!this.screen.power) {
-      //this.governor("GOVERNOR_WORKING");
+      this.governor("WORKING");
       if (this.config.mode) this.wantedPowerDisplay(true);
       this.sendSocketNotification("SCREEN_SHOWING");
       this.screen.power = true;

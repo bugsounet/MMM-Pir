@@ -12,12 +12,12 @@ class GOVERNOR {
     this.default = {
       debug: false,
       useCallback: false,
-      sleeping: "powersave",
-      working: "ondemand"
+      sleeping: 4,
+      working: 2
     };
     this.config = Object.assign(this.default, this.config);
     if (this.config.debug === true) log = (...args) => { console.log("[MMM-Pir] [LIB] [GOVERNOR]", ...args); };
-    this.MyGovernor = [ "conservative", "ondemand" , "userspace" , "powersave" , "performance" ];
+    this.MyGovernor = [ "Disabled", "conservative", "ondemand" , "userspace" , "powersave" , "performance" ];
     this.Governor = {
       actived : false,
       wanted : "",
@@ -26,22 +26,20 @@ class GOVERNOR {
     };
     console.log("[MMM-Pir] [LIB] [GOVERNOR] Governor library initialized...");
   }
+
   start () {
-    this.Governor.wanted = this.config.working;
-    /* disabled (prepare code)
-    this.apply();
-    */
     log("Start");
+    this.working();
   }
 
   working () {
-    this.Governor.wanted = this.config.working;
-    this.apply();
+    this.Governor.wanted = this.checkGovernor(this.config.working);
+    if (this.Governor.wanted !== "Disabled") this.apply();
   }
 
   sleeping () {
-    this.Governor.wanted = this.config.sleeping;
-    this.apply();
+    this.Governor.wanted = this.checkGovernor(this.config.sleeping);
+    if (this.Governor.wanted !== "Disabled") this.apply();
   }
 
   apply () {
@@ -49,7 +47,7 @@ class GOVERNOR {
       if (error) {
         this.Governor.actived= false;
         this.Governor.error= "Incompatible with your system.";
-        console.log("[MMM-Pir] [LIB] [GOVERNOR] Error: Incompatible with your system.");
+        console.error("[MMM-Pir] [LIB] [GOVERNOR] Error: Incompatible with your system.");
         if (this.config.useCallback) this.callback(this.Governor);
         return;
       }
@@ -71,13 +69,26 @@ class GOVERNOR {
           }
         });
         if (!this.Governor.actived) {
-          console.log(`[MMM-Pir] [LIB] [GOVERNOR] Error: unknow Governor (${this.Governor.wanted})`);
+          console.error(`[MMM-Pir] [LIB] [GOVERNOR] Error: unknow Governor (${this.Governor.wanted})`);
           this.Governor.error= `Unknow Governor (${this.Governor.wanted})`;
           this.Governor.actived = false;
           if (this.config.useCallback) this.callback(this.Governor);
         }
       }
     });
+  }
+
+  checkGovernor(wanted) {
+    let found = this.MyGovernor.find((governor, value) => {
+      return value === wanted;
+    });
+    if (found) {
+      console.log(`[MMM-Pir] [LIB] [GOVERNOR] Governor: ${found}`);
+      return found;
+    } else {
+      console.error(`[MMM-Pir] [LIB] [GOVERNOR] Governor Error ! [${wanted}]`);
+      return "Disabled";
+    }
   }
 }
 

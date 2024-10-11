@@ -50,15 +50,28 @@ module.exports = NodeHelper.create({
     console.log("[MMM-Pir] Version:", require("./package.json").version, "rev:", require("./package.json").rev);
     log("Config:", this.config);
     var callbacks = {
-      screen: (noti, params) => {
-        log("[CALLBACK] Screen:", noti, params || "");
-        this.sendSocketNotification(noti, params);
+      /* from screenLib */
+      screen: {
+        sendSocketNotification: (noti, params) => {
+          log("[CALLBACK] Screen:", noti, params || "");
+          this.sendSocketNotification(noti, params);
+        },
+        /* from screenLib to governorLib */
+        governor: (state) => {
+          if (this.governor) {
+            log("[CALLBACK] Screen for Governor:", state);
+            if (state === "WORKING") this.governor.working();
+            if (state === "SLEEPING") this.governor.sleeping();
+          }
+        }
       },
+      /* from pirLib */
       pir: (noti, params) => {
         log("[CALLBACK] Pir:", noti, params || "");
         if (noti === "PIR_DETECTED") this.screen.wakeup();
         else this.sendSocketNotification(noti, params);
       },
+      /* from cromLib */
       cron: {
         cronState: (param) => {
           log("[CALLBACK] Cron: cronState", param);
@@ -98,7 +111,7 @@ module.exports = NodeHelper.create({
       working: this.config.Governor.working
     };
 
-    if (!this.pir && !this.screen) {
+    if (!this.screen) {
       /* will allow multi-instance
        *
        * don't load again lib and screen scripts
@@ -107,14 +120,14 @@ module.exports = NodeHelper.create({
       this.pir = new LibPir(pirConfig, callbacks.pir);
       this.pir.start();
 
+      this.governor = new LibGovernor(governorConfig, callbacks.governor);
+      this.governor.start();
+
       this.screen = new LibScreen(screenConfig, callbacks.screen);
       this.screen.activate();
 
       this.cron = new LibCron(cronConfig, callbacks.cron);
       this.cron.start();
-
-      this.governor = new LibGovernor(governorConfig, callbacks.governor);
-      this.governor.start();
 
       console.log("[MMM-Pir] Started!");
     } else {

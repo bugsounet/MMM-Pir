@@ -42,8 +42,8 @@ Module.register("MMM-Pir", {
       mode: 3
     },
     Governor: {
-      sleeping: "ondemand",
-      working: "performance"
+      sleeping: 4,
+      working: 2
     }
   },
 
