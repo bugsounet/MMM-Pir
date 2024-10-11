@@ -46,7 +46,7 @@
     "esbuild": "^0.24.0",
     "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
-    "nan": "^2.20.0",
+    "nan": "^2.22.0",
     "node-cron": "^3.0.3",
     "node-libgpiod": "^0.4.6",
     "progressbar.js": "^1.1.1",
