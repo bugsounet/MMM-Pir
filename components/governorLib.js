@@ -78,7 +78,7 @@ class GOVERNOR {
     });
   }
 
-  checkGovernor(wanted) {
+  checkGovernor (wanted) {
     let found = this.MyGovernor.find((governor, value) => {
       return value === wanted;
     });
