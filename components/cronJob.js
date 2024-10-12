@@ -17,6 +17,27 @@ class cronJob {
 
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [CRON]", ...args); };
     log("Reading ON/OFF cron configuration...");
+
+    switch (this.config.mode) {
+      case 0:
+        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Disabled.");
+        this.Manager.mode = 0;
+        break;
+      case 1:
+        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 1");
+        this.Manager.mode = 1;
+        break;
+      case 2:
+        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 2");
+        this.Manager.mode = 2;
+        break;
+      default:
+        console.error(`[MMM-Pir] [LIB] [CRON] [MODE] Unknow Mode (${this.config.mode})`);
+        this.Manager.mode = 0;
+        break;
+    }
+
+    if (!this.Manager.mode) return;
     if (!this.config.ON) return console.warn("[MMM-Pir] [LIB] [CRON] ON feature not detected!");
     if (!this.config.OFF) return console.warn("[MMM-Pir] [LIB] [CRON] OFF feature not detected!");
     if (!Array.isArray(this.config.ON)) return console.error("[MMM-Pir] [LIB] [CRON] ON feature must be an Array");
@@ -49,20 +70,6 @@ class cronJob {
       log("[OFF] Result:", this.cronOFF);
     }
 
-    switch (this.config.mode) {
-      case 0:
-        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 0");
-        this.config.mode = 0;
-        break;
-      case 1:
-        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 0");
-        this.config.mode = 1;
-        break;
-      default:
-        console.error(`[MMM-Pir] [LIB] [CRON] [MODE] Unknow Mode (${this.config.mode}) Change mode to 0`);
-        this.config.mode = 0;
-        break;
-    }
   }
 
   checkCron (toCron, type) {
@@ -88,7 +95,7 @@ class cronJob {
   }
 
   start () {
-    if (!this.cronON.length && !this.cronOFF.length) return;
+    if (!this.Manager.mode || (!this.cronON.length && !this.cronOFF.length)) return;
     if (!this.cronON.length && this.cronOFF.length) {
       console.error("[MMM-Pir] [LIB] [CRON] ON feature missing or failed!");
       return;
