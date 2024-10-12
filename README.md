@@ -66,6 +66,10 @@ To display the module insert it in the config.js file.
     Governor: {
       sleeping: 4,
       working: 2
+    },
+    Sounds: {
+      on: "open.mp3",
+      off: "close.mp3"
     }
   }
 },
@@ -76,6 +80,8 @@ To display the module insert it in the config.js file.
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
  | debug | enable or not debug mode | Boolean | false |
+
+------
 #### Display Configuration
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
@@ -111,6 +117,7 @@ To display the module insert it in the config.js file.
    - `mode: 5` - use ddcutil (not yet documented)
    - `mode: 6` - use dpms (linux version for debian, ubuntu, ...)
 
+------
 #### Pir Configuration
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
@@ -123,6 +130,7 @@ To display the module insert it in the config.js file.
 
  ⚠ You can disable PIR Sensor detection by using `gpio: 0`
 
+------
 #### Cron Configuration
 This is the rule to turn your screen on and off based on a set time event
 
@@ -223,6 +231,7 @@ Let's apply your own rules !
   * When `OFF` event started: counter will be functional and turn off the screen when done
   * Don't be stupid! Don't create an ON event equal to OFF event
 
+------
 #### Touch Configuration
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
@@ -246,6 +255,7 @@ Let's apply your own rules !
     - If you lock your screen with TouchScreen, PIR sensor will be disabled
     - You need to unlock your screen with touchscreen to reactivate the PIR sensor
 
+------
 #### Governor Configuration
 
 CPU governor enables the operating system to scale the CPU frequency up or down in order to save power or improve performance.
@@ -272,6 +282,21 @@ If you want a maximum of CPU power, `performance` is the best choice !
 
 If you want an economy mode of CPU power, `powersave` is the best choice !
 
+------
+#### Sounds Configuration
+
+Sounds configuration will play audio file when your screen turn on or off.
+
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
+ | on | File to play when screen turn on | String or 0 | open.mp3 |
+ | off | File to play when screen turn off | String or 0 | close.mp3 |
+ 
+You can personalize your sound, just past your file into `sounds` folder and report filename (with extension) in your configuration
+
+You can disable sound by using `0` in your configuration
+
+------
 ## Developer Notes
 
 - This module broadcasts:
