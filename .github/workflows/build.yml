@@ -30,6 +30,6 @@ jobs:
           path: MagicMirror/modules/MMM-Pir
 
       - name: Install MMM-Pir
-        run: npm run dependencies && npm install
+        run: npm run setup
         working-directory: MagicMirror/modules/MMM-Pir
         continue-on-error: false
