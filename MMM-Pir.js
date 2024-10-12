@@ -44,6 +44,10 @@ Module.register("MMM-Pir", {
     Governor: {
       sleeping: 4,
       working: 2
+    },
+    Sounds: {
+      on: "open.mp3",
+      off: "close.mp3"
     }
   },
 
@@ -57,6 +61,8 @@ Module.register("MMM-Pir", {
     };
     this.screenDisplay = new screenDisplayer(this.config.Display, Tools);
     this.screenTouch = new screenTouch(this.config.Touch, Tools);
+    this.sound = new Audio();
+    this.sound.autoplay = true;
     _logPIR("is now started!");
   },
 
@@ -78,6 +84,13 @@ Module.register("MMM-Pir", {
         break;
       case "SCREEN_PRESENCE":
         this.screenDisplay.updatePresence(payload);
+        break;
+      case "SCREEN_POWER":
+        if (payload && this.config.Sounds.on !== 0) {
+          this.sound.src = `modules/EXT-Screen/sounds/${this.config.Sounds.on}?seed=${Date.now}`;
+        } else if (this.config.Sounds.off !== 0) {
+          this.sound.src = `modules/EXT-Screen/sounds/${this.config.Sounds.off}?seed=${Date.now}`;
+        }
         break;
       case "SCREEN_POWERSTATUS":
         if (payload) this.sendNotification("USER_PRESENCE", true);
