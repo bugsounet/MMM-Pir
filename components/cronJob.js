@@ -109,7 +109,7 @@ class cronJob {
 
     this.cronON.forEach((on) => {
       cron.schedule(on, () => {
-        log("[ON] it's time to turn ON");
+        log("[ON] It's time to turn ON");
         this.Manager.ON= true;
         this.Manager.OFF= false;
         this.cronState(this.Manager);
@@ -119,7 +119,7 @@ class cronJob {
 
     this.cronOFF.forEach((off) => {
       cron.schedule(off, () => {
-        log("[OFF] it's time to turn OFF");
+        log("[OFF] It's time to turn OFF");
         this.Manager.ON= false;
         this.Manager.OFF= true;
         this.cronState(this.Manager);

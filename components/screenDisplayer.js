@@ -7,6 +7,9 @@ class screenDisplayer {
   constructor (config, Tools) {
     this.config = config;
     this.translate = (...args) => Tools.translate(...args);
+    this.hide = (...args) => Tools.hide(...args);
+    this.show = (...args) => Tools.show(...args);
+    this.hidden = () => Tools.hidden();
     this.default = {
       animate: true,
       colorFrom: "#FF0000",
@@ -201,6 +204,17 @@ class screenDisplayer {
       module.hide(500, () => {}, options);
     });
     _logPIR("Hide All modules.");
+  }
+
+  /** Hide with Flip animation **/
+  hideMe () {
+    if (this.hidden()) return _logPIR("Already Hidden.");
+    this.hide(1000, () => {}, { lockString: "MMM-PIR_LOCK", animate: "flipOutX" });
+  }
+
+  showMe () {
+    if (!this.hidden()) return _logPIR("Already Showing.");
+    this.show(1000, () => {}, { lockString: "MMM-PIR_LOCK", animate: "flipInX" });
   }
 
   animateFromPosition (position, show) {

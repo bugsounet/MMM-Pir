@@ -4,8 +4,6 @@
 *  09/2024   *
 *************/
 
-/* global screenDisplayer, screenTouch */
-
 var _logPIR = (...args) => { /* do nothing */ };
 
 Module.register("MMM-Pir", {
@@ -57,7 +55,9 @@ Module.register("MMM-Pir", {
     let Tools = {
       sendSocketNotification: (...args) => this.sendSocketNotification(...args),
       hidden: () => { return this.hidden; },
-      translate: (...args) => this.translate(...args)
+      translate: (...args) => this.translate(...args),
+      hide: (...args) => this.hide(...args),
+      show: (...args) => this.show(...args)
     };
     this.screenDisplay = new screenDisplayer(this.config.Display, Tools);
     this.screenTouch = new screenTouch(this.config.Touch, Tools);
@@ -111,6 +111,13 @@ Module.register("MMM-Pir", {
           message: `Pir Error detected: ${payload}`,
           timer: 15000
         });
+        break;
+      case "SCREEN_FORCELOCKED":
+        if (payload) this.screenDisplay.hideMe();
+        else this.screenDisplay.showMe();
+        break;
+      case "FORCE_LOCK_END":
+        this.screenDisplay.showMe();
         break;
     }
   },

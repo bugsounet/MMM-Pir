@@ -579,11 +579,13 @@ class SCREEN {
     if ((!this.screen.cronON && !this.screen.cronOFF) || this.screen.cronON) {
       this.screen.cronON = true;
       this.screen.cronOFF = false;
-      if (this.screen.cronMode === 2) {
-        this.sendForceLockState(true);
-        this.lock();
-      } else {
+      if (this.screen.cronMode === 1) {
         this.forceLockON();
+      } else {
+        this.screen.locked = false;
+        this.wakeup();
+        this.lock();
+        this.sendForceLockState(true);
       }
     } else if (this.screen.cronOFF) {
       this.screen.cronON = false;
@@ -608,18 +610,12 @@ class SCREEN {
   }
 
   forceLockON () {
-    if (this.screen.cronStarted && this.screen.cronOFF) return log("[Force ON] Display is Locked by cron!");
     if (this.screen.locked && !this.screen.forceLocked) return log("[Force ON] Display is Locked!");
-    if (this.screen.power && this.screen.cronStarted) return log("[Force ON] Display Already ON");
-
-    if (this.screen.cronStarted  && this.screen.cronON && this.screen.cronMode === 2) {
-      this.sendForceLockState(true);
-      this.lock();
-    } else {
-      this.sendForceLockState(false);
-      this.screen.locked = false;
-      this.wakeup();
-    }
+    if (this.screen.cronStarted && this.screen.cronOFF) return log("[Force ON] Display is Locked by cron!");
+    if (this.screen.cronStarted && this.screen.cronON && this.screen.cronMode === 2) return log("[Force ON] [mode 2] Display is Locked by cron!");
+    this.sendForceLockState(false);
+    this.screen.locked = false;
+    this.wakeup();
     this.sendSocketNotification("FORCE_LOCK_END");
     log("[Force ON] Turn ON Display");
   }
