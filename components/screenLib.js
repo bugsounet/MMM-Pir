@@ -260,6 +260,7 @@ class SCREEN {
   }
 
   forceEnd () {
+    if (this.screen.forceLocked) return log("forceEnd: ForceLocked");
     clearInterval(this.interval);
     this.interval = null;
     this.screen.running = false;
