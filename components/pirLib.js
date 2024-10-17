@@ -112,6 +112,7 @@ class PIR {
         try {
           this.pirChip = new Chip(number);
           const label = this.pirChip.getChipLabel();
+          log(`[GPIOD] Check chip ${number}: ${label}`);
           if (label.includes("pinctrl-")) {
             /* found chip */
             console.log(`[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip ${number}: ${label}`);
