@@ -2,8 +2,9 @@
   "ScreenWakeUp": "Réveil de l'écran demandé par {VALUES}",
   "ScreenLock": "Verrouillage de l'écran demandé par {VALUES}",
   "ScreenUnLock": "Déverrouillage de l'écran demandé par {VALUES}",
-  "ScreenTurnOff": "Mise en veille dans",
+  "ScreenTurnOff": "Mise en veille dans:",
   "ScreenLastPresence": "Dernière Présence:",
   "ScreenPowerOn": "Allumage de l'écran",
-  "ScreenPowerOff": "Extinction de l'écran"
+  "ScreenPowerOff": "Extinction de l'écran",
+  "ScreenAvailability": "Disponibilité écran:"
 }
