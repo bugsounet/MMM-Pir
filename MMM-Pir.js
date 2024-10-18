@@ -87,9 +87,9 @@ Module.register("MMM-Pir", {
         break;
       case "SCREEN_POWER":
         if (payload && this.config.Sounds.on !== 0) {
-          this.sound.src = `modules/EXT-Screen/sounds/${this.config.Sounds.on}?seed=${Date.now}`;
+          this.sound.src = `modules/MMM-Pir/sounds/${this.config.Sounds.on}?seed=${Date.now}`;
         } else if (this.config.Sounds.off !== 0) {
-          this.sound.src = `modules/EXT-Screen/sounds/${this.config.Sounds.off}?seed=${Date.now}`;
+          this.sound.src = `modules/MMM-Pir/sounds/${this.config.Sounds.off}?seed=${Date.now}`;
         }
         break;
       case "SCREEN_POWERSTATUS":
