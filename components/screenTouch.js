@@ -6,8 +6,8 @@
 /* global window */
 
 class screenTouch {
-  constructor (mode, Tools) {
-    this.mode = mode;
+  constructor (Touch, Tools) {
+    this.mode = Touch.mode;
     this.sendSocketNotification = (...args) => Tools.sendSocketNotification(...args);
     this.hidden = () => Tools.hidden();
     if (this.mode > 3 || this.mode < 0 || isNaN(this.mode)) this.mode = 3;
@@ -21,7 +21,6 @@ class screenTouch {
 
     switch (this.mode) {
       case 1:
-
         /** mode 1 **/
         window.addEventListener("click", () => {
           this.clickCount++;
@@ -38,7 +37,6 @@ class screenTouch {
         }, false);
         break;
       case 2:
-
         /** mode 2 **/
         TouchScreen.addEventListener("click", () => {
           if (!this.hidden()) this.sendSocketNotification("LOCK_FORCE_WAKEUP");
@@ -52,7 +50,6 @@ class screenTouch {
         }, false);
         break;
       case 3:
-
         /** mode 3 **/
         TouchScreen.addEventListener("click", () => {
           this.clickCount++;
