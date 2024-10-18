@@ -59,6 +59,9 @@ Module.register("MMM-Pir", {
       hide: (...args) => this.hide(...args),
       show: (...args) => this.show(...args)
     };
+
+    this.config = configMerge({}, this.defaults, this.config);
+
     this.screenDisplay = new screenDisplayer(this.config.Display, Tools);
     this.screenTouch = new screenTouch(this.config.Touch, Tools);
     this.sound = new Audio();
