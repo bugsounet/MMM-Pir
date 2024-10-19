@@ -96,6 +96,7 @@ Module.register("MMM-Pir", {
         }
         break;
       case "SCREEN_POWERSTATUS":
+        this.sendNotification("MMM_PIR-SCREEN_POWERSTATUS", payload)
         if (payload) this.sendNotification("USER_PRESENCE", true);
         else this.sendNotification("USER_PRESENCE", false);
         break;
