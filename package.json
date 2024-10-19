@@ -44,6 +44,7 @@
     "@electron/rebuild": "^3.7.0",
     "cron-parser": "^4.9.0",
     "esbuild": "^0.24.0",
+    "eslint-plugin-import": "^2.31.0",
     "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
     "nan": "^2.22.0",

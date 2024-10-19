@@ -1,5 +1,6 @@
 const globals = require("globals");
 const eslintPluginStylistic = require("@stylistic/eslint-plugin");
+const eslintPluginImport = require("eslint-plugin-import");
 
 const config = [
   {
@@ -19,10 +20,20 @@ const config = [
       }
     },
     plugins: {
-      "@stylistic": eslintPluginStylistic
+      "@stylistic": eslintPluginStylistic,
+      import: eslintPluginImport
     },
     rules: {
       eqeqeq: "error",
+      "import/order": "error",
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          json: "always" // ignore json require (display EXT version and rev date)
+        }
+      ],
+      "import/newline-after-import": "error",
       "no-param-reassign": "error",
       "no-prototype-builtins": "off",
       "no-throw-literal": "error",
