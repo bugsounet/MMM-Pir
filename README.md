@@ -32,7 +32,6 @@ To display the module insert it in the config.js file.
 {
   module: 'MMM-Pir',
   position: 'top_left',
-  configDeepMerge: true,
   config: {
     debug: false,
     Display: {
