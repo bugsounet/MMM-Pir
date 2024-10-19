@@ -348,9 +348,5 @@ cd ~/MagicMirror/modules/MMM-Pir
 npm run rebuild
 ```
 
-## Notes
- * `mode 1` works with bullseye OS (raspbian 11)<br>
- ↪️ Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`
-
 ## Support
  * Get assistance on [bugsounet website](https://www.bugsounet.fr)
