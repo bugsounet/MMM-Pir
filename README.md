@@ -32,7 +32,6 @@ To display the module insert it in the config.js file.
 {
   module: 'MMM-Pir',
   position: 'top_left',
-  configDeepMerge: true,
   config: {
     debug: false,
     Display: {
@@ -348,10 +347,6 @@ For reinstall this module or when an update of MagicMirror² is available, you c
 cd ~/MagicMirror/modules/MMM-Pir
 npm run rebuild
 ```
-
-## Notes
- * `mode 1` works with bullseye OS (raspbian 11)<br>
- ↪️ Just use `dtoverlay=vc4-fkms-v3d` driver in `/boot/config.txt`
 
 ## Support
  * Get assistance on [bugsounet website](https://www.bugsounet.fr)
