@@ -86,10 +86,10 @@ To display the module insert it in the config.js file.
  | ------- | --- | --- | --- |
  | timeout | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
  | animate | Animate all modules on turn on/off your screen | Boolean | true |
- | style| Style of the Count-down. (see bellow) | String | Text |
+ | style| Style of the Count-down. (see bellow) | Number | 1 |
  | colorFrom | Color of the start of the color gradient (default: Red in HEXA) | String | #FF0000 |
  | colorTo | Color of the start of the color gradient (default: Green in HEXA) | String | #00FF00 |
- | mode | mode for turn on/off your screen (see bellow) | number | 1 |
+ | mode | mode for turn on/off your screen (see bellow) | Number | 1 |
  | counter | Should display Count-down in screen ? | Boolean | true |
  | lastPresence| Display the date of the last user presence | Boolean | true |
  | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
