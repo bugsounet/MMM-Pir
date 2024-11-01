@@ -86,14 +86,14 @@ To display the module insert it in the config.js file.
  | ------- | --- | --- | --- |
  | timeout | Time before the mirror turns off the display if no user activity is detected. (in ms) | Number | 120000 |
  | animate | Animate all modules on turn on/off your screen | Boolean | true |
- | style| Style of the Count-down. (see bellow) | Number | 1 |
+ | style | Style of the Count-down. (see bellow) | Number | 1 |
  | colorFrom | Color of the start of the color gradient (default: Red in HEXA) | String | #FF0000 |
  | colorTo | Color of the start of the color gradient (default: Green in HEXA) | String | #00FF00 |
  | mode | mode for turn on/off your screen (see bellow) | Number | 1 |
  | counter | Should display Count-down in screen ? | Boolean | true |
- | lastPresence| Display the date of the last user presence | Boolean | true |
- | lastPresenceTimeFormat| Change the date format (moment.js format) of the last presence | String | LL H:mm |
- | availability | Display screen availability time | Boolean | true |
+ | lastPresence | Display the date of the last user presence | Boolean | true |
+ | lastPresenceTimeFormat | Change the date format (moment.js format) of the last presence | String | LL H:mm |
+ | availability | Display screen availability time (average 24h) | Boolean | true |
  | autoDimmer | creen dimmer when timeout is 1/4 time left and use opacity from 100% to 0% | Boolean | false |
  | xrandrForceRotation | **-mode 2 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
  | wrandrForceRotation | **-mode 3 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
