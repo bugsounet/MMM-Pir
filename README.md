@@ -9,6 +9,10 @@ It will wake up with a Pir sensor, Touch screen or crontab
 
 ![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot2.png)
 
+![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot3.png)
+
+![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot4.png)
+
 ## Installation
 
 **Minimal MagicMirror² version requirement: v2.28.0** <br>
