@@ -7,7 +7,7 @@
 var _logPIR = (...args) => { /* do nothing */ };
 
 Module.register("MMM-Pir", {
-  requiresVersion: "2.23.0",
+  requiresVersion: "2.28.0",
   defaults: {
     debug: false,
     Display: {
