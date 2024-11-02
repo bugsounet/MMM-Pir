@@ -33,21 +33,21 @@ class GOVERNOR {
   }
 
   working () {
-    this.Governor.wanted = this.checkGovernor(this.config.working);
-    if (this.Governor.wanted !== "Disabled") this.apply();
+    this.Governor.wanted = this.checkGovernor(this.config.working, "working");
+    if (this.Governor.wanted !== "Disabled") this.apply("working");
   }
 
   sleeping () {
-    this.Governor.wanted = this.checkGovernor(this.config.sleeping);
-    if (this.Governor.wanted !== "Disabled") this.apply();
+    this.Governor.wanted = this.checkGovernor(this.config.sleeping, "sleeping");
+    if (this.Governor.wanted !== "Disabled") this.apply("sleeping");
   }
 
-  apply () {
+  apply (type) {
     exec("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor", (error, stdout, stderr) => {
       if (error) {
         this.Governor.actived= false;
         this.Governor.error= "Incompatible with your system.";
-        console.error("[MMM-Pir] [LIB] [GOVERNOR] Error: Incompatible with your system.");
+        console.error(`[MMM-Pir] [LIB] [GOVERNOR] ${type} - Error: Incompatible with your system.`);
         if (this.config.useCallback) this.callback(this.Governor);
         return;
       }
@@ -64,12 +64,12 @@ class GOVERNOR {
             exec(`echo ${governor} | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor`);
             this.Governor.error= null;
             this.Governor.actived = true;
-            log(`Set: ${governor}`);
+            log(`${type} Set: ${governor}`);
             if (this.config.useCallback) this.callback(this.Governor);
           }
         });
         if (!this.Governor.actived) {
-          console.error(`[MMM-Pir] [LIB] [GOVERNOR] Error: unknow Governor (${this.Governor.wanted})`);
+          console.error(`[MMM-Pir] [LIB] [GOVERNOR] ${type} Error: unknow Governor (${this.Governor.wanted})`);
           this.Governor.error= `Unknow Governor (${this.Governor.wanted})`;
           this.Governor.actived = false;
           if (this.config.useCallback) this.callback(this.Governor);
@@ -78,15 +78,15 @@ class GOVERNOR {
     });
   }
 
-  checkGovernor (wanted) {
+  checkGovernor (wanted, type) {
     let found = this.MyGovernor.find((governor, value) => {
       return value === wanted;
     });
     if (found) {
-      console.log(`[MMM-Pir] [LIB] [GOVERNOR] Governor: ${found}`);
+      log(`${type} Governor: ${found}`);
       return found;
     } else {
-      console.error(`[MMM-Pir] [LIB] [GOVERNOR] Governor Error ! [${wanted}]`);
+      console.error(`[MMM-Pir] [LIB] [GOVERNOR] ${type} Governor Error ! [${wanted}]`);
       return "Disabled";
     }
   }
