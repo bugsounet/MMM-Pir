@@ -283,4 +283,13 @@ class screenDisplayer {
       region.style.opacity = dimmer;
     });
   }
+
+  animateModule () {
+    let animation= document.getElementById("MMM-PIR");
+    animation.classList.add("animate__animated", "animate__headShake");
+    animation.style.setProperty("--animate-duration", ".5s");
+    setTimeout(()=> {
+      animation.classList.remove("animate__animated", "animate__headShake");
+    },500);
+  }
 }

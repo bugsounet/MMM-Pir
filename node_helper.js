@@ -71,8 +71,12 @@ module.exports = NodeHelper.create({
       /* from pirLib */
       pir: (noti, params) => {
         log("[CALLBACK] Pir:", noti, params || "");
-        if (noti === "PIR_DETECTED") this.screen.wakeup();
-        else this.sendSocketNotification(noti, params);
+        if (noti === "PIR_DETECTED") {
+          this.screen.wakeup();
+          this.sendSocketNotification("PIR_DETECTED-ANIMATE");
+        } else {
+          this.sendSocketNotification(noti, params);
+        }
       },
       /* from cromLib */
       cron: {

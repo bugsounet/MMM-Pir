@@ -121,6 +121,9 @@ Module.register("MMM-Pir", {
       case "FORCE_LOCK_END":
         this.screenDisplay.showMe();
         break;
+      case "PIR_DETECTED-ANIMATE":
+        this.screenDisplay.animateModule();
+        break;
     }
   },
 
