@@ -198,13 +198,13 @@ So, `ON` rules will be:
 ON: [
   {
     dayOfWeek: [1,2,3,4],
-    hour: 07,
+    hour: 7,
     minute: 45
   },
   {
     dayOfWeek: [5],
-    hour: 08,
-    minute: 00
+    hour: 8,
+    minute: 0
   }
 ],
 ```
@@ -219,7 +219,7 @@ OFF: [
   {
     dayOfWeek: [1,2,3,4,5],
     hour: 17,
-    minute: 00
+    minute: 0
   }
 ]
 ```
