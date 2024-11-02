@@ -262,7 +262,6 @@ fi
 # module name
 Installer_module="$(grep -Eo '\"name\"[^,]*' ./package.json | grep -Eo '[^:]*$' | awk  -F'\"' '{print $2}')"
 
-Installer_warning "🛠️ For personalized assistance, visit https://www.bugsounet.fr and create a ticket."
 echo
 
 Installer_success "$Installer_module is now installed !"
