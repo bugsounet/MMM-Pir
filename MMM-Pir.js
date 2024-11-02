@@ -97,8 +97,6 @@ Module.register("MMM-Pir", {
         break;
       case "SCREEN_POWERSTATUS":
         this.sendNotification("MMM_PIR-SCREEN_POWERSTATUS", payload);
-        if (payload) this.sendNotification("USER_PRESENCE", true);
-        else this.sendNotification("USER_PRESENCE", false);
         break;
       case "SCREEN_ERROR":
         this.sendNotification("SHOW_ALERT", {
@@ -149,10 +147,6 @@ Module.register("MMM-Pir", {
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("UNLOCK");
         break;
-      case "USER_PRESENCE":
-        /** only available if not force-locked by touch **/
-        if (payload) this.sendSocketNotification("WAKEUP");
-        else this.sendSocketNotification("FORCE_END");
     }
   },
 

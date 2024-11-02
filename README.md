@@ -301,16 +301,15 @@ You can disable sound by using `0` in your configuration
 
 - This module broadcasts:
 
-  * `USER_PRESENCE` with payload `true` when your screen turn on.
-  * `USER_PRESENCE` with payload `false` when your screen turn off.
+  * `MMM_PIR-SCREEN_POWERSTATUS` with payload `true` when your screen turn on.
+  * `MMM_PIR-SCREEN_POWERSTATUS` with payload `false` when your screen turn off.
 
 - This module receive:
 
-  * `MMM_PIR-END` notification to force the end of the count down
-  * `MMM_PIR-WAKEUP` notification to wake up the screen and reset count down
-  * `MMM_PIR-LOCK` notification keep the screen on and lock it (freeze counter and stop pir detection) 
-  * `MMM_PIR-UNLOCK` notification unlock the screen and restart counter and pir detection
-  * `USER_PRESENCE` with payload `true` or `false` like `MMM_PIR-WAKEUP` or `MMM_PIR-END` notification
+  * `MMM_PIR-END` notification to force the end of the count down.
+  * `MMM_PIR-WAKEUP` notification to wake up the screen and reset count down.
+  * `MMM_PIR-LOCK` notification keep the screen on and lock it (freeze counter and stop pir detection).
+  * `MMM_PIR-UNLOCK` notification unlock the screen and restart counter and pir detection.
 
 ## Update
 
