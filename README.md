@@ -11,7 +11,8 @@ It will wake up with a Pir sensor, Touch screen or crontab
 
 ## Installation
 
-**Minimal node version requirement: v20**
+**Minimal MagicMirror² version requirement: v2.28.0** <br>
+**Minimal node version requirement: v20.9.0**
 
 Clone the module into your MagicMirror module folder and execute `npm run setup` in the module's directory.
 ```sh
