@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
   "version": "2.0.0",
-  "rev": "241018",
+  "rev": "241102",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -28,7 +28,7 @@
     "motion detection"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20.9.0 <21 || >=22"
   },
   "repository": {
     "type": "git",
