@@ -5,9 +5,9 @@ It will wake up with a Pir sensor or Touch screen
 
 ## Screenshot
 
-![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot.png)
+![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/v1.x/screenshot/screenshot.png)
 
-![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot2.png)
+![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/v1.x/screenshot/screenshot2.png)
 
 ## Installation
 
