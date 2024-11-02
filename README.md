@@ -347,6 +347,3 @@ For reinstall this module or when an update of MagicMirror² is available, you c
 cd ~/MagicMirror/modules/MMM-Pir
 npm run rebuild
 ```
-
-## Support
- * Get assistance on [bugsounet website](https://www.bugsounet.fr)
