@@ -78,11 +78,16 @@ module.exports = NodeHelper.create({
           this.sendSocketNotification(noti, params);
         }
       },
-      /* from cromLib */
+      /* from cronLib */
       cron: {
         cronState: (param) => {
           log("[CALLBACK] Cron: cronState", param);
           this.screen.cronState(param);
+        }
+      },
+      governor: {
+        error: (params) => {
+          this.sendSocketNotification("GOVERNOR_ERROR", params);
         }
       }
     };
@@ -113,7 +118,6 @@ module.exports = NodeHelper.create({
 
     let governorConfig = {
       debug: this.config.debug,
-      useCallback: false,
       sleeping: this.config.Governor.sleeping,
       working: this.config.Governor.working
     };

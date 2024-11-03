@@ -106,6 +106,13 @@ Module.register("MMM-Pir", {
           timer: 15000
         });
         break;
+      case "SCREEN_FORCELOCKED":
+        if (payload) this.screenDisplay.hideMe();
+        else this.screenDisplay.showMe();
+        break;
+      case "FORCE_LOCK_END":
+        this.screenDisplay.showMe();
+        break;
       case "PIR_ERROR":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
@@ -114,15 +121,16 @@ Module.register("MMM-Pir", {
           timer: 15000
         });
         break;
-      case "SCREEN_FORCELOCKED":
-        if (payload) this.screenDisplay.hideMe();
-        else this.screenDisplay.showMe();
-        break;
-      case "FORCE_LOCK_END":
-        this.screenDisplay.showMe();
-        break;
       case "PIR_DETECTED-ANIMATE":
         this.screenDisplay.animateModule();
+        break;
+      case "GOVERNOR_ERROR":
+        this.sendNotification("SHOW_ALERT", {
+          type: "notification",
+          title: "MMM-Pir",
+          message: `Governor Error detected: ${payload}`,
+          timer: 15000
+        });
         break;
     }
   },
