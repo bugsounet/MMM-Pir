@@ -83,8 +83,15 @@ module.exports = NodeHelper.create({
         cronState: (param) => {
           log("[CALLBACK] Cron: cronState", param);
           this.screen.cronState(param);
+        },
+        error: (params) => {
+          this.sendSocketNotification("CRON_ERROR", params);
+        },
+        error_unspecified: (code)=> {
+          this.sendSocketNotification("CRON_ERROR_UNSPECIFIED", code);
         }
       },
+      /* from governorLib */
       governor: {
         error: (params) => {
           this.sendSocketNotification("GOVERNOR_ERROR", params);

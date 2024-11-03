@@ -14,6 +14,8 @@ class cronJob {
       started: false
     };
     this.cronState = callback.cronState;
+    this.error = callback.error;
+    this.error_unspecified = callback.error_unspecified;
 
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [CRON]", ...args); };
     log("Reading ON/OFF cron configuration...");
@@ -33,6 +35,7 @@ class cronJob {
         break;
       default:
         console.error(`[MMM-Pir] [LIB] [CRON] [MODE] Unknow Mode (${this.config.mode})`);
+        this.error(`Unknow Mode (${this.config.mode})`);
         this.Manager.mode = 0;
         break;
     }
@@ -40,14 +43,21 @@ class cronJob {
     if (!this.Manager.mode) return;
     if (!this.config.ON) return console.warn("[MMM-Pir] [LIB] [CRON] ON feature not detected!");
     if (!this.config.OFF) return console.warn("[MMM-Pir] [LIB] [CRON] OFF feature not detected!");
-    if (!Array.isArray(this.config.ON)) return console.error("[MMM-Pir] [LIB] [CRON] ON feature must be an Array");
-    if (!Array.isArray(this.config.OFF)) return console.error("[MMM-Pir] [LIB] [CRON] OFF feature must be an Array");
+    if (!Array.isArray(this.config.ON)) {
+      this.error_unspecified(1);
+      return console.error("[MMM-Pir] [LIB] [CRON] ~Code: 1~ ON feature must be an Array");
+    }
+    if (!Array.isArray(this.config.OFF)) {
+      this.error_unspecified(2);
+      return console.error("[MMM-Pir] [LIB] [CRON] ~Code 2~ OFF feature must be an Array");
+    }
 
     this.config.ON.forEach((ON) => {
       if (this.isObject(ON)) {
         this.checkCron(ON, "ON");
       } else {
-        console.error("[MMM-Pir] [LIB] [CRON] [ON]", ON, "must be an object");
+        console.error("[MMM-Pir] [LIB] [CRON] [ON] ~Code 3~", ON, "must be an object");
+        this.error_unspecified(3);
       }
     });
 
@@ -61,7 +71,8 @@ class cronJob {
       if (this.isObject(OFF)) {
         this.checkCron(OFF, "OFF");
       } else {
-        console.error("[MMM-Pir] [LIB] [CRON] [OFF]", ON, "must be an object");
+        console.error("[MMM-Pir] [LIB] [CRON] [OFF] ~Code 4~", OFF, "must be an object");
+        this.error_unspecified(4);
       }
     });
     if (!this.cronOFF.length) {
@@ -76,11 +87,20 @@ class cronJob {
     var interval = parser.parseExpression("* * * * *");
     var fields = JSON.parse(JSON.stringify(interval.fields));
     console.log(`[MMM-Pir] [LIB] [CRON] [${type}] Configure:`, toCron);
-    if (isNaN(toCron.hour)) return console.error(`[MMM-Pir] [LIB] [CRON] [${type}]`, toCron, "hour must be a number");
+    if (isNaN(toCron.hour)) {
+      this.error_unspecified(5);
+      return console.error(`[MMM-Pir] [LIB] [CRON] ~Code 5~ [${type}]`, toCron, "hour must be a number");
+    }
     fields.hour = [toCron.hour];
-    if (isNaN(toCron.minute)) return console.error(`[MMM-Pir] [LIB] [CRON] [${type}]`, toCron, "minute must be a number");
+    if (isNaN(toCron.minute)) {
+      this.error_unspecified(6);
+      return console.error(`[MMM-Pir] [LIB] [CRON] ~Code 6~ [${type}]`, toCron, "minute must be a number");
+    }
     fields.minute = [toCron.minute];
-    if (!Array.isArray(toCron.dayOfWeek)) return console.error(`[MMM-Pir] [LIB] [CRON] [${type}]`, toCron, "dayOfWeek must be a Array");
+    if (!Array.isArray(toCron.dayOfWeek)) {
+      this.error_unspecified(7);
+      return console.error(`[MMM-Pir] [LIB] [CRON] ~Code 7~ [${type}]`, toCron, "dayOfWeek must be a Array");
+    }
     fields.dayOfWeek = toCron.dayOfWeek;
     try {
       var modifiedInterval = parser.fieldsToExpression(fields);
@@ -90,17 +110,20 @@ class cronJob {
       else this.cronOFF.push(job);
       console.log(`[MMM-Pir] [LIB] [CRON] [${type}] Next`, type === "ON" ? "Start:": "Stop:", modifiedInterval.next().toString());
     } catch (e) {
-      console.error(`[MMM-Pir] [LIB] [CRON] [${type}]`, toCron, e.toString());
+      this.error_unspecified(8);
+      console.error(`[MMM-Pir] [LIB] [CRON] ~Code 8~ [${type}]`, toCron, e.toString());
     }
   }
 
   start () {
     if (!this.Manager.mode || (!this.cronON.length && !this.cronOFF.length)) return;
     if (!this.cronON.length && this.cronOFF.length) {
+      this.error("ON feature missing or failed!");
       console.error("[MMM-Pir] [LIB] [CRON] ON feature missing or failed!");
       return;
     }
     if (this.cronON.length && !this.cronOFF.length) {
+      this.error("OFF feature missing or failed!");
       console.error("[MMM-Pir] [LIB] [CRON] OFF feature missing or failed!");
       return;
     }

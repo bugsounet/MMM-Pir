@@ -132,6 +132,22 @@ Module.register("MMM-Pir", {
           timer: 15000
         });
         break;
+      case "CRON_ERROR":
+        this.sendNotification("SHOW_ALERT", {
+          type: "notification",
+          title: "MMM-Pir",
+          message: `Cron Error detected: ${payload}`,
+          timer: 15000
+        });
+        break;
+      case "CRON_ERROR_UNSPECIFIED":
+        this.sendNotification("SHOW_ALERT", {
+          type: "notification",
+          title: this.translate("MODULE_CONFIG_ERROR", { MODULE_NAME: "MMM-Pir", ERROR: "Cron Configuration" }),
+          message: `Code:${payload} - ${this.translate("MODULE_ERROR_UNSPECIFIED")}`,
+          timer: 15000
+        });
+        break;
     }
   },
 
