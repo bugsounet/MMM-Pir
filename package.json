@@ -1,18 +1,23 @@
 {
   "name": "MMM-Pir",
-  "version": "1.5.4",
-  "rev": "240824",
+  "version": "2.0.0",
+  "rev": "241104",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
-    "preinstall": "installer/preinstall.sh -d 'unclutter cec-utils ddcutil python3 python-is-python3 python3-gpiozero'",
-    "postinstall": "installer/postinstall.sh -m -r",
+    "dependencies": "installer/dependencies.sh -d 'unclutter ddcutil cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
+    "presetup": "npm run dependencies && installer/preinstall.sh",
+    "setup": "npm prune",
+    "postsetup": "installer/postinstall.sh -m -r",
+    "preinstall": "echo ⚠ npm install will be deprecated on next release!.",
+    "install": "npm run setup",
+    "postinstall": "echo ⚠ On next release, Please use: npm run setup",
     "update": "installer/update.sh",
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js --no-warn-ignored",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --ignore-pattern components/long-press-event.js --ignore-pattern components/progressbar.js --no-warn-ignored --fix",
+    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
+    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
     "test": "npm run lint",
     "test:minify": "cd installer && node minify.js"
   },
@@ -23,7 +28,7 @@
     "motion detection"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20.9.0 <21 || >=22"
   },
   "repository": {
     "type": "git",
@@ -32,22 +37,24 @@
   "author": "bugsounet",
   "license": "MIT",
   "bugs": {
-    "url": "https://forum.bugsounet.fr/"
+    "url": "https://www.bugsounet.fr/"
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "@electron/rebuild": "^3.6.0",
-    "esbuild": "^0.23.1",
+    "@electron/rebuild": "^3.7.0",
+    "cron-parser": "^4.9.0",
+    "esbuild": "^0.24.0",
     "glob": "^10.4.5",
     "long-press-event": "^2.5.0",
-    "nan": "^2.20.0",
-    "onoff": "^6.0.3",
+    "nan": "^2.22.0",
+    "node-cron": "^3.0.3",
+    "node-libgpiod": "^0.4.6",
+    "progressbar.js": "^1.1.1",
     "python-shell": "^5.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^8.57.0",
-    "@stylistic/eslint-plugin": "1.8.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-import": "^2.29.1"
+    "@stylistic/eslint-plugin": "^2.10.1",
+    "eslint": "^9.14.0",
+    "eslint-plugin-import": "^2.31.0"
   }
 }

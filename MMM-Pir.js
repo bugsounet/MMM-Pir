@@ -1,54 +1,71 @@
 /*************
 *  MMM-Pir   *
 *  Bugsounet *
-*  03/2024   *
+*  09/2024   *
 *************/
-
-/* global screenDisplayer, screenTouch */
 
 var _logPIR = (...args) => { /* do nothing */ };
 
 Module.register("MMM-Pir", {
-  requiresVersion: "2.23.0",
+  requiresVersion: "2.28.0",
   defaults: {
     debug: false,
-    delay: 2 * 60 * 1000,
-    mode: 1,
-    touchMode: 3,
-    displayCounter: true,
-    displayBar: true,
-    displayStyle: "Text",
-    displayLastPresence: true,
-    lastPresenceTimeFormat: "LL H:mm",
-    mode6_gpio: 20,
-    mode6_clearGpioValue: true,
-    pir_mode: 0,
-    pir_gpio: 21,
-    xrandrForceRotation: "normal",
-    wrandrForceRotation: "normal",
-    wrandrForceMode: null
+    Display: {
+      animate: true,
+      colorFrom: "#FF0000",
+      colorTo: "#00FF00",
+      timeout: 2 * 60 * 1000,
+      mode: 1,
+      counter: true,
+      style: 1,
+      lastPresence: true,
+      lastPresenceTimeFormat: "LL H:mm",
+      availability: true,
+      autoDimmer: false,
+      xrandrForceRotation: "normal",
+      wrandrForceRotation: "normal",
+      wrandrForceMode: null,
+      wrandrDisplayName: "wayland-0"
+    },
+    Pir: {
+      mode: 0,
+      gpio: 21
+    },
+    Cron: {
+      mode: 0,
+      ON: [],
+      OFF: []
+    },
+    Touch: {
+      mode: 3
+    },
+    Governor: {
+      sleeping: 4,
+      working: 2
+    },
+    Sounds: {
+      on: "open.mp3",
+      off: "close.mp3"
+    }
   },
 
   start () {
     if (this.config.debug) _logPIR = (...args) => { console.log("[MMM-Pir]", ...args); };
-    this.userPresence = null;
-    this.lastPresence = null;
     this.ready = false;
     let Tools = {
       sendSocketNotification: (...args) => this.sendSocketNotification(...args),
       hidden: () => { return this.hidden; },
-      translate: (...args) => this.translate(...args)
+      translate: (...args) => this.translate(...args),
+      hide: (...args) => this.hide(...args),
+      show: (...args) => this.show(...args)
     };
-    let displayConfig = {
-      displayCounter: this.config.displayCounter,
-      displayBar: this.config.displayBar,
-      displayStyle: this.config.displayStyle,
-      displayLastPresence: this.config.displayLastPresence,
-      delay: this.config.delay
-    };
-    this.screenDisplay = new screenDisplayer(displayConfig, Tools);
-    this.screenDisplay.checkStyle();
-    this.screenTouch = new screenTouch(this.config.touchMode, Tools);
+
+    this.config = configMerge({}, this.defaults, this.config);
+
+    this.screenDisplay = new screenDisplayer(this.config.Display, Tools);
+    this.screenTouch = new screenTouch(this.config.Touch, Tools);
+    this.sound = new Audio();
+    this.sound.autoplay = true;
     _logPIR("is now started!");
   },
 
@@ -66,28 +83,20 @@ Module.register("MMM-Pir", {
         this.screenDisplay.screenHiding();
         break;
       case "SCREEN_OUTPUT":
-        if (this.config.displayStyle === "Text") {
-          let counter = document.getElementById("MMM-PIR_SCREEN_COUNTER");
-          counter.textContent = payload.timer;
-        } else {
-          this.screenDisplay.barAnimate(payload.bar);
-        }
+        this.screenDisplay.updateDisplay(payload);
         break;
       case "SCREEN_PRESENCE":
-        if (!this.config.displayLastPresence) return;
-        if (payload) this.lastPresence = moment().format(this.config.lastPresenceTimeFormat);
-        else this.userPresence = this.lastPresence;
-        if (this.userPresence) {
-          let presence = document.getElementById("MMM-PIR_PRESENCE");
-          presence.classList.remove("hidden");
-          presence.classList.add("bright");
-          let userPresence = document.getElementById("MMM-PIR_PRESENCE_DATE");
-          userPresence.textContent = this.userPresence;
+        this.screenDisplay.updatePresence(payload);
+        break;
+      case "SCREEN_POWER":
+        if (payload && this.config.Sounds.on !== 0) {
+          this.sound.src = `modules/MMM-Pir/sounds/${this.config.Sounds.on}?seed=${Date.now}`;
+        } else if (this.config.Sounds.off !== 0) {
+          this.sound.src = `modules/MMM-Pir/sounds/${this.config.Sounds.off}?seed=${Date.now}`;
         }
         break;
       case "SCREEN_POWERSTATUS":
-        if (payload) this.sendNotification("USER_PRESENCE", true);
-        else this.sendNotification("USER_PRESENCE", false);
+        this.sendNotification("MMM_PIR-SCREEN_POWERSTATUS", payload);
         break;
       case "SCREEN_ERROR":
         this.sendNotification("SHOW_ALERT", {
@@ -97,6 +106,13 @@ Module.register("MMM-Pir", {
           timer: 15000
         });
         break;
+      case "SCREEN_FORCELOCKED":
+        if (payload) this.screenDisplay.hideMe();
+        else this.screenDisplay.showMe();
+        break;
+      case "FORCE_LOCK_END":
+        this.screenDisplay.showMe();
+        break;
       case "PIR_ERROR":
         this.sendNotification("SHOW_ALERT", {
           type: "notification",
@@ -105,46 +121,64 @@ Module.register("MMM-Pir", {
           timer: 15000
         });
         break;
+      case "PIR_DETECTED-ANIMATE":
+        this.screenDisplay.animateModule();
+        break;
+      case "GOVERNOR_ERROR":
+        this.sendNotification("SHOW_ALERT", {
+          type: "notification",
+          title: "MMM-Pir",
+          message: `Governor Error detected: ${payload}`,
+          timer: 15000
+        });
+        break;
+      case "CRON_ERROR":
+        this.sendNotification("SHOW_ALERT", {
+          type: "notification",
+          title: "MMM-Pir",
+          message: `Cron Error detected: ${payload}`,
+          timer: 15000
+        });
+        break;
+      case "CRON_ERROR_UNSPECIFIED":
+        this.sendNotification("SHOW_ALERT", {
+          type: "notification",
+          title: this.translate("MODULE_CONFIG_ERROR", { MODULE_NAME: "MMM-Pir", ERROR: "Cron Configuration" }),
+          message: `Code:${payload} - ${this.translate("MODULE_ERROR_UNSPECIFIED")}`,
+          timer: 15000
+        });
+        break;
     }
   },
 
   notificationReceived (notification, payload, sender) {
     if (notification === "MODULE_DOM_CREATED") {
-      this.screenDisplay.prepareBar();
+      this.screenDisplay.prepareStyle();
       this.sendSocketNotification("INIT", this.config);
     }
     if (!this.ready) return;
     switch (notification) {
       case "MMM_PIR-END":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("FORCE_END");
         break;
       case "MMM_PIR-WAKEUP":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("WAKEUP");
         break;
       case "MMM_PIR-LOCK":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("LOCK");
         break;
       case "MMM_PIR-UNLOCK":
-
         /** only available if not force-locked by touch **/
         this.sendSocketNotification("UNLOCK");
         break;
-      case "USER_PRESENCE":
-
-        /** only available if not force-locked by touch **/
-        if (payload) this.sendSocketNotification("WAKEUP");
-        else this.sendSocketNotification("FORCE_END");
     }
   },
 
   getDom () {
-    return this.screenDisplay.prepare();
+    return this.screenDisplay.prepareDom();
   },
 
   getStyles () {
@@ -153,10 +187,10 @@ Module.register("MMM-Pir", {
 
   getScripts () {
     return [
-      "/modules/MMM-Pir/components/progressbar.js",
       "/modules/MMM-Pir/components/screenDisplayer.js",
       "/modules/MMM-Pir/components/screenTouch.js",
-      "/modules/MMM-Pir/node_modules/long-press-event/dist/long-press-event.min.js"
+      "/modules/MMM-Pir/node_modules/long-press-event/dist/long-press-event.min.js",
+      "/modules/MMM-Pir/node_modules/progressbar.js/dist/progressbar.min.js"
     ];
   },
 

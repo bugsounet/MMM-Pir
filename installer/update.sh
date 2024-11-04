@@ -43,7 +43,7 @@ echo
 rm -f package-lock.json
 
 Installer_info "Updating..."
-(git reset --hard && git pull) || {
+(npm run reset && git pull) || {
   Installer_error "Update Failed!"
   exit 255
 }
@@ -53,4 +53,4 @@ echo
 Installer_info "Ready for Installing..."
 
 # launch installer
-npm install
+npm run setup

@@ -1,7 +1,6 @@
 const globals = require("globals");
-const { configs: eslintConfigs } = require("@eslint/js");
-const eslintPluginImport = require("eslint-plugin-import");
 const eslintPluginStylistic = require("@stylistic/eslint-plugin");
+const eslintPluginImport = require("eslint-plugin-import");
 
 const config = [
   {
@@ -21,7 +20,7 @@ const config = [
       }
     },
     plugins: {
-      ...eslintPluginStylistic.configs["all-flat"].plugins,
+      "@stylistic": eslintPluginStylistic,
       import: eslintPluginImport
     },
     rules: {
@@ -68,22 +67,5 @@ const config = [
     }
   }
 ];
-
-/*
- * Set debug to true for testing purposes.
- * Since some plugins have not yet been optimized for the flat config,
- * we will be able to optimize this file in the future. It can be helpful
- * to write the ESLint config to a file and compare it after changes.
- */
-const debug = false;
-
-if (debug === true) {
-  const FileSystem = require("fs");
-  FileSystem.writeFile("eslint-config-DEBUG.json", JSON.stringify(config, null, 2), (error) => {
-    if (error) {
-      throw error;
-    }
-  });
-}
 
 module.exports = config;
