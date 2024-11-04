@@ -15,7 +15,6 @@ class SCREEN {
     this.config = config;
     this.sendSocketNotification = callback.sendSocketNotification;
     this.governor = callback.governor;
-    this.PathScript = `${path.dirname(require.resolve("../package.json"))}/scripts`;
     this.interval = null;
     this.default = {
       debug: false,
