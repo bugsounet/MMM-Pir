@@ -63,7 +63,11 @@ Module.register("MMM-Pir", {
       hidden: () => { return this.hidden; },
       translate: (...args) => this.translate(...args),
       hide: (...args) => this.hide(...args),
-      show: (...args) => this.show(...args)
+      show: (...args) => this.show(...args),
+      wakeup: () => {
+        this.sendSocketNotification("WAKEUP");
+        this.screenDisplay.animateModule();
+      }
     };
 
     this.config = configMerge({}, this.defaults, this.config);
