@@ -31,6 +31,11 @@ Module.register("MMM-Pir", {
       mode: 0,
       gpio: 21
     },
+    Motion: {
+      deviceId: 0,
+      captureIntervalTime: 1000,
+      scoreThreshold: 100
+    },
     Cron: {
       mode: 0,
       ON: [],
@@ -54,6 +59,7 @@ Module.register("MMM-Pir", {
     this.ready = false;
     let Tools = {
       sendSocketNotification: (...args) => this.sendSocketNotification(...args),
+      sendNotification: (...args) => this.sendNotification(...args),
       hidden: () => { return this.hidden; },
       translate: (...args) => this.translate(...args),
       hide: (...args) => this.hide(...args),
@@ -64,6 +70,7 @@ Module.register("MMM-Pir", {
 
     this.screenDisplay = new screenDisplayer(this.config.Display, Tools);
     this.screenTouch = new screenTouch(this.config.Touch, Tools);
+    this.motionDetect = new motionLib(this.config.Motion, Tools);
     this.sound = new Audio();
     this.sound.autoplay = true;
     _logPIR("is now started!");
@@ -74,6 +81,7 @@ Module.register("MMM-Pir", {
       case "INITIALIZED":
         _logPIR("Ready to fight MagicMirror²!");
         this.screenTouch.touch();
+        if (this.config.Motion.deviceId !==0) this.motionDetect.start();
         this.ready = true;
         break;
       case "SCREEN_SHOWING":
@@ -190,7 +198,9 @@ Module.register("MMM-Pir", {
       "/modules/MMM-Pir/components/screenDisplayer.js",
       "/modules/MMM-Pir/components/screenTouch.js",
       "/modules/MMM-Pir/node_modules/long-press-event/dist/long-press-event.min.js",
-      "/modules/MMM-Pir/node_modules/progressbar.js/dist/progressbar.min.js"
+      "/modules/MMM-Pir/node_modules/progressbar.js/dist/progressbar.min.js",
+      "/modules/MMM-Pir/components/motion.js",
+      "/modules/MMM-Pir/components/motionLib.js"
     ];
   },
 
