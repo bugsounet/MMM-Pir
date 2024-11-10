@@ -6,7 +6,7 @@
 class motionLib {
   constructor (Config, Tools) {
     this.config = Config;
-    this.sendSocketNotification = (...args) => Tools.sendSocketNotification(...args);
+    this.wakeup = () => Tools.wakeup();
     this.sendNotification = (...args) => Tools.sendNotification(...args);
     if (this.config.captureIntervalTime < 1000) this.config.captureIntervalTime = 1000;
     if (this.config.scoreThreshold < 20) this.config.scoreThreshold = 20;
@@ -53,7 +53,7 @@ class motionLib {
       captureCallback: ({ score, hasMotion }) => {
         if (hasMotion) {
           _logPIR(`[MOTION] Motion detected, score ${score}`);
-          this.sendSocketNotification("WAKEUP");
+          this.wakeup();
         }
       }
     });
