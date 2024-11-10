@@ -8,10 +8,9 @@ class motionLib {
     this.config = Config;
     this.sendSocketNotification = (...args) => Tools.sendSocketNotification(...args);
     this.sendNotification = (...args) => Tools.sendNotification(...args);
-    this.configured = false;
     if (this.config.captureIntervalTime < 1000) this.config.captureIntervalTime = 1000;
     if (this.config.scoreThreshold < 20) this.config.scoreThreshold = 20;
-    if (this.config.deviceId !== 0) this.configured = true;
+    if (this.config.deviceId === 1) this.config.deviceId = null;
     console.log("[MMM-Pir] [MOTION] motionLib Ready");
   }
 
