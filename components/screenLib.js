@@ -20,6 +20,7 @@ class SCREEN {
       debug: false,
       timeout: 5 * 60 * 1000,
       mode: 1,
+      mode8Gpio: 0,
       availability: true,
       autoDimmer: false,
       xrandrForceRotation: "normal",
@@ -123,6 +124,8 @@ class SCREEN {
           console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 7: labwc invalid DisplayName --> ${this.config.waylandDisplayName}, Set to default: wayland-0`);
           this.screen.waylandDisplayName = "wayland-0";
         }
+      case 8:
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 8: relais");
         break;
       default:
         console.error(`[MMM-Pir] [LIB] [SCREEN] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
@@ -414,6 +417,25 @@ class SCREEN {
               }
             }
           });
+      case 8:
+        /* pinctrl */
+        let cmd = `pinctrl get ${this.config.mode7Gpio}`;
+        exec(cmd, (err, stdout, stderr) => {
+          if (err) {
+            console.error(`[MMM-Pir] [LIB] [SCREEN] [Display Error] pinctrl get: ${err}`);
+            this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode: 7)");
+          }
+          else {
+            let responseSh = stdout.trim();
+            const inout = /.*\|\s(hi|lo)\s.*/g.exec(responseSh);
+            if (inout[1] === 'hi') {
+              actual = true;
+            } else {
+              actual = false;
+            }
+            this.resultDisplay(actual, wanted);
+          }
+        });
         break;
     }
   }
@@ -603,6 +625,25 @@ class SCREEN {
           });
         }
         break;
+      case 8:
+        if (set) {
+          let cmd = `pinctrl set ${this.config.mode7Gpio} op dh`;
+          exec(cmd, (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power ON: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode 7 power ON)");
+            }
+          });
+        }
+        else {
+          let cmd = `pinctrl set ${this.config.mode7Gpio} op dl`;
+          exec(cmd, (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power OFF: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode 7 power OFF)");
+            }
+          });
+        }
     }
   }
 
