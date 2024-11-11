@@ -1,7 +1,7 @@
 {
   "name": "MMM-Pir",
-  "version": "2.0.0",
-  "rev": "241104",
+  "version": "2.1.0",
+  "rev": "241110",
   "description": "Screen manager",
   "main": "MMM-Pir.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "@electron/rebuild": "^3.7.0",
     "cron-parser": "^4.9.0",
     "esbuild": "^0.24.0",
-    "glob": "^10.4.5",
+    "glob": "^11.0.0",
     "long-press-event": "^2.5.0",
     "nan": "^2.22.0",
     "node-cron": "^3.0.3",

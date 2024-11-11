@@ -5,13 +5,14 @@ It will wake up with a Pir sensor, Touch screen or crontab
 
 ## Screenshot
 
-![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/v1.x/screenshot/screenshot.png)
+![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot.png)
 
-![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/v1.x/screenshot/screenshot2.png)
+![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot2.png)
 
 ![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot3.png)
 
 ![](https://raw.githubusercontent.com/bugsounet/MMM-Pir/dev/screenshot/screenshot4.png)
+
 
 ## Installation
 
@@ -60,6 +61,11 @@ To display the module insert it in the config.js file.
       mode: 0,
       gpio: 21
     },
+    Motion: {
+      deviceId: 0,
+      captureIntervalTime: 1000,
+      scoreThreshold: 100
+    },
     Cron: {
       ON: [],
       OFF: []
@@ -103,7 +109,7 @@ To display the module insert it in the config.js file.
  | xrandrForceRotation | **-mode 2 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
  | wrandrForceRotation | **-mode 3 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
- | wrandrDisplayName | **-mode 3 only-** wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
+ | wrandrDisplayName | **-mode 3 only-** Wayfire display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen
@@ -116,10 +122,12 @@ To display the module insert it in the config.js file.
    - `mode: 0` - disabled mode
    - `mode: 1` - use dpms (For raspbian 10/11 or raspbian 12 with x11 compositor)
    - `mode: 2` - use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
-   - `mode: 3` - use wlr-randr (For rapsbian 12 with wayland compositor)
+   - `mode: 3` - use wlr-randr (For rapsbian 12 with wayfire compositor)
    - `mode: 4` - use HDMI CEC
    - `mode: 5` - use ddcutil (not yet documented)
    - `mode: 6` - use dpms (linux version for debian, ubuntu, ...)
+
+ ⚠ Labwc compositor will be coded soon, best way is using X11 or wayfire compositor
 
 ------
 #### Pir Configuration
@@ -133,6 +141,24 @@ To display the module insert it in the config.js file.
     - `mode: 1` - use python script with gpiozero library
 
  ⚠ You can disable PIR Sensor detection by using `gpio: 0`
+
+------
+#### Motion Configuration
+This Feature allows to control your screen with a webcam as a motion detector.
+
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
+ | captureIntervalTime | Time in ms between capturing images for detection | Number | 1000 |
+ | scoreThreshold | Threshold minimum for an image to be considered significant | Number | 100 |
+ | deviceId | Disable, enable auto detection or Specify which camera to use in case multiple exist in the system. | Number or String | 0 |
+
+Notes: `deviceId` value setting:
+ * Disable Motion: `deviceId: 0,` (You don't have any webcam)
+ * Enable device auto-detection: `deviceId: 1,`
+
+In 99% of time auto-detection works but in case you have SooOOoo many webcam, open the developer console (`npm start dev`) and try:<br>
+`await navigator.mediaDevices.enumerateDevices()` to get all devices and copy and past the `deviceId` of your needed device
+sample: `deviceId: "27d8c2a4b894149a2caae146d8f4bea9cd74c528453a5859ab18c2c764d7d2411",`
 
 ------
 #### Cron Configuration
