@@ -116,7 +116,13 @@ class SCREEN {
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 6: dpms linux");
         break;
       case 7:
-        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 7: labwc");
+        if (this.config.waylandDisplayName.startsWith("wayland")) {
+          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 7: labwc -- DisplayName : ${this.config.waylandDisplayName}`);
+          this.screen.waylandDisplayName = this.config.waylandDisplayName;
+        } else {
+          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 7: labwc invalid DisplayName --> ${this.config.waylandDisplayName}, Set to default: wayland-0`);
+          this.screen.waylandDisplayName = "wayland-0";
+        }
         break;
       default:
         console.error(`[MMM-Pir] [LIB] [SCREEN] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
@@ -310,7 +316,7 @@ class SCREEN {
           });
         break;
       case 3:
-        /** wl-randr **/
+        /** wlr-randr **/
         exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlr-randr | grep 'Enabled'`,
           (err, stdout, stderr) => {
             if (err) {
@@ -382,6 +388,32 @@ class SCREEN {
         break;
       case 7:
         /* labwc */
+        exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlopm --json`,
+          (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] wlopm: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "wlopm command error (mode: 7)");
+            } else {
+              let responseSh = stdout.trim();
+              try {
+                let responseJson = JSON.parse(responseSh);
+                let responseOutput = responseJson[0];
+                if (responseOutput.error) {
+                  console.error(`[MMM-Pir] [LIB] [SCREEN] wlopm report arror: ${responseOutput.error}`);
+                  this.sendSocketNotification("SCREEN_ERROR", "scan screen command report error (mode: 7)");
+                } else {
+                  this.screen.hdmiPort = responseOutput.output;
+                  if (responseOutput["power-mode"] === "on") actual = true;
+                  log(`[MODE 7] Monitor on ${this.screen.hdmiPort} from ${this.screen.waylandDisplayName} is ${actual}`);
+                  this.resultDisplay(actual, wanted);
+                }
+              } catch (error) {
+                console.error(`[MMM-Pir] [LIB] [SCREEN] wlopm: ${error}`);
+                console.error(`[MMM-Pir] [LIB] [SCREEN] wlopm response: ${responseSh}`);
+                this.sendSocketNotification("SCREEN_ERROR", "scan screen command error (mode: 7)");
+              }
+            }
+          });
         break;
     }
   }
