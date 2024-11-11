@@ -112,7 +112,7 @@ module.exports = NodeHelper.create({
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
       wrandrForceMode: this.config.Display.wrandrForceMode,
-      wrandrDisplayName: this.config.Display.wrandrDisplayName,
+      waylandDisplayName: this.config.Display.waylandDisplayName,
       animate: this.config.Display.animate
     };
 
