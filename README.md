@@ -55,7 +55,7 @@ To display the module insert it in the config.js file.
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      wrandrDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0"
     },
     Pir: {
       mode: 0,
@@ -109,7 +109,7 @@ To display the module insert it in the config.js file.
  | xrandrForceRotation | **-mode 2 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
  | wrandrForceRotation | **-mode 3 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
- | wrandrDisplayName | **-mode 3 only-** Wayfire display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
+ | waylandDisplayName | **-mode 3 or mode 7 only-** Wayfire display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen
@@ -122,12 +122,11 @@ To display the module insert it in the config.js file.
    - `mode: 0` - disabled mode
    - `mode: 1` - use dpms (For raspbian 10/11 or raspbian 12 with x11 compositor)
    - `mode: 2` - use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
-   - `mode: 3` - use wlr-randr (For rapsbian 12 with wayfire compositor)
+   - `mode: 3` - use wlr-randr (For raspbian 12 with wayfire compositor)
    - `mode: 4` - use HDMI CEC
    - `mode: 5` - use ddcutil (not yet documented)
    - `mode: 6` - use dpms (linux version for debian, ubuntu, ...)
-
- ⚠ Labwc compositor will be coded soon, best way is using X11 or wayfire compositor
+   - `mode: 7` - use labwc (For raspbian 12 with labwc compositor)
 
 ------
 #### Pir Configuration

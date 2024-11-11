@@ -25,7 +25,7 @@ class SCREEN {
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      wrandrDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0"
     };
     this.config = Object.assign({}, this.default, this.config);
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [SCREEN]", ...args); };
@@ -50,7 +50,7 @@ class SCREEN {
       xrandrRotation: null,
       wrandrRotation: null,
       wrandrForceMode: null,
-      wrandrDisplayName: null,
+      waylandDisplayName: null,
       hdmiPort: null,
       forceOnStart: true,
       dimmerFrom: this.config.timeout / 4,
@@ -98,12 +98,12 @@ class SCREEN {
           console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr -- ForceMode: ${this.config.wrandrForceMode}`);
           this.screen.wrandrForceMode = this.config.wrandrForceMode;
         }
-        if (this.config.wrandrDisplayName.startsWith("wayland")) {
-          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr -- DisplayName : ${this.config.wrandrDisplayName}`);
-          this.screen.wrandrDisplayName = this.config.wrandrDisplayName;
+        if (this.config.waylandDisplayName.startsWith("wayland")) {
+          console.log(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr -- DisplayName : ${this.config.waylandDisplayName}`);
+          this.screen.waylandDisplayName = this.config.waylandDisplayName;
         } else {
-          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr invalid DisplayName --> ${this.config.wrandrDisplayName}, Set to default: wayland-0`);
-          this.screen.wrandrDisplayName = "wayland-0";
+          console.error(`[MMM-Pir] [LIB] [SCREEN] Mode 3: wlr-randr invalid DisplayName --> ${this.config.waylandDisplayName}, Set to default: wayland-0`);
+          this.screen.waylandDisplayName = "wayland-0";
         }
         break;
       case 4:
@@ -114,6 +114,9 @@ class SCREEN {
         break;
       case 6:
         console.log("[MMM-Pir] [LIB] [SCREEN] Mode 6: dpms linux");
+        break;
+      case 7:
+        console.log("[MMM-Pir] [LIB] [SCREEN] Mode 7: labwc");
         break;
       default:
         console.error(`[MMM-Pir] [LIB] [SCREEN] Unknow Mode (${this.config.mode}) Set to 0 (Disabled)`);
@@ -301,14 +304,14 @@ class SCREEN {
               this.screen.hdmiPort = responseSh.split(" ")[0];
               if (responseSh.split(" ")[3] === "(normal") power = "off";
               if (power === "on") actual = true;
-              log(`[MODE 9] Monitor on ${this.screen.hdmiPort} is ${power}`);
+              log(`[MODE 2] Monitor on ${this.screen.hdmiPort} is ${power}`);
               this.resultDisplay(actual, wanted);
             }
           });
         break;
       case 3:
         /** wl-randr **/
-        exec(`WAYLAND_DISPLAY=${this.screen.wrandrDisplayName} wlr-randr | grep 'Enabled'`,
+        exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlr-randr | grep 'Enabled'`,
           (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
@@ -316,7 +319,7 @@ class SCREEN {
             } else {
               let responseSh = stdout.trim();
               if (responseSh.split(" ")[1] === "yes") actual = true;
-              exec(`WAYLAND_DISPLAY=${this.screen.wrandrDisplayName} wlr-randr`,
+              exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlr-randr`,
                 (err, stdout, stderr) => {
                   if (err) {
                     console.error(`[MMM-Pir] [LIB] [SCREEN] wlr-randr: ${err}`);
@@ -376,6 +379,9 @@ class SCREEN {
             this.resultDisplay(actual, wanted);
           }
         });
+        break;
+      case 7:
+        /* labwc */
         break;
     }
   }
@@ -445,7 +451,7 @@ class SCREEN {
           ];
           if (this.screen.wrandrForceMode) wrandrOptions.push("--mode", this.screen.wrandrForceMode);
           wrandrOptions = wrandrOptions.join(" ");
-          exec(`WAYLAND_DISPLAY=${this.screen.wrandrDisplayName} wlr-randr ${wrandrOptions}`, (err, stdout, stderr) => {
+          exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlr-randr ${wrandrOptions}`, (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 3, power ON: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "wlr-randr command error (mode 3 power ON)");
@@ -453,7 +459,7 @@ class SCREEN {
           });
         }
         else {
-          exec(`WAYLAND_DISPLAY=${this.screen.wrandrDisplayName} wlr-randr --output ${this.screen.hdmiPort} --off`, (err, stdout, stderr) => {
+          exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlr-randr --output ${this.screen.hdmiPort} --off`, (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 3, power OFF: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "wlr-randr command error (mode 3 power OFF)");
@@ -547,6 +553,8 @@ class SCREEN {
             }
           });
         }
+        break;
+      case 7:
         break;
     }
   }

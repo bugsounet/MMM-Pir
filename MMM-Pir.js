@@ -25,7 +25,7 @@ Module.register("MMM-Pir", {
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      wrandrDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0",
     },
     Pir: {
       mode: 0,
