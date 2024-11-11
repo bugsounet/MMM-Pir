@@ -158,7 +158,8 @@ Notes: `deviceId` value setting:
 
 In 99% of time auto-detection works but in case you have SooOOoo many webcam, open the developer console (`npm start dev`) and try:<br>
 `await navigator.mediaDevices.enumerateDevices()` to get all devices and copy and past the `deviceId` of your needed device
-sample: `deviceId: "27d8c2a4b894149a2caae146d8f4bea9cd74c528453a5859ab18c2c764d7d2411",`
+sample:<br>
+`deviceId: "27d8c2a4b894149a2caae146d8f4bea9cd74c528453a5859ab18c2c764d7d2411",`
 
 ------
 #### Cron Configuration
