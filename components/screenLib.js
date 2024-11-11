@@ -587,6 +587,21 @@ class SCREEN {
         }
         break;
       case 7:
+        if (set) {
+          exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlopm --on ${this.screen.hdmiPort}`, (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power ON: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "wlopm command error (mode 3 power ON)");
+            }
+          });
+        } else {
+          exec(`WAYLAND_DISPLAY=${this.screen.waylandDisplayName} wlopm --off ${this.screen.hdmiPort}`, (err, stdout, stderr) => {
+            if (err) {
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power OFF: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "wlopm command error (mode 3 power OFF)");
+            }
+          });
+        }
         break;
     }
   }
