@@ -109,7 +109,7 @@ To display the module insert it in the config.js file.
  | xrandrForceRotation | **-mode 2 only-** Forces screen rotation according to the defined value (possible value: "normal", "left", "right", "inverted") | String | normal |
  | wrandrForceRotation | **-mode 3 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
- | waylandDisplayName | **-mode 3 or mode 7 only-** Wayfire display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
+ | waylandDisplayName | **-mode 3 or mode 7 only-** Wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen
