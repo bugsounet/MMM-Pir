@@ -428,7 +428,7 @@ class SCREEN {
           else {
             let responseSh = stdout.trim();
             const inout = /.*\|\s(hi|lo)\s.*/g.exec(responseSh);
-            if (inout[1] === 'hi') {
+            if (inout[1] === "hi") {
               actual = true;
             } else {
               actual = false;
