@@ -16,7 +16,7 @@ Module.register("MMM-Pir", {
       colorTo: "#00FF00",
       timeout: 2 * 60 * 1000,
       mode: 1,
-      mode7Gpio: 0,
+      mode8Gpio: 0,
       counter: true,
       style: 1,
       lastPresence: true,

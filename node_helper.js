@@ -108,7 +108,7 @@ module.exports = NodeHelper.create({
       debug: this.config.debug,
       timeout: this.config.Display.timeout,
       mode: this.config.Display.mode,
-      mode7Gpio: this.config.Display.mode7Gpio,
+      mode8Gpio: this.config.Display.mode8Gpio,
       autoDimmer: this.config.Display.autoDimmer,
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,

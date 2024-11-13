@@ -419,7 +419,7 @@ class SCREEN {
           });
       case 8:
         /* pinctrl */
-        let cmd = `pinctrl get ${this.config.mode7Gpio}`;
+        let cmd = `pinctrl get ${this.config.mode8Gpio}`;
         exec(cmd, (err, stdout, stderr) => {
           if (err) {
             console.error(`[MMM-Pir] [LIB] [SCREEN] [Display Error] pinctrl get: ${err}`);
@@ -627,7 +627,7 @@ class SCREEN {
         break;
       case 8:
         if (set) {
-          let cmd = `pinctrl set ${this.config.mode7Gpio} op dh`;
+          let cmd = `pinctrl set ${this.config.mode8Gpio} op dh`;
           exec(cmd, (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power ON: ${err}`);
@@ -636,7 +636,7 @@ class SCREEN {
           });
         }
         else {
-          let cmd = `pinctrl set ${this.config.mode7Gpio} op dl`;
+          let cmd = `pinctrl set ${this.config.mode8Gpio} op dl`;
           exec(cmd, (err, stdout, stderr) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power OFF: ${err}`);
