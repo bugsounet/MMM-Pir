@@ -16,7 +16,6 @@ Module.register("MMM-Pir", {
       colorTo: "#00FF00",
       timeout: 2 * 60 * 1000,
       mode: 1,
-      mode8Gpio: 0,
       counter: true,
       style: 1,
       lastPresence: true,
@@ -26,7 +25,8 @@ Module.register("MMM-Pir", {
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      waylandDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0",
+      relayGPIOPin: 0
     },
     Pir: {
       mode: 0,

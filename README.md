@@ -110,6 +110,7 @@ To display the module insert it in the config.js file.
  | wrandrForceRotation | **-mode 3 only-** Forces screen rotation according to the defined value (possible value: "normal", "90", "180", "270", "flipped", "flipped-90", "flipped-180", "flipped-270") | String | normal |
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
  | waylandDisplayName | **-mode 3 or mode 7 only-** Wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
+ | relayGPIOPin | **-mode 8 only-** GPIO pin of the relay | Number | 1 |
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen
@@ -127,6 +128,7 @@ To display the module insert it in the config.js file.
    - `mode: 5` - use ddcutil (not yet documented)
    - `mode: 6` - use dpms (linux version for debian, ubuntu, ...)
    - `mode: 7` - use labwc (For raspbian 12 with labwc compositor)
+   - `mode: 8` - use pinctrl for switching a relay
 
 ------
 #### Pir Configuration

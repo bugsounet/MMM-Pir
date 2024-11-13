@@ -20,7 +20,7 @@ class SCREEN {
       debug: false,
       timeout: 5 * 60 * 1000,
       mode: 1,
-      mode8Gpio: 0,
+      relayGPIOPin: 0,
       availability: true,
       autoDimmer: false,
       xrandrForceRotation: "normal",
@@ -419,11 +419,11 @@ class SCREEN {
           });
       case 8:
         /* pinctrl */
-        let cmd = `pinctrl get ${this.config.mode8Gpio}`;
+        let cmd = `pinctrl get ${this.config.relayGPIOPin}`;
         exec(cmd, (err, stdout, stderr) => {
           if (err) {
             console.error(`[MMM-Pir] [LIB] [SCREEN] [Display Error] pinctrl get: ${err}`);
-            this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode: 7)");
+            this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode: 8)");
           }
           else {
             let responseSh = stdout.trim();
@@ -627,20 +627,20 @@ class SCREEN {
         break;
       case 8:
         if (set) {
-          let cmd = `pinctrl set ${this.config.mode8Gpio} op dh`;
+          let cmd = `pinctrl set ${this.config.relayGPIOPin} op dh`;
           exec(cmd, (err, stdout, stderr) => {
             if (err) {
-              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power ON: ${err}`);
-              this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode 7 power ON)");
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 8, power ON: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode 8 power ON)");
             }
           });
         }
         else {
-          let cmd = `pinctrl set ${this.config.mode8Gpio} op dl`;
+          let cmd = `pinctrl set ${this.config.relayGPIOPin} op dl`;
           exec(cmd, (err, stdout, stderr) => {
             if (err) {
-              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 7, power OFF: ${err}`);
-              this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode 7 power OFF)");
+              console.error(`[MMM-Pir] [LIB] [SCREEN] mode 8, power OFF: ${err}`);
+              this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode 8 power OFF)");
             }
           });
         }
