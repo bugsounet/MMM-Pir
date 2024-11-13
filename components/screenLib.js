@@ -422,7 +422,7 @@ class SCREEN {
         let cmd = `pinctrl get ${this.config.relayGPIOPin}`;
         exec(cmd, (err, stdout, stderr) => {
           if (err) {
-            console.error(`[MMM-Pir] [LIB] [SCREEN] [Display Error] pinctrl get: ${err}`);
+            console.error(`[MMM-Pir] [LIB] [SCREEN] pinctrl get: ${err}`);
             this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode: 8)");
           }
           else {
