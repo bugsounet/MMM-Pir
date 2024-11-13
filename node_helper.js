@@ -108,6 +108,7 @@ module.exports = NodeHelper.create({
       debug: this.config.debug,
       timeout: this.config.Display.timeout,
       mode: this.config.Display.mode,
+      relayGPIOPin: this.config.Display.relayGPIOPin,
       autoDimmer: this.config.Display.autoDimmer,
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
