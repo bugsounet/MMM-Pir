@@ -405,4 +405,4 @@ const DiffCamEngine = (function () {
     initialized: this.initialized,
     started: this.started
   };
-})();
+}());
