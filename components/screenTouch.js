@@ -3,8 +3,7 @@
 * Bugsounet   *
 ***************/
 
-/* global window */
-
+/* eslint-disable-next-line */
 class screenTouch {
   constructor (Touch, Tools) {
     this.mode = Touch.mode;
@@ -21,7 +20,7 @@ class screenTouch {
 
     switch (this.mode) {
       case 1:
-        /** mode 1 **/
+        // mode 1
         window.addEventListener("click", () => {
           this.clickCount++;
           if (this.clickCount === 1) {
@@ -37,7 +36,7 @@ class screenTouch {
         }, false);
         break;
       case 2:
-        /** mode 2 **/
+        // mode 2
         TouchScreen.addEventListener("click", () => {
           if (!this.hidden()) this.sendSocketNotification("LOCK_FORCE_WAKEUP");
         }, false);
@@ -50,7 +49,7 @@ class screenTouch {
         }, false);
         break;
       case 3:
-        /** mode 3 **/
+        // mode 3
         TouchScreen.addEventListener("click", () => {
           this.clickCount++;
           if (this.clickCount === 1) {
