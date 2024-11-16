@@ -55,7 +55,8 @@ To display the module insert it in the config.js file.
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      waylandDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0",
+      relayGPIOPin: 0
     },
     Pir: {
       mode: 0,
