@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2.10.1",
-    "eslint": "^9.14.0",
+    "eslint": "^9.15.0",
     "eslint-plugin-import": "^2.31.0"
   }
 }
