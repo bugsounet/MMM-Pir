@@ -1,7 +1,7 @@
 /** PIR library **/
 /** bugsounet **/
 
-var log = (...args) => { /* do nothing */ };
+var log = () => { /* do nothing */ };
 
 class PIR {
   constructor (config, callback) {
@@ -67,7 +67,7 @@ class PIR {
       mode: "text",
       scriptPath: __dirname,
       pythonOptions: ["-u"],
-      args: [ "-g", this.config.gpio ]
+      args: ["-g", this.config.gpio]
     };
 
     this.pir = new PythonShell("MotionSensor.py", options);
@@ -93,9 +93,9 @@ class PIR {
       this.running = false;
     });
 
-    this.pir.end((err,code,signal) => {
+    this.pir.end((err, code, signal) => {
       if (err) {
-        console.error("[MMM-Pir] [LIB] [PIR] [PYTHON]",err);
+        console.error("[MMM-Pir] [LIB] [PIR] [PYTHON]", err);
         this.callback("PIR_ERROR", err.message);
       }
       console.warn(`[MMM-Pir] [LIB] [PIR] [PYTHON] The exit code was: ${code}`);
@@ -108,7 +108,7 @@ class PIR {
   gpiodDetect () {
     try {
       const { version, Chip, Line } = require("node-libgpiod");
-      const numbers = [0,1,2,3,4,5,6,7,8,9,10];
+      const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
       numbers.every((number) => {
         try {
@@ -116,16 +116,16 @@ class PIR {
           const label = this.pirChip.getChipLabel();
           log(`[GPIOD] Check chip ${number}: ${label}`);
           if (label.includes("pinctrl-")) {
-            /* found chip */
+            // found chip
             console.log(`[MMM-Pir] [LIB] [PIR] [GPIOD] Found chip ${number}: ${label}`);
             this.pirChipNumber = number;
             return false;
           }
         } catch {
-          /* out of chip */
+          // out of chip
           return false;
         }
-        /* try next chip */
+        // try next chip
         return true;
       });
 
@@ -168,7 +168,7 @@ class PIR {
         } catch (err) {
           console.error(`[MMM-Pir] [LIB] [PIR] [GPIOD] ${err}`);
           this.callback("PIR_ERROR", err);
-        };
+        }
       }
     };
     this.pirInterval = setInterval(() => this.pir(), 1000);
