@@ -644,6 +644,7 @@ class SCREEN {
             }
           });
         }
+        break;
     }
   }
 
