@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
-    "@electron/rebuild": "^3.7.0",
+    "@electron/rebuild": "^3.7.1",
     "cron-parser": "^4.9.0",
     "esbuild": "^0.24.0",
     "glob": "^11.0.0",
