@@ -3,12 +3,12 @@
 * BuGsounet               *
 ***************************/
 
-var log = (...args) => { /* do nothing */ };
+var log = () => { /* do nothing */ };
 const NodeHelper = require("node_helper");
-const LibScreen = require("./components/screenLib.js");
-const LibPir = require("./components/pirLib.js");
-const LibCron = require("./components/cronJob.js");
-const LibGovernor = require("./components/governorLib.js");
+const LibScreen = require("./components/screenLib");
+const LibPir = require("./components/pirLib");
+const LibCron = require("./components/cronJob");
+const LibGovernor = require("./components/governorLib");
 
 module.exports = NodeHelper.create({
   start () {
@@ -53,13 +53,13 @@ module.exports = NodeHelper.create({
     console.log("[MMM-Pir] Version:", require("./package.json").version, "rev:", require("./package.json").rev);
     log("Config:", this.config);
     var callbacks = {
-      /* from screenLib */
+      // from screenLib
       screen: {
         sendSocketNotification: (noti, params) => {
           log("[CALLBACK] Screen:", noti, params || "");
           this.sendSocketNotification(noti, params);
         },
-        /* from screenLib to governorLib */
+        // from screenLib to governorLib
         governor: (state) => {
           if (this.governor) {
             log("[CALLBACK] Screen for Governor:", state);
@@ -68,17 +68,17 @@ module.exports = NodeHelper.create({
           }
         }
       },
-      /* from pirLib */
+      // from pirLib
       pir: (noti, params) => {
         log("[CALLBACK] Pir:", noti, params || "");
         if (noti === "PIR_DETECTED") {
           this.screen.wakeup();
           this.sendSocketNotification("PIR_DETECTED-ANIMATE");
-        } else {
+        } else {
           this.sendSocketNotification(noti, params);
         }
       },
-      /* from cronLib */
+      // from cronLib
       cron: {
         cronState: (param) => {
           log("[CALLBACK] Cron: cronState", param);
@@ -87,11 +87,11 @@ module.exports = NodeHelper.create({
         error: (params) => {
           this.sendSocketNotification("CRON_ERROR", params);
         },
-        error_unspecified: (code)=> {
+        error_unspecified: (code) => {
           this.sendSocketNotification("CRON_ERROR_UNSPECIFIED", code);
         }
       },
-      /* from governorLib */
+      // from governorLib
       governor: {
         error: (params) => {
           this.sendSocketNotification("GOVERNOR_ERROR", params);
@@ -108,6 +108,7 @@ module.exports = NodeHelper.create({
       debug: this.config.debug,
       timeout: this.config.Display.timeout,
       mode: this.config.Display.mode,
+      relayGPIOPin: this.config.Display.relayGPIOPin,
       autoDimmer: this.config.Display.autoDimmer,
       xrandrForceRotation: this.config.Display.xrandrForceRotation,
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
@@ -130,11 +131,13 @@ module.exports = NodeHelper.create({
     };
 
     if (!this.screen) {
+
       /* will allow multi-instance
        *
        * don't load again lib and screen scripts
        * just only use it if loaded
        */
+
       this.pir = new LibPir(pirConfig, callbacks.pir);
       this.pir.start();
 

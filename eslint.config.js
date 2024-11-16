@@ -1,11 +1,15 @@
 const globals = require("globals");
 const eslintPluginStylistic = require("@stylistic/eslint-plugin");
 const eslintPluginImport = require("eslint-plugin-import");
+const eslintPluginJs = require("@eslint/js");
 
 const config = [
+  eslintPluginImport.flatConfigs.recommended,
+  eslintPluginJs.configs.recommended,
   {
     files: ["**/*.js"],
     languageOptions: {
+      ecmaVersion: "latest",
       globals: {
         ...globals.browser,
         ...globals.node,
@@ -20,27 +24,10 @@ const config = [
       }
     },
     plugins: {
-      "@stylistic": eslintPluginStylistic,
-      import: eslintPluginImport
+      ...eslintPluginStylistic.configs["all-flat"].plugins
     },
     rules: {
-      eqeqeq: "error",
-      "import/order": "error",
-      "import/extensions": [
-        "error",
-        "ignorePackages",
-        {
-          json: "always" // ignore json require (display EXT version and rev date)
-        }
-      ],
-      "import/newline-after-import": "error",
-      "no-param-reassign": "error",
-      "no-prototype-builtins": "off",
-      "no-throw-literal": "error",
-      "no-unused-vars": "off",
-      "no-useless-return": "error",
-      "object-shorthand": ["error", "methods"],
-      "prefer-template": "error",
+      ...eslintPluginStylistic.configs["all-flat"].rules,
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/arrow-parens": ["error", "always"],
       "@stylistic/brace-style": "off",
@@ -49,7 +36,9 @@ const config = [
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
       "@stylistic/function-paren-newline": ["error", "consistent"],
       "@stylistic/implicit-arrow-linebreak": ["error", "beside"],
+      "@stylistic/indent": ["error", 2],
       "@stylistic/max-statements-per-line": ["error", { max: 2 }],
+      "@stylistic/multiline-comment-style": "off",
       "@stylistic/multiline-ternary": ["error", "always-multiline"],
       "@stylistic/newline-per-chained-call": ["error", { ignoreChainWithDepth: 4 }],
       "@stylistic/no-extra-parens": "off",
@@ -60,10 +49,40 @@ const config = [
       "@stylistic/padded-blocks": "off",
       "@stylistic/quote-props": ["error", "as-needed"],
       "@stylistic/quotes": ["error", "double"],
-      "@stylistic/indent": ["error", 2], // indent 2 spaces
       "@stylistic/semi": ["error", "always"],
       "@stylistic/space-before-function-paren": ["error", "always"],
-      "@stylistic/spaced-comment": "off"
+      "@stylistic/spaced-comment": "off",
+      eqeqeq: "error",
+      "id-length": "off",
+      "import/order": "error",
+      "import/extensions": [
+        "error",
+        {
+          json: "always" // ignore json require (display EXT version and rev date)
+        }
+      ],
+      "import/newline-after-import": "error",
+      "import/no-unresolved": "error",
+      "init-declarations": "off",
+      "max-lines-per-function": ["warn", 400],
+      "max-statements": "off",
+      "no-global-assign": "off",
+      "no-inline-comments": "off",
+      "no-magic-numbers": "off",
+      "no-param-reassign": "error",
+      "no-plusplus": "off",
+      "no-prototype-builtins": "off",
+      "no-ternary": "off",
+      "no-throw-literal": "error",
+      "no-undefined": "off",
+      "no-unused-vars": "error",
+      "no-useless-return": "error",
+      "no-warning-comments": "off",
+      "object-shorthand": ["error", "methods"],
+      "one-var": "off",
+      "prefer-destructuring": "off",
+      "prefer-template": "error",
+      "sort-keys": "off"
     }
   }
 ];

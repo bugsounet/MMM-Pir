@@ -3,6 +3,8 @@
 * Bugsounet *
 *************/
 
+/* global DiffCamEngine, _logPIR */
+/* eslint-disable-next-line */
 class motionLib {
   constructor (Config, Tools) {
     this.config = Config;

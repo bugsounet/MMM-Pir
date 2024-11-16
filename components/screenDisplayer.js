@@ -3,6 +3,8 @@
 * Bugsounet         *
 *********************/
 
+/* global ProgressBar, _logPIR */
+/* eslint-disable-next-line */
 class screenDisplayer {
   constructor (config, Tools) {
     this.config = config;
@@ -40,7 +42,7 @@ class screenDisplayer {
     dom.id = "MMM-PIR";
 
     if (this.style === "Text" && this.config.counter) {
-      /** Screen TimeOut with Text **/
+      // Screen TimeOut with Text
       var screen = document.createElement("div");
       screen.id = "MMM-PIR_TEXT";
       var screenText = document.createElement("div");
@@ -58,7 +60,7 @@ class screenDisplayer {
       dom.appendChild(screen);
     } else {
       if (this.style !== "None") {
-        /** Screen TimeOut with Style **/
+        // Screen TimeOut with Style
         var screenStyle = document.createElement("div");
         screenStyle.id = "MMM-PIR_STYLE";
         screenStyle.classList.add(this.style);
@@ -68,7 +70,7 @@ class screenDisplayer {
     }
 
     if (this.config.lastPresence) {
-      /** Last user Presence **/
+      // Last user Presence
       var presence = document.createElement("div");
       presence.id = "MMM-PIR_PRESENCE";
       presence.className = "hidden";
@@ -85,7 +87,7 @@ class screenDisplayer {
     }
 
     if (this.config.availability) {
-      /** availability of the screen **/
+      // availability of the screen
       var availability = document.createElement("div");
       availability.id = "MMM-PIR_AVAILABILITY";
       availability.classList.add("bright");
@@ -104,7 +106,7 @@ class screenDisplayer {
   }
 
   prepareStyle () {
-    /** Prepare TimeOut with Style **/
+    // Prepare TimeOut with Style
     if (this.style === "Text" || this.style === "None") return;
     this.bar = new ProgressBar[this.style](document.getElementById("MMM-PIR_STYLE"), {
       strokeWidth: this.style === "Line" ? 2 : 5,
@@ -137,8 +139,8 @@ class screenDisplayer {
 
   updateDisplay (payload) {
     if (this.config.availability && payload.availability) {
-      let availability= document.getElementById("MMM-PIR_AVAILABILITY_DATA");
-      availability.textContent= `${payload.availability} (${payload.availabilityPercent}%)`;
+      let availability = document.getElementById("MMM-PIR_AVAILABILITY_DATA");
+      availability.textContent = `${payload.availability} (${payload.availabilityPercent}%)`;
     }
     if (this.config.autoDimmer && payload.dimmer) {
       this.opacityRegions(payload.dimmer);
@@ -195,11 +197,9 @@ class screenDisplayer {
 
   screenHiding () {
     MM.getModules().enumerate((module) => {
-      let speed = 200;
       let options = { lockString: "MMM-PIR_LOCK" };
       if (this.config.animate && module.data.position) {
         options.animate = this.animateFromPosition(module.data.position, false);
-        speed = 500;
       }
       module.hide(500, () => {}, options);
     });
@@ -253,9 +253,9 @@ class screenDisplayer {
   }
 
   checkStyle () {
-    /** Crash prevent on Time Out Style Displaying **/
-    /** --> Set to "Text" if not found */
-    let Style = [ "None", "Text", "Line", "SemiCircle", "Circle"];
+    // Crash prevent on Time Out Style Displaying
+    // --> Set to "Text" if not found
+    let Style = ["None", "Text", "Line", "SemiCircle", "Circle"];
     let found = Style.find((style, value) => {
       return value === this.config.style;
     });
@@ -269,7 +269,7 @@ class screenDisplayer {
   }
 
   checkColor () {
-    /** check valid HEXA color **/
+    // check valid HEXA color
     if (this.style === "Text" || this.style === "None") return;
     let from = CSS.supports("color", this.config.colorFrom) && this.config.colorFrom.startsWith("#");
     if (from) this.colorFrom = this.config.colorFrom;
@@ -285,11 +285,11 @@ class screenDisplayer {
   }
 
   animateModule () {
-    let animation= document.getElementById("MMM-PIR");
+    let animation = document.getElementById("MMM-PIR");
     animation.classList.add("animate__animated", "animate__headShake");
     animation.style.setProperty("--animate-duration", ".5s");
-    setTimeout(()=> {
+    setTimeout(() => {
       animation.classList.remove("animate__animated", "animate__headShake");
-    },500);
+    }, 500);
   }
 }

@@ -1,4 +1,4 @@
-var log = (...args) => { /* do nothing */ };
+var log = () => { /* do nothing */ };
 var cron = require("node-cron");
 var parser = require("cron-parser");
 
@@ -108,7 +108,7 @@ class cronJob {
       log(`[${type}] PASSED --->`, job);
       if (type === "ON") this.cronON.push(job);
       else this.cronOFF.push(job);
-      console.log(`[MMM-Pir] [LIB] [CRON] [${type}] Next`, type === "ON" ? "Start:": "Stop:", modifiedInterval.next().toString());
+      console.log(`[MMM-Pir] [LIB] [CRON] [${type}] Next`, type === "ON" ? "Start:" : "Stop:", modifiedInterval.next().toString());
     } catch (e) {
       this.error_unspecified(8);
       console.error(`[MMM-Pir] [LIB] [CRON] ~Code 8~ [${type}]`, toCron, e.toString());
@@ -128,13 +128,13 @@ class cronJob {
       return;
     }
 
-    this.Manager.started= true;
+    this.Manager.started = true;
 
     this.cronON.forEach((on) => {
       cron.schedule(on, () => {
         log("[ON] It's time to turn ON");
-        this.Manager.ON= true;
-        this.Manager.OFF= false;
+        this.Manager.ON = true;
+        this.Manager.OFF = false;
         this.cronState(this.Manager);
       });
       log("[ON] Added:", on);
@@ -143,8 +143,8 @@ class cronJob {
     this.cronOFF.forEach((off) => {
       cron.schedule(off, () => {
         log("[OFF] It's time to turn OFF");
-        this.Manager.ON= false;
-        this.Manager.OFF= true;
+        this.Manager.ON = false;
+        this.Manager.OFF = true;
         this.cronState(this.Manager);
       });
       log("[OFF] Added:", off);

@@ -4,7 +4,9 @@
 *  09/2024   *
 *************/
 
-var _logPIR = (...args) => { /* do nothing */ };
+/* global screenDisplayer, screenTouch, motionLib */
+
+var _logPIR = () => { /* do nothing */ };
 
 Module.register("MMM-Pir", {
   requiresVersion: "2.28.0",
@@ -25,7 +27,8 @@ Module.register("MMM-Pir", {
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      waylandDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0",
+      relayGPIOPin: 0
     },
     Pir: {
       mode: 0,
@@ -85,7 +88,7 @@ Module.register("MMM-Pir", {
       case "INITIALIZED":
         _logPIR("Ready to fight MagicMirror²!");
         this.screenTouch.touch();
-        if (this.config.Motion.deviceId !==0) this.motionDetect.start();
+        if (this.config.Motion.deviceId !== 0) this.motionDetect.start();
         this.ready = true;
         break;
       case "SCREEN_SHOWING":
@@ -163,27 +166,24 @@ Module.register("MMM-Pir", {
     }
   },
 
-  notificationReceived (notification, payload, sender) {
+  notificationReceived (notification) {
     if (notification === "MODULE_DOM_CREATED") {
       this.screenDisplay.prepareStyle();
       this.sendSocketNotification("INIT", this.config);
     }
     if (!this.ready) return;
     switch (notification) {
+      // only available if not force-locked
       case "MMM_PIR-END":
-        /** only available if not force-locked by touch **/
         this.sendSocketNotification("FORCE_END");
         break;
       case "MMM_PIR-WAKEUP":
-        /** only available if not force-locked by touch **/
         this.sendSocketNotification("WAKEUP");
         break;
       case "MMM_PIR-LOCK":
-        /** only available if not force-locked by touch **/
         this.sendSocketNotification("LOCK");
         break;
       case "MMM_PIR-UNLOCK":
-        /** only available if not force-locked by touch **/
         this.sendSocketNotification("UNLOCK");
         break;
     }
