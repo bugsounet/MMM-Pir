@@ -6,8 +6,8 @@
 *************************************************/
 
 const DiffCamEngine = (function () {
-  this.initialized= false;
-  this.started= false;
+  this.initialized = false;
+  this.started = false;
   let stream; // stream obtained from webcam
   let video; // shows stream
   let deviceId;
@@ -21,6 +21,8 @@ const DiffCamEngine = (function () {
   let initSuccessCallback; // called when init succeeds
   let initErrorCallback; // called when init fails
   let startCompleteCallback; // called when start is complete
+  let stopCompleteCallback; // called when stop is complete
+  let destroyCompleteCallback; // called when destroy is complete
   let captureCallback; // called when an image has been captured and diffed
 
   let captureInterval; // interval for continuous captures
@@ -39,8 +41,8 @@ const DiffCamEngine = (function () {
   let jpegQuality; // imageMimeType:"image/jpeg" quality value between 0 and 1
 
   let coords;
+
   /**
-   *
    * @param options
    */
   function init (options) {
