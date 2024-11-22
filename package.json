@@ -53,7 +53,7 @@
     "python-shell": "^5.0.0"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.10.1",
+    "@stylistic/eslint-plugin": "^2.11.0",
     "eslint": "^9.15.0",
     "eslint-plugin-import": "^2.31.0"
   }
