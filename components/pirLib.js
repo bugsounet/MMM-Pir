@@ -86,6 +86,7 @@ class PIR {
             log("Motion Detected");
             this.callback("PIR_DETECTED");
             this.pirReadyToDetect = false;
+            log("Debug: Set motion detect ready to:", this.pirReadyToDetect);
           }
           break;
         case "NoMotion":
