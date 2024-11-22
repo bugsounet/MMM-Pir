@@ -20,6 +20,7 @@ class PIR {
     this.pirLine = null;
     this.pirChipNumber = -1;
     this.pirInterval = null;
+    this.pirReadyToDetect = false;
   }
 
   start () {
@@ -73,17 +74,30 @@ class PIR {
     this.pir = new PythonShell("MotionSensor.py", options);
     this.callback("PIR_STARTED");
     console.log("[MMM-Pir] [LIB] [PIR] Started!");
+    this.pirReadyToDetect = true;
     this.running = true;
 
     this.pir.on("message", (message) => {
       // detect pir
-      if (message === "Detected") {
-        log("Detected presence");
-        this.callback("PIR_DETECTED");
-      } else {
-        console.error("[MMM-Pir] [LIB] [PIR] ", message);
-        this.callback("PIR_ERROR", message);
-        this.running = false;
+      switch (message) {
+        case "Motion":
+          log("Debug: Motion detect ready is", this.pirReadyToDetect);
+          if (this.pirReadyToDetect) {
+            log("Motion Detected");
+            this.callback("PIR_DETECTED");
+            this.pirReadyToDetect = false;
+          }
+          break;
+        case "NoMotion":
+          log("No Motion Detected");
+          this.pirReadyToDetect = true;
+          log("Debug: Set motion detect ready to:", this.pirReadyToDetect);
+          break;
+        default:
+          console.error("[MMM-Pir] [LIB] [PIR] ", message);
+          this.callback("PIR_ERROR", message);
+          this.running = false;
+          break;
       }
     });
 
