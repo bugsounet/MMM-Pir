@@ -16,8 +16,8 @@
     "rebuild": "installer/rebuild.sh",
     "reset": "git reset --hard",
     "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
+    "lint": "eslint . --config eslint.config.mjs",
+    "lint:fix": "eslint . --config eslint.config.mjs --fix",
     "test": "npm run lint",
     "test:minify": "cd installer && node minify.js",
     "pinctrl": "installer/pinctrl.sh"
