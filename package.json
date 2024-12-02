@@ -31,7 +31,7 @@
     "lint:fix": "eslint . --config eslint.config.mjs --fix",
     "pinctrl": "installer/pinctrl.sh",
     "rebuild": "installer/rebuild.sh",
-    "reset": "git reset --hard",
+    "reset": "rm -f *.js && rm -rf components/*.js && git reset --hard",
     "presetup": "npm run dependencies && installer/preinstall.sh",
     "setup": "npm prune",
     "postsetup": "installer/postinstall.sh -m -r",
