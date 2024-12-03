@@ -40,10 +40,10 @@ async function minifyFiles () {
  */
 function minify (file) {
   let FileName = file.replace("../src/", "../");
-  let GAFileName = `${project}/${FileName.replace("../", "")}`;
+  let MyFileName = `${project}/${FileName.replace("../", "")}`;
   let pathInResolve = path.resolve(__dirname, file);
   let pathOutResolve = path.resolve(__dirname, FileName);
-  console.log("Process File:", GAFileName);
+  console.log("Process File:", MyFileName);
   return new Promise((resolve, reject) => {
     try {
       esbuild.buildSync({
@@ -52,7 +52,7 @@ function minify (file) {
         minify: true,
         outfile: pathOutResolve,
         banner: {
-          js: `${commentIn} ${project}\n  * File: ${GAFileName}\n  * Version: ${version}\n  * Revision: ${revision}\n  * ⚠ This file must not be modified ⚠\n${commentOut}`
+          js: `${commentIn} ${project}\n  * File: ${MyFileName}\n  * Version: ${version}\n  * Revision: ${revision}\n  * ⚠ This file must not be modified ⚠\n${commentOut}`
         },
         footer: {
           js: `${commentIn} ❤ Coded With Heart by @bugsounet -- https://www.bugsounet.fr ${commentOut}`
