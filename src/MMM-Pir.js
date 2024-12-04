@@ -177,6 +177,7 @@ Module.register("MMM-Pir", {
       case "MMM_PIR-END":
         this.sendSocketNotification("FORCE_END");
         break;
+      case "UPDATES":
       case "MMM_PIR-WAKEUP":
         this.sendSocketNotification("WAKEUP");
         break;
