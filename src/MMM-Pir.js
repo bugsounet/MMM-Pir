@@ -166,7 +166,7 @@ Module.register("MMM-Pir", {
     }
   },
 
-  notificationReceived (notification) {
+  notificationReceived (notification, payload, sender) {
     if (notification === "MODULE_DOM_CREATED") {
       this.screenDisplay.prepareStyle();
       this.sendSocketNotification("INIT", this.config);
@@ -178,6 +178,8 @@ Module.register("MMM-Pir", {
         this.sendSocketNotification("FORCE_END");
         break;
       case "UPDATES":
+        if (sender?.name === "updatenotification") this.sendSocketNotification("WAKEUP");
+        break;
       case "MMM_PIR-WAKEUP":
         this.sendSocketNotification("WAKEUP");
         break;
