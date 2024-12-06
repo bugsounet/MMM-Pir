@@ -122,7 +122,7 @@ To display the module insert it in the config.js file.
 
  * Available mode:
    - `mode: 0` - disabled mode
-   - `mode: 1` - use dpms (For raspbian 10/11 or raspbian 12 with x11 compositor)
+   - `mode: 1` - use dpms (For raspbian 11 or raspbian 12 with x11 compositor)
    - `mode: 2` - use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
    - `mode: 3` - use wlr-randr (For raspbian 12 with wayfire compositor)
    - `mode: 4` - use HDMI CEC
@@ -131,8 +131,12 @@ To display the module insert it in the config.js file.
    - `mode: 7` - use labwc (For raspbian 12 with labwc compositor)
    - `mode: 8` - use pinctrl for switching a relay
 
+Note:<br>
+It's possible that `pinctrl` tool is not installed by default on your system (raspbian 11)<br>
+You can install it by using this command in your `MMM-Pir` folder: `npm run pinctrl`
+
 ------
-#### Pir Configuration
+#### Pir Sensor Configuration
  | Option  | Description | Type | Default |
  | ------- | --- | --- | --- |
  | mode | Detection mode (see bellow) | Number | 0 |

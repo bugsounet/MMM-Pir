@@ -19,13 +19,16 @@ args = parser.parse_args(None if sys.argv[1:] else ['-h'])
 
 GPIO = "GPIO" + str(args.gpio)
 
-def detected():
-  print('Detected')
+def motion():
+  print('Motion')
+
+def no_motion():
+  print("NoMotion")
 
 try:
   pir = MotionSensor(GPIO)
-  pir.when_motion = detected
+  pir.when_motion = motion
+  pir.when_no_motion = no_motion
   pause()
 except Exception as e:
   print("Error:", e)
-

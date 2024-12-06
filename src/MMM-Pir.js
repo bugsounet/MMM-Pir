@@ -80,6 +80,7 @@ Module.register("MMM-Pir", {
     this.motionDetect = new motionLib(this.config.Motion, Tools);
     this.sound = new Audio();
     this.sound.autoplay = true;
+    this.getUpdatesNotifications = false;
     _logPIR("is now started!");
   },
 
@@ -166,16 +167,20 @@ Module.register("MMM-Pir", {
     }
   },
 
-  notificationReceived (notification) {
+  notificationReceived (notification, payload, sender) {
     if (notification === "MODULE_DOM_CREATED") {
       this.screenDisplay.prepareStyle();
       this.sendSocketNotification("INIT", this.config);
+      this.enforceUpdateNotificationConfig();
     }
     if (!this.ready) return;
     switch (notification) {
       // only available if not force-locked
       case "MMM_PIR-END":
         this.sendSocketNotification("FORCE_END");
+        break;
+      case "UPDATES":
+        if (sender?.name === "updatenotification" && this.getUpdatesNotifications) this.sendSocketNotification("WAKEUP");
         break;
       case "MMM_PIR-WAKEUP":
         this.sendSocketNotification("WAKEUP");
@@ -220,5 +225,23 @@ Module.register("MMM-Pir", {
       ko: "translations/ko.json",
       el: "translations/el.json"
     };
+  },
+
+  // force to set `sendUpdatesNotifications: true` in updatenotification module
+  // needed for labwc using for auto-restart after updating.
+  // without -> labwc can't display MM in full screen
+  // Best way: set sendUpdatesNotifications only if updateAutorestart and read UPDATES notification for wakeup screen
+  enforceUpdateNotificationConfig () {
+    MM.getModules().enumerate((module) => {
+      if (module.name === "updatenotification" && module.config.updateAutorestart === true) {
+        this.getUpdatesNotifications = true;
+        if (module.config.sendUpdatesNotifications === false) {
+          console.log("[MMM-Pir] Enforce updatenotification config: set sendUpdatesNotifications to true");
+          module.config.sendUpdatesNotifications = true;
+          module.sendSocketNotification("CONFIG", module.config);
+          module.sendSocketNotification("SCAN_UPDATES");
+        }
+      }
+    });
   }
 });

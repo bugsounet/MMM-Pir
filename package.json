@@ -1,45 +1,44 @@
 {
   "name": "MMM-Pir",
-  "version": "2.3.0",
-  "rev": "241116",
+  "version": "2.4.0",
   "description": "Screen manager",
-  "main": "MMM-Pir.js",
-  "scripts": {
-    "dependencies": "installer/dependencies.sh -d 'unclutter ddcutil cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
-    "presetup": "npm run dependencies && installer/preinstall.sh",
-    "setup": "npm prune",
-    "postsetup": "installer/postinstall.sh -m -r",
-    "preinstall": "echo ⚠ npm install will be deprecated on next release!.",
-    "install": "npm run setup",
-    "postinstall": "echo ⚠ On next release, Please use: npm run setup",
-    "update": "installer/update.sh",
-    "rebuild": "installer/rebuild.sh",
-    "reset": "git reset --hard",
-    "clean": "rm -rf node_modules package-lock.json",
-    "lint": "eslint *.js installer/*.js components/*.js --config eslint.config.js",
-    "lint:fix": "eslint *.js installer/*.js components/*.js --config eslint.config.js --fix",
-    "test": "npm run lint",
-    "test:minify": "cd installer && node minify.js"
-  },
   "keywords": [
     "magic mirror",
     "module",
     "screen",
     "motion detection"
   ],
-  "engines": {
-    "node": ">=20.9.0 <21 || >=22"
+  "homepage": "https://github.com/bugsounet/MMM-Pir",
+  "bugs": {
+    "url": "https://www.bugsounet.fr/"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/bugsounet/MMM-Pir"
   },
-  "author": "bugsounet",
   "license": "MIT",
-  "bugs": {
-    "url": "https://www.bugsounet.fr/"
+  "author": "bugsounet",
+  "main": "MMM-Pir.js",
+  "scripts": {
+    "clean": "rm -rf node_modules package-lock.json",
+    "dependencies": "installer/dependencies.sh -d 'unclutter ddcutil cec-utils python3 python-is-python3 python3-gpiozero gpiod libgpiod2 libgpiod-dev'",
+    "dev": "cd installer && node dev.js",
+    "dev:src": "cd installer && node src.js",
+    "preinstall": "echo ⚠ npm install will be deprecated on next release!.",
+    "install": "npm run setup",
+    "postinstall": "echo ⚠ On next release, Please use: npm run setup",
+    "lint": "eslint . --config eslint.config.mjs",
+    "lint:fix": "eslint . --config eslint.config.mjs --fix",
+    "pinctrl": "installer/pinctrl.sh",
+    "rebuild": "installer/rebuild.sh",
+    "reset": "rm -f *.js && rm -rf components/*.js && git reset --hard",
+    "presetup": "npm run dependencies && installer/preinstall.sh",
+    "setup": "npm prune",
+    "postsetup": "installer/postinstall.sh -m -r",
+    "test": "npm run lint",
+    "test:minify": "cd installer && node minify.js",
+    "update": "installer/update.sh"
   },
-  "homepage": "https://github.com/bugsounet/MMM-Pir",
   "dependencies": {
     "@electron/rebuild": "^3.7.1",
     "cron-parser": "^4.9.0",
@@ -53,8 +52,13 @@
     "python-shell": "^5.0.0"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^2.10.1",
-    "eslint": "^9.15.0",
-    "eslint-plugin-import": "^2.31.0"
-  }
+    "@stylistic/eslint-plugin": "^2.11.0",
+    "eslint": "^9.16.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-package-json": "^0.18.0"
+  },
+  "engines": {
+    "node": ">=20.9.0 <21 || >=22"
+  },
+  "rev": "241205"
 }
