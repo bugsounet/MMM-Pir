@@ -44,6 +44,14 @@ if [[ $minify == 1 ]]; then
   }
   Installer_success "Done"
   echo
+else
+  Installer_info "Install developer Main code..."
+  node dev.js || {
+    Installer_error "Install Failed!"
+    exit 255
+  }
+  Installer_success "Done"
+  echo
 fi
 
 # Go back to module root
