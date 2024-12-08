@@ -420,15 +420,14 @@ class SCREEN {
         break;
       case 8:
         // pinctrl
-        exec(`pinctrl get ${this.config.relayGPIOPin}`, (err, stdout) => {
+        exec(`pinctrl lev ${this.config.relayGPIOPin}`, (err, stdout) => {
           if (err) {
             console.error(`[MMM-Pir] [LIB] [SCREEN] pinctrl get: ${err}`);
             this.sendSocketNotification("SCREEN_ERROR", "pinctrl linux command error (mode: 8)");
           }
           else {
             let responseSh = stdout.trim();
-            const inout = (/.*\|\s(hi|lo)\s.*/g).exec(responseSh);
-            if (inout[1] === "hi") {
+            if (responseSh === "1") {
               actual = true;
             } else {
               actual = false;
