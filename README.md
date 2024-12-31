@@ -68,6 +68,7 @@ To display the module insert it in the config.js file.
       scoreThreshold: 100
     },
     Cron: {
+      mode: 0,
       ON: [],
       OFF: []
     },
@@ -171,7 +172,24 @@ sample:<br>
 #### Cron Configuration
 This is the rule to turn your screen on and off based on a set time event
 
-Each event have an object format:
+ | Option  | Description | Type | Default |
+ | ------- | --- | --- | --- |
+ | mode | cron mode (see bellow) | Number | 0 |
+ | ON | cron times to turn ON Screen | Array | [] |
+ | OFF | cron time to turn OFF Screen | Array | [] |
+
+* Available mode:
+    - `mode: 0` - Disable Cron using.
+    - `mode: 1` - Wake up / turn OFF automaticaly by CRON and use countdown
+      * `MMM-Pir` timer will be used before turn off screen
+      * Allow to use sensor/touch when CRON `ON` is activated
+      * When screen is OFF by cron, you can't wakeup it.
+      * When screen is OFF by timer, you can wakeup it (by sensor or touch)
+    - `mode: 2` - Your screen will be fully managed by cron
+      * `MMM-Pir` timer will be not displayed and not used
+      * You can't use touch mode or pir sensor for wake up or turn off screen
+
+`CRON` event (`ON`/`OFF`) have an object format:
 ```js
 {
   dayOfWeek: <Array of days>,
@@ -262,11 +280,7 @@ OFF: [
 ```
 
 Let's apply your own rules !
-
-##### Notes
-  * When `ON` event started: counter will be not displayed
-  * When `OFF` event started: counter will be functional and turn off the screen when done
-  * Don't be stupid! Don't create an ON event equal to OFF event
+Don't be stupid! Don't create an ON event equal to OFF event
 
 ------
 #### Touch Configuration
