@@ -33,6 +33,10 @@ class cronJob {
         console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 2");
         this.Manager.mode = 2;
         break;
+      case 3:
+        console.log("[MMM-Pir] [LIB] [CRON] [MODE] Add mode 3");
+        this.Manager.mode = 3;
+        break;
       default:
         console.error(`[MMM-Pir] [LIB] [CRON] [MODE] Unknow Mode (${this.config.mode})`);
         this.error(`Unknow Mode (${this.config.mode})`);

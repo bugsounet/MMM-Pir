@@ -182,12 +182,16 @@ This is the rule to turn your screen on and off based on a set time event
     - `mode: 0` - Disable Cron using.
     - `mode: 1` - Wake up / turn OFF automaticaly by CRON and use countdown
       * `MMM-Pir` timer will be used before turn off screen
-      * Allow to use sensor/touch when CRON `ON` is activated
+      * Allow to use sensor/touch/camera when CRON `ON` is activated
       * When screen is OFF by cron, you can't wakeup it.
-      * When screen is OFF by timer, you can wakeup it (by sensor or touch)
+      * When screen is OFF by timer, you can wakeup it (by sensor, touch, camera)
     - `mode: 2` - Your screen will be fully managed by cron
       * `MMM-Pir` timer will be not displayed and not used
-      * You can't use touch mode or pir sensor for wake up or turn off screen
+      * You can't use touch mode, pir sensor or camera for wake up or turn off screen
+    - `mode: 3` - Wake up / turn OFF automaticaly by CRON and allow wake up
+      * `MMM-Pir` timer will be used before turn off screen
+      * Allow to use sensor/touch/camera when CRON `ON` is activated
+      * When screen is OFF by cron or timer, you can wakeup it (by sensor, touch, camera)
 
 `CRON` event (`ON`/`OFF`) have an object format:
 ```js
