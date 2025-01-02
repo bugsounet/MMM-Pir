@@ -114,7 +114,8 @@ module.exports = NodeHelper.create({
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
       wrandrForceMode: this.config.Display.wrandrForceMode,
       waylandDisplayName: this.config.Display.waylandDisplayName,
-      animate: this.config.Display.animate
+      animate: this.config.Display.animate,
+      ddcutil: this.config.Display.ddcutil
     };
 
     let cronConfig = {
