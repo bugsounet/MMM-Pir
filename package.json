@@ -42,6 +42,7 @@
   "dependencies": {
     "@electron/rebuild": "^3.7.1",
     "cron-parser": "^4.9.0",
+    "croner": "^9.0.0",
     "esbuild": "^0.24.2",
     "glob": "^11.0.0",
     "long-press-event": "^2.5.0",

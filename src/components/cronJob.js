@@ -1,5 +1,5 @@
 var log = () => { /* do nothing */ };
-var cron = require("node-cron");
+const { Cron } = require("croner");
 var parser = require("cron-parser");
 
 class cronJob {
@@ -135,7 +135,7 @@ class cronJob {
     this.Manager.started = true;
 
     this.cronON.forEach((on) => {
-      cron.schedule(on, () => {
+      new Cron(on, () => {
         log("[ON] It's time to turn ON");
         this.Manager.ON = true;
         this.Manager.OFF = false;
@@ -145,7 +145,7 @@ class cronJob {
     });
 
     this.cronOFF.forEach((off) => {
-      cron.schedule(off, () => {
+      new Cron(off, () => {
         log("[OFF] It's time to turn OFF");
         this.Manager.ON = false;
         this.Manager.OFF = true;
