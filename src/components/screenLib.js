@@ -6,6 +6,7 @@
 const exec = require("child_process").exec;
 const process = require("process");
 const moment = require("moment");
+const lodash = require("lodash");
 
 var log = () => { /* do nothing */ };
 
@@ -25,9 +26,14 @@ class SCREEN {
       xrandrForceRotation: "normal",
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
-      waylandDisplayName: "wayland-0"
+      waylandDisplayName: "wayland-0",
+      ddcutil : {
+        powerOnCode : "1",
+        powerOffCode : "4",
+        skipSetVcpCheck : false
+      }
     };
-    this.config = Object.assign({}, this.default, this.config);
+    this.config = lodash.defaultsDeep(this.config,this.default,{});
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [SCREEN]", ...args); };
     this.screen = {
       mode: this.config.mode,
@@ -539,11 +545,11 @@ class SCREEN {
         break;
       case 5:
         if (set) {
-          exec("ddcutil setvcp d6 1 --noverify", (err) => {
+          exec(`ddcutil setvcp d6 ${this.config.ddcutil.powerOnCode} --noverify`, (err) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power ON: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON)");
-            } else {
+            } else if(!this.config.ddcutil.skipSetVcpCheck){
               // 5 second delay
               setTimeout(() => {
                 exec("ddcutil getvcp d6", (err, stdout) => {
@@ -564,11 +570,11 @@ class SCREEN {
             }
           });
         } else {
-          exec("ddcutil setvcp d6 4 --noverify", (err) => {
+          exec(`ddcutil setvcp d6 ${this.config.ddcutil.powerOffCode} --noverify`, (err) => {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power OFF: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF)");
-            } else {
+            } else if(!this.config.skipSetVcpCheck){
               // 1 second delay
               setTimeout(() => {
                 exec("ddcutil getvcp d6", (err, stdout) => {

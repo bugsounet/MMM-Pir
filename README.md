@@ -113,6 +113,7 @@ To display the module insert it in the config.js file.
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
  | waylandDisplayName | **-mode 3 or mode 7 only-** Wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
  | relayGPIOPin | **-mode 8 only-** GPIO pin of the relay | Number | 1 |
+ | ddcutil | adjust feature codes of setvcp command for power on (**powerOnCode**) and off (**powerOffCode**), and to skip check after setvcp commands (**skipSetVcpCheck**) | Object | {powerOnCode: "1", powerOffCode: "4", skipSetVcpCheck: false} 
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen
@@ -134,7 +135,10 @@ To display the module insert it in the config.js file.
 
 Note:<br>
 It's possible that `pinctrl` tool is not installed by default on your system (raspbian 11)<br>
-You can install it by using this command in your `MMM-Pir` folder: `npm run pinctrl`
+You can install it by using this command in your `MMM-Pir` folder: `npm run pinctrl`<br>
+
+Note for ddcutil:<br>
+For some displays, the `getvcp` commands cause the display to turn-on. In these cases it could be useful to set the display config value of `ddcutil.skipSetVcpCheck` to `true`.<br>
 
 ------
 #### Pir Sensor Configuration
