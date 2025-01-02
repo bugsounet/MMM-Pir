@@ -56,7 +56,12 @@ To display the module insert it in the config.js file.
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
       waylandDisplayName: "wayland-0",
-      relayGPIOPin: 0
+      relayGPIOPin: 0,
+      ddcutil: {
+        powerOnCode: "01",
+        powerOffCode: "04",
+        skipSetVcpCheck: false
+      }
     },
     Pir: {
       mode: 0,
@@ -113,7 +118,7 @@ To display the module insert it in the config.js file.
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
  | waylandDisplayName | **-mode 3 or mode 7 only-** Wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
  | relayGPIOPin | **-mode 8 only-** GPIO pin of the relay | Number | 1 |
- | ddcutil | adjust feature codes of setvcp command for power on (**powerOnCode**) and off (**powerOffCode**), and to skip check after setvcp commands (**skipSetVcpCheck**) | Object | {powerOnCode: "01", powerOffCode: "04", skipSetVcpCheck: false} 
+ | ddcutil | **-mode 5 only-** Adjust feature codes of setvcp command for power on (**powerOnCode**) and off (**powerOffCode**), and to skip check after setvcp commands (**skipSetVcpCheck**) | Object | {powerOnCode: "01", powerOffCode: "04", skipSetVcpCheck: false} 
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen
@@ -128,7 +133,7 @@ To display the module insert it in the config.js file.
    - `mode: 2` - use xrandr (For raspbian 11 or raspbian 12 with x11 compositor)
    - `mode: 3` - use wlr-randr (For raspbian 12 with wayfire compositor)
    - `mode: 4` - use HDMI CEC
-   - `mode: 5` - use ddcutil (not yet documented)
+   - `mode: 5` - use ddcutil
    - `mode: 6` - use dpms (linux version for debian, ubuntu, ...)
    - `mode: 7` - use labwc (For raspbian 12 with labwc compositor)
    - `mode: 8` - use pinctrl for switching a relay
