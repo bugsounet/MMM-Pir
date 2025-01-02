@@ -11,7 +11,7 @@ const lodash = require("lodash");
 var log = () => { /* do nothing */ };
 
 class SCREEN {
-  constructor (config, callback) {
+  constructor(config, callback) {
     this.config = config;
     this.sendSocketNotification = callback.sendSocketNotification;
     this.governor = callback.governor;
@@ -27,13 +27,13 @@ class SCREEN {
       wrandrForceRotation: "normal",
       wrandrForceMode: null,
       waylandDisplayName: "wayland-0",
-      ddcutil : {
-        powerOnCode : "1",
-        powerOffCode : "4",
-        skipSetVcpCheck : false
+      ddcutil: {
+        powerOnCode: "01",
+        powerOffCode: "04",
+        skipSetVcpCheck: false
       }
     };
-    this.config = lodash.defaultsDeep(this.config,this.default,{});
+    this.config = lodash.defaultsDeep(this.config, this.default, {});
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir] [LIB] [SCREEN]", ...args); };
     this.screen = {
       mode: this.config.mode,
@@ -157,7 +157,7 @@ class SCREEN {
     this.screenStatus();
   }
 
-  activate () {
+  activate() {
     process.on("exit", () => {
       if (this.config.mode) this.setPowerDisplay(true);
       this.governor("WORKING");
@@ -165,7 +165,7 @@ class SCREEN {
     this.start();
   }
 
-  start (restart) {
+  start(restart) {
     if (this.screen.locked || this.screen.running) return;
     if (!restart) log("Start.");
     else log("Restart.");
@@ -217,7 +217,7 @@ class SCREEN {
     }, 1000);
   }
 
-  forceTurnOffScreen () {
+  forceTurnOffScreen() {
     if (!this.screen.power) return log("forceTurnOffScreen: already off");
     this.sendSocketNotification("SCREEN_HIDING");
     this.screen.power = false;
@@ -227,7 +227,7 @@ class SCREEN {
     this.sendSocketNotification("SCREEN_PRESENCE", false);
   }
 
-  stop () {
+  stop() {
     if (this.screen.locked) return;
 
     if (!this.screen.power) {
@@ -244,7 +244,7 @@ class SCREEN {
     log("Stops.");
   }
 
-  reset () {
+  reset() {
     if (this.screen.locked) return;
     clearInterval(this.interval);
     this.interval = null;
@@ -252,12 +252,12 @@ class SCREEN {
     this.start(true);
   }
 
-  wakeup () {
+  wakeup() {
     if (this.screen.locked) return;
     this.reset();
   }
 
-  lock () {
+  lock() {
     if (this.screen.locked) return;
     this.screen.locked = true;
     clearInterval(this.interval);
@@ -266,14 +266,14 @@ class SCREEN {
     log("Locked !");
   }
 
-  unlock () {
+  unlock() {
     if (this.screen.forceLocked) return log("Unlock: ForceLocked");
     this.screen.locked = false;
     log("Unlocked !");
     this.start();
   }
 
-  forceEnd () {
+  forceEnd() {
     if (this.screen.forceLocked) return log("forceEnd: ForceLocked");
     clearInterval(this.interval);
     this.interval = null;
@@ -282,7 +282,7 @@ class SCREEN {
     this.forceTurnOffScreen();
   }
 
-  wantedPowerDisplay (wanted) {
+  wantedPowerDisplay(wanted) {
     var actual = false;
     switch (this.config.mode) {
       case 0:
@@ -445,7 +445,7 @@ class SCREEN {
     }
   }
 
-  resultDisplay (actual, wanted) {
+  resultDisplay(actual, wanted) {
     if (this.screen.forceOnStart) {
       log("Display: Force On Start");
       this.setPowerDisplay(true);
@@ -458,7 +458,7 @@ class SCREEN {
     }
   }
 
-  async setPowerDisplay (set) {
+  async setPowerDisplay(set) {
     log(`Display ${set ? "ON." : "OFF."}`);
     this.screen.power = set;
     // and finally apply rules !
@@ -549,7 +549,7 @@ class SCREEN {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power ON: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON)");
-            } else if(!this.config.ddcutil.skipSetVcpCheck){
+            } else if (!this.config.ddcutil.skipSetVcpCheck) {
               // 5 second delay
               setTimeout(() => {
                 exec("ddcutil getvcp d6", (err, stdout) => {
@@ -560,7 +560,7 @@ class SCREEN {
                   else {
                     let responseSh = stdout.trim();
                     var displaySh = responseSh.split("(sl=")[1];
-                    if (displaySh !== "0x01)") {
+                    if (displaySh !== `0x${this.config.ddcutil.powerOnCode})`) {
                       console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${responseSh}`);
                       this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power ON verify)");
                     }
@@ -574,7 +574,7 @@ class SCREEN {
             if (err) {
               console.error(`[MMM-Pir] [LIB] [SCREEN] mode 5, power OFF: ${err}`);
               this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF)");
-            } else if(!this.config.skipSetVcpCheck){
+            } else if (!this.config.ddcutil.skipSetVcpCheck) {
               // 1 second delay
               setTimeout(() => {
                 exec("ddcutil getvcp d6", (err, stdout) => {
@@ -585,7 +585,7 @@ class SCREEN {
                   else {
                     let responseSh = stdout.trim();
                     var displaySh = responseSh.split("(sl=")[1];
-                    if (displaySh !== "0x04)") {
+                    if (displaySh !== `0x${this.config.ddcutil.powerOffCode})`) {
                       console.error(`[MMM-Pir] [LIB] [SCREEN] ddcutil Error ${responseSh}`);
                       this.sendSocketNotification("SCREEN_ERROR", "ddcutil command error (mode 5 power OFF verify)");
                     }
@@ -653,22 +653,22 @@ class SCREEN {
     }
   }
 
-  state () {
+  state() {
     this.sendSocketNotification("SCREEN_STATE", this.screen);
   }
 
-  SendScreenPowerState () {
+  SendScreenPowerState() {
     this.sendSocketNotification("SCREEN_POWER", this.screen.power);
   }
 
-  sleep (ms = 1300) {
+  sleep(ms = 1300) {
     return new Promise((resolve) => {
       this.screen.awaitBeforeTurnOffTimer = setTimeout(resolve, ms);
     });
   }
 
   /** Cron Rules **/
-  cronState (state) {
+  cronState(state) {
     this.screen.cronStarted = state.started;
     this.screen.cronON = state.ON;
     this.screen.cronOFF = state.OFF;
@@ -711,7 +711,7 @@ class SCREEN {
   }
 
   /** Force Lock ON/OFF display **/
-  forceLockOFF () {
+  forceLockOFF() {
     if (!this.screen.power) return log("[Force OFF] Display Already OFF");
     if (this.screen.cronStarted && this.screen.cronON && this.screen.cronMode === 2) return log("[Force OFF] Display is Locked by cron!");
     this.sendForceLockState(true);
@@ -725,7 +725,7 @@ class SCREEN {
     log("[Force OFF] Turn OFF Display");
   }
 
-  forceLockON () {
+  forceLockON() {
     if (this.screen.locked && !this.screen.forceLocked) return log("[Force ON] Display is Locked!");
     if (this.screen.cronStarted) {
       if (this.screen.cronON) {
@@ -744,17 +744,17 @@ class SCREEN {
     log("[Force ON] Turn ON Display");
   }
 
-  forceLockToggle () {
+  forceLockToggle() {
     if (this.screen.power) this.forceLockOFF();
     else this.forceLockON();
   }
 
-  sendForceLockState (state) {
+  sendForceLockState(state) {
     this.screen.forceLocked = state;
     this.sendSocketNotification("SCREEN_FORCELOCKED", this.screen.forceLocked);
   }
 
-  screenStatus () {
+  screenStatus() {
     setInterval(() => {
       if (this.screen.power && this.config.availability) this.screen.availabilityCounter++;
       let status = this.screen.power;

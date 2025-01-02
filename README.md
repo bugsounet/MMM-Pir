@@ -113,7 +113,7 @@ To display the module insert it in the config.js file.
  | wrandrForceMode | **-mode 3 only-** Force screen resolution mode | String | null |
  | waylandDisplayName | **-mode 3 or mode 7 only-** Wayland display name (generaly `wayland-0` or `wayland-1`) | String | wayland-0 |
  | relayGPIOPin | **-mode 8 only-** GPIO pin of the relay | Number | 1 |
- | ddcutil | adjust feature codes of setvcp command for power on (**powerOnCode**) and off (**powerOffCode**), and to skip check after setvcp commands (**skipSetVcpCheck**) | Object | {powerOnCode: "1", powerOffCode: "4", skipSetVcpCheck: false} 
+ | ddcutil | adjust feature codes of setvcp command for power on (**powerOnCode**) and off (**powerOffCode**), and to skip check after setvcp commands (**skipSetVcpCheck**) | Object | {powerOnCode: "01", powerOffCode: "04", skipSetVcpCheck: false} 
 
  * Available style:
    - `style: 0` - Don't display Count-up bar in screen

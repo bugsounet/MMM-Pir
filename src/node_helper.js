@@ -11,14 +11,14 @@ const LibCron = require("./components/cronJob");
 const LibGovernor = require("./components/governorLib");
 
 module.exports = NodeHelper.create({
-  start () {
+  start() {
     this.pir = null;
     this.screen = null;
     this.cron = null;
     this.governor = null;
   },
 
-  socketNotificationReceived (notification, payload) {
+  socketNotificationReceived(notification, payload) {
     switch (notification) {
       case "INIT":
         this.config = payload;
@@ -48,7 +48,7 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async parse () {
+  async parse() {
     if (this.config.debug) log = (...args) => { console.log("[MMM-Pir]", ...args); };
     console.log("[MMM-Pir] Version:", require("./package.json").version, "rev:", require("./package.json").rev);
     log("Config:", this.config);
@@ -114,7 +114,8 @@ module.exports = NodeHelper.create({
       wrandrForceRotation: this.config.Display.wrandrForceRotation,
       wrandrForceMode: this.config.Display.wrandrForceMode,
       waylandDisplayName: this.config.Display.waylandDisplayName,
-      animate: this.config.Display.animate
+      animate: this.config.Display.animate,
+      ddcutil: this.config.Display.ddcutil
     };
 
     let cronConfig = {
