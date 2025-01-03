@@ -14,7 +14,7 @@ let project = require("../package.json").name;
 /**
  * search all javascript files
  */
-function searchFiles () {
+async function searchFiles () {
   const components = await new fdir()
     .withBasePath()
     .filter((path) => path.endsWith(".js"))
