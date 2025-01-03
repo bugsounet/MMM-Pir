@@ -5,7 +5,7 @@
 
 const path = require("node:path");
 const { copyFileSync } = require("node:fs");
-const { globSync } = require("glob");
+const { fdir } = require("fdir");
 
 var files = [];
 
@@ -14,8 +14,13 @@ let project = require("../package.json").name;
 /**
  * search all javascript files
  */
-function searchFiles () {
-  let components = globSync("../src/**/*.js");
+async function searchFiles () {
+  const components = await new fdir()
+    .withBasePath()
+    .filter((path) => path.endsWith(".js"))
+    .crawl("../src")
+    .withPromise();
+
   files = files.concat(components);
   console.log(`Found: ${files.length} files to install\n`);
 }
@@ -24,8 +29,10 @@ function searchFiles () {
  * Install all files in array with Promise
  */
 async function installFiles () {
-  searchFiles();
+  console.log("⚠ This Tools is reserved for develop only ⚠\n");
+  await searchFiles();
   await Promise.all(files.map((file) => { return install(file); })).catch(() => process.exit(255));
+  console.log("\n✅ All new sources files are copied to the src folder\n");
 }
 
 /**
@@ -49,6 +56,4 @@ function install (file) {
   });
 }
 
-console.log("⚠ This Tools is reserved for develop only ⚠\n");
 installFiles();
-console.log("\n✅ All new sources files are copied to the src folder\n");

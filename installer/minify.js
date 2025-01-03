@@ -4,7 +4,7 @@
 */
 
 const path = require("node:path");
-const { globSync } = require("glob");
+const { fdir } = require("fdir");
 const esbuild = require("esbuild");
 
 var files = [];
@@ -19,8 +19,13 @@ let commentOut = "**/";
 /**
  * search all javascript files
  */
-function searchFiles () {
-  let components = globSync("../src/**/*.js");
+async function searchFiles () {
+  const components = await new fdir()
+    .withBasePath()
+    .filter((path) => path.endsWith(".js"))
+    .crawl("../src")
+    .withPromise();
+
   files = files.concat(components);
   console.log(`Found: ${files.length} files to install and minify\n`);
 }
@@ -29,7 +34,7 @@ function searchFiles () {
  * Minify all files in array with Promise
  */
 async function minifyFiles () {
-  searchFiles();
+  await searchFiles();
   await Promise.all(files.map((file) => { return minify(file); })).catch(() => process.exit(255));
 }
 
