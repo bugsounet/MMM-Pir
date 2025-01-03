@@ -29,8 +29,10 @@ async function searchFiles () {
  * Install all files in array with Promise
  */
 async function installFiles () {
+  console.log("⚠ This Tools is reserved for develop only ⚠\n");
   await searchFiles();
   await Promise.all(files.map((file) => { return install(file); })).catch(() => process.exit(255));
+  console.log("\n✅ All sources files are installed and ready for developing\n");
 }
 
 /**
@@ -54,6 +56,4 @@ function install (file) {
   });
 }
 
-console.log("⚠ This Tools is reserved for develop only ⚠\n");
 installFiles();
-console.log("\n✅ All sources files are installed and ready for developing\n");
