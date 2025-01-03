@@ -43,7 +43,7 @@
     "@electron/rebuild": "^3.7.1",
     "cron-parser": "^4.9.0",
     "esbuild": "^0.24.2",
-    "glob": "^11.0.0",
+    "fdir": "^6.4.2",
     "lodash": "^4.17.21",
     "long-press-event": "^2.5.0",
     "nan": "^2.22.0",

@@ -5,7 +5,7 @@
 
 const path = require("node:path");
 const { copyFileSync } = require("node:fs");
-const { globSync } = require("glob");
+const { fdir } = require("fdir");
 
 var files = [];
 
@@ -15,7 +15,12 @@ let project = require("../package.json").name;
  * search all javascript files
  */
 function searchFiles () {
-  let components = globSync("../src/**/*.js");
+  const components = await new fdir()
+    .withBasePath()
+    .filter((path) => path.endsWith(".js"))
+    .crawl("../src")
+    .withPromise();
+
   files = files.concat(components);
   console.log(`Found: ${files.length} files to install\n`);
 }
@@ -24,7 +29,7 @@ function searchFiles () {
  * Install all files in array with Promise
  */
 async function installFiles () {
-  searchFiles();
+  await searchFiles();
   await Promise.all(files.map((file) => { return install(file); })).catch(() => process.exit(255));
 }
 
